@@ -1,0 +1,11 @@
+# As described in Smith et al. (2009).
+1: 'V(M)'  # 'Visual (Medial)'
+2: 'V(O)'  # 'Visual (Occipital, Cognition–Language–Orthography)'
+3: 'V(L)'  # 'Visual (Lateral, Cognition–Space)'
+4: 'DMN'  # Default Mode Network
+5: 'CBM'  # 'Cerebellum'
+6: 'SM'  # 'Sensorimotor'
+7: 'AUD'  # 'Auditory'
+8: 'EC'  # 'Executive Control'
+9:  'FP'  # 'Frontoparietal (Perception–Somesthesis–Pain)'
+10: 'FP(CL)'  # Frontoparietal (Cognition-Language)

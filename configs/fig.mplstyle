@@ -1,0 +1,10 @@
+text.usetex: False
+font.family: sans-serif
+font.size: 10
+font.sans-serif: Arial, DejaVu Sans, Lucida Grande, Verdana, Geneva, Lucid, Arial, Helvetica, Avant Garde, sans-serif
+
+axes.labelsize: 10
+legend.fontsize: 8
+
+xtick.labelsize: 8
+ytick.labelsize: 8

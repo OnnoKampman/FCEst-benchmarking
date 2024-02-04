@@ -1,0 +1,37 @@
+name: fcest-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - boto3
+  - cmake
+  - git
+  - jupyter
+  # - jupyterlab
+  # - matplotlib
+  - mpfr  # for installing R package `rmgarch` on Ubuntu
+  # - networkx
+  - packaging
+  - pip
+  - python=3.10
+  - pyyaml
+  - r-base=4.1.0
+  - r-gmp  # for installing R package `rmgarch` on Ubuntu
+  - statsmodels
+  - tabulate
+  - typing-extensions
+  - tzlocal
+  - pip:
+    # - bctpy  # Brain Connectivity Toolbox
+    # - hcp_utils
+    - nilearn==0.9.2
+    - nipype
+    - numpy==1.21.0
+    - pandas==1.5.3
+    - pingouin==0.5.3
+    - ptitprince==0.2.7
+    - seaborn==0.11
+    # - templateflow
+    - tensorflow_probability==0.19.0
+    - git+https://github.com/OnnoKampman/FCEst
+    # - git+https://github.com/RittmanResearch/maybrain@master

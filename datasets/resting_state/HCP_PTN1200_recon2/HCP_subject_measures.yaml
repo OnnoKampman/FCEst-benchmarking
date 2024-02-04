@@ -1,0 +1,94 @@
+# We may not be interested in age-adjusted phenotypes if we feed age as a nuisance variable.
+# The 13 cognitive measures are the same (and same ordering) as Li2019a.
+cognitive: [
+    'PicSeq_Unadj',  # visual episodic memory task
+    'CardSort_Unadj',  # cognitive flexibility (DCCS)
+    'Flanker_Unadj',  # flanker (inhibition task)
+    'PMAT24_A_CR',  # (fluid) intelligence (matrix reasoning task) - contains missing values
+#    'PMAT24_A_SI',  # intelligence - contains missing values
+#    'PMAT24_A_RTCR',  # intelligence - contains missing values
+    'ReadEng_Unadj',  # vocabulary task (reading pronunciation)
+    'PicVocab_Unadj',  # vocabulary (picture matching task)
+    'ProcSpeed_Unadj',  # processing speed
+    'DDisc_AUC_40K',  # delay discounting
+    'VSPLOT_TC',  # spatial orientation
+    'SCPT_SEN',  # sustained attention (sens.)
+    'SCPT_SPEC',  # sustained attention (spec.)
+    'IWRD_TOT',  # verbal episodic memory
+    'ListSort_Unadj',  # list sorting (working memory task)
+#    'CogFluidComp_Unadj',
+#    'CogFluidComp_AgeAdj',
+#    'CogEarlyComp_Unadj',
+#    'CogEarlyComp_AgeAdj',
+#    'CogTotalComp_Unadj',
+#    'CogTotalComp_AgeAdj',
+#    'CogCrystalComp_Unadj',
+#    'CogCrystalComp_AgeAdj',
+]
+# The 22 other measures are the same (and same ordering) as Li2019a.
+other: [
+    'MMSE_Score',  # Cognitive Status (MMSE)
+    'PSQI_Score',  # Sleep Quality (PSQI)
+    'Endurance_Unadj',  # Walking Endurance
+    'GaitSpeed_Comp',  # Walking Speed
+    'Dexterity_Unadj',  # Manual Dexterity
+    'Strength_Unadj',  # Grip Strength
+    'Odor_Unadj',  # Odor Identification
+    'PainInterf_Tscore',  # Pain Interference Survey
+#    'PainIntens_RawScore',
+    'Taste_Unadj',  # Taste Intensity
+    'Mars_Final',  # Contrast Sensitivity
+    'Emotion_Task_Face_Acc',  # Emotional Face Matching
+    'Language_Task_Math_Avg_Difficulty_Level',  # Arithmetic
+    'Language_Task_Story_Avg_Difficulty_Level',  # Story Comprehension
+    'Relational_Task_Acc',  # Relational Processing contains missing values
+  # 'Relational_Task_Median_RT',  # contains missing values
+  # 'Relational_Task_Match_Acc',  # contains missing values
+  # 'Relational_Task_Match_Median_RT',  # contains missing values
+  # 'Relational_Task_Rel_Acc',  # contains missing values
+  # 'Relational_Task_Rel_Median_RT',  # contains missing values
+    'Social_Task_Perc_Random',  # Social Cognition - Random
+    'Social_Task_Perc_TOM',  # Social Cognition - Interaction
+    'WM_Task_Acc',  # Working Memory (N-back)
+    # 'NEOFAC_A',  # Agreeableness (NEO) Big Five personality, contains missing values
+    # 'NEOFAC_O',  # Openness (NEO) Big Five personality, contains missing values
+    # 'NEOFAC_C',  # Conscientiousness (NEO) Big Five personality, contains missing values
+    # 'NEOFAC_N',  # Neuroticism (NEO) Big Five personality, contains missing values
+    # 'NEOFAC_E',  # Extraversion (NEO) Big Five personality, contains missing values
+]
+personality: [
+  'NEOFAC_A',  # Agreeableness (NEO) Big Five personality, contains missing values
+  'NEOFAC_O',  # Openness (NEO) Big Five personality, contains missing values
+  'NEOFAC_C',  # Conscientiousness (NEO) Big Five personality, contains missing values
+  'NEOFAC_N',  # Neuroticism (NEO) Big Five personality, contains missing values
+  'NEOFAC_E',  # Extraversion (NEO) Big Five personality, contains missing values
+]
+psychiatric: [
+  'DSM_Depr_Pct',
+]
+# The 23 social-emotional measures are the same (and same ordering) as Li2019a.
+social-emotional: [
+    'ER40_CR',  # Emot. Recog. - Total
+    'ER40ANG',  # Emot. Recog. - Angry
+    'ER40FEAR',  # Emot. Recog. - Fear
+    'ER40HAP',  # Emot. Recog. - Happy
+    'ER40NOE',  # Emot. Recog. - Neutral
+    'ER40SAD',  # Emot. Recog. - Sad
+    'AngAffect_Unadj',  # Anger - Affect
+    'AngHostil_Unadj',  # Anger - Hostility
+    'AngAggr_Unadj',  # Anger - Aggression
+    'FearAffect_Unadj',  # Fear - Affect
+    'FearSomat_Unadj',  # Fear - Somatic Arousal
+    'Sadness_Unadj',  # Sadness
+    'LifeSatisf_Unadj',  # Life Satisfaction
+    'MeanPurp_Unadj',  # Meaning & Purpose
+    'PosAffect_Unadj',  # Positive Affect
+    'Friendship_Unadj',  # Friendship
+    'Loneliness_Unadj',  # Loneliness
+    'PercHostil_Unadj',  # Perceived Hostility
+    'PercReject_Unadj',  # Perceived Rejection
+    'EmotSupp_Unadj',  # Emotional Support
+    'InstruSupp_Unadj',  # Instrument Support
+    'PercStress_Unadj',  # Perceived Stress
+    'SelfEff_Unadj',  # Self-Efficacy
+]

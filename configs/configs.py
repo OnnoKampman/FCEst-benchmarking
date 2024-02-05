@@ -275,7 +275,7 @@ def _get_rockland_config_dict(
         ),
         'git-results-basedir': os.path.join(
             shared_config_dict['git-basedir'],
-            'results', 'task', shared_config_dict['data-set-name'], subset
+            'results', 'fmri', 'tb', shared_config_dict['data-set-name'], subset
         ),
         'log-interval': 100,
         'max-n-cpus': 10,

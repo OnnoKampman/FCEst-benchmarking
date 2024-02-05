@@ -276,7 +276,8 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
     Define all global properties of simulated data sets.
     """
     simulated_data_dirpath = os.path.join(
-        shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets', 'simulations', shared_config_dict['data-set-name']
+        shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
+        'simulations', shared_config_dict['data-set-name']
     )
     if os.path.exists(simulated_data_dirpath):
         logging.info("Existing data sets found:")
@@ -297,22 +298,24 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
         ],
         'constant-covariance': 0.8,
         'data-dir': os.path.join(
-            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets', 'simulations',
-            shared_config_dict['data-set-name'], benchmark_dimensions
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
+            'simulations', shared_config_dict['data-set-name'], benchmark_dimensions
         ),
         'experiments-basedir': os.path.join(
-            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'benchmarks', 'simulations',
-            shared_config_dict['data-set-name'], benchmark_dimensions
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'benchmarks',
+            'simulations', shared_config_dict['data-set-name'], benchmark_dimensions
         ),
         'figures-basedir': os.path.join(
-            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'figures', 'simulations',
-            shared_config_dict['data-set-name'], benchmark_dimensions
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'figures',
+            'simulations', shared_config_dict['data-set-name'], benchmark_dimensions
         ),
         'git-results-basedir': os.path.join(
-            shared_config_dict['git-basedir'], 'results', 'simulations',
+            shared_config_dict['git-basedir'], 'results', 'fmri', 'sim',
             shared_config_dict['data-set-name'], benchmark_dimensions
         ),
-        'hcp-data-dir': os.path.join(shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets', 'resting_state'),
+        'hcp-data-dir': os.path.join(
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets', 'resting_state'
+        ),
         'figure-quantitative-results-dpi': 300,
         'figure-covariance-structures-dpi': 250,
         'figure-covariance-structures-figsize': (12, 4),

@@ -116,22 +116,23 @@ def _get_human_connectome_project_config_dict(
     subset = f'3T_HCP1200_MSMAll_{data_dimensionality:s}_ts2'
     return {
         'data-dir': os.path.join(
-            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets', 'resting_state',
-            shared_config_dict['data-set-name'], 'node_timeseries', subset
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
+            'resting_state', shared_config_dict['data-set-name'], 'node_timeseries', subset
         ),
         'data-dir-subject-measures': os.path.join(
-            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets', 'resting_state', 'hcp-openaccess'
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
+            'resting_state', 'hcp-openaccess'
         ),
         'experiments-basedir': os.path.join(
-            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'experiments', 'resting_state',
-            shared_config_dict['data-set-name'], subset
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'experiments',
+            'resting_state', shared_config_dict['data-set-name'], subset
         ),
         'figures-basedir': os.path.join(
-            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'figures', 'resting_state',
-            shared_config_dict['data-set-name'], subset
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'figures',
+            'resting_state', shared_config_dict['data-set-name'], subset
         ),
         'git-results-basedir': os.path.join(
-            shared_config_dict['git-basedir'], 'results', 'resting_state',
+            shared_config_dict['git-basedir'], 'results', 'fmri', 'rs',
             shared_config_dict['data-set-name'], subset
         ),
         # 'ica-id-to-rsn-id-manual-map': _get_ica_id_to_rsn_id_manual_map()[data_dimensionality],

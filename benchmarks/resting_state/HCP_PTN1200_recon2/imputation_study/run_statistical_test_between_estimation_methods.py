@@ -23,8 +23,9 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
     models_list = cfg['plot-model-estimates-methods']
+    test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
+    test_likelihoods_ttests_savedir = os.path.join(test_likelihoods_savedir, 'ttests')
 
     all_method_significances_df = pd.DataFrame(
         np.nan,
@@ -68,16 +69,16 @@ if __name__ == "__main__":
 
     likelihoods_pvals_filename = f'{data_split:s}_{experiment_dimensionality:s}_likelihoods_pvals.csv'
     all_method_significances_df.to_csv(
-        os.path.join(test_likelihoods_savedir, likelihoods_pvals_filename),
+        os.path.join(test_likelihoods_ttests_savedir, likelihoods_pvals_filename),
         index=True,
         float_format='%.3f'
     )
-    logging.info(f"Saved {data_split:s} likelihoods p-values '{likelihoods_pvals_filename:s}' in '{test_likelihoods_savedir:s}'.")
+    logging.info(f"Saved {data_split:s} likelihoods p-values '{likelihoods_pvals_filename:s}' in '{test_likelihoods_ttests_savedir:s}'.")
 
     likelihoods_cod_filename = f'{data_split:s}_{experiment_dimensionality:s}_likelihoods_cod.csv'
     all_method_cod_df.to_csv(
-        os.path.join(test_likelihoods_savedir, likelihoods_cod_filename),
+        os.path.join(test_likelihoods_ttests_savedir, likelihoods_cod_filename),
         index=True,
         float_format='%.3f'
     )
-    logging.info(f"Saved {data_split:s} likelihoods Cohen's D '{likelihoods_cod_filename:s}' in '{test_likelihoods_savedir:s}'.")
+    logging.info(f"Saved {data_split:s} likelihoods Cohen's D '{likelihoods_cod_filename:s}' in '{test_likelihoods_ttests_savedir:s}'.")

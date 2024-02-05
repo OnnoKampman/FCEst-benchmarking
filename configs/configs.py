@@ -3,6 +3,8 @@ import os
 from pprint import pprint
 import yaml
 
+import numpy as np
+
 logging.basicConfig(
     format='%(asctime)s : %(levelname)s : %(message)s',
     datefmt='%d-%b-%y %H:%M:%S',
@@ -12,12 +14,15 @@ logging.basicConfig(
 
 def get_config_dict(
         data_set_name: str,
+        subset: str = None,
         subset_dimensionality: str = None,
         hostname: str = 'local'
 ) -> dict:
     """
     :param data_set_name:
         resting state data: 'HCP_PTN1200_recon2'
+        task data: 'rockland'
+    :param subset:
     :param subset_dimensionality:
     :param hostname:
     :return:
@@ -60,6 +65,11 @@ def get_config_dict(
             config_dict = _get_human_connectome_project_config_dict(
                 shared_config_dict=shared_config_dict,
                 data_dimensionality=subset_dimensionality
+            )
+        case 'rockland':
+            config_dict = _get_rockland_config_dict(
+                shared_config_dict=shared_config_dict,
+                repetition_time=subset
             )
         case _:
             raise NotImplementedError(f"Data set name '{data_set_name:s}' not recognized.")
@@ -235,6 +245,96 @@ def _get_human_connectome_project_config_dict(
             'SW_60',
             'sFC',
         ]
+    }
+
+
+def _get_rockland_config_dict(
+        shared_config_dict: dict, repetition_time: str, roi_list_name: str = 'final'
+) -> dict:
+    """
+    Rockland tb-fMRI specific configurations.
+    :param shared_config_dict:
+    :param repetition_time:
+    :param roi_list_name: which set of ROIs we use; 'final', 'V1_V2_V3_V4_ACC'
+    :return:
+    """
+    subset = f"CHECKERBOARD{repetition_time:s}"
+    return {
+        'cutoff-v1-stim-correlation': 0.4,
+        'data-basedir': os.path.join(
+            shared_config_dict['project-basedir'],
+            'opk20_hivemind_paper_1', 'datasets', 'task', shared_config_dict['data-set-name'], subset
+        ),
+        'experiments-basedir': os.path.join(
+            shared_config_dict['project-basedir'],
+            'opk20_hivemind_paper_1', 'benchmarks', 'task', shared_config_dict['data-set-name'], subset
+        ),
+        'figures-basedir': os.path.join(
+            shared_config_dict['project-basedir'],
+            'opk20_hivemind_paper_1', 'figures', 'task', shared_config_dict['data-set-name'], subset
+        ),
+        'git-results-basedir': os.path.join(
+            shared_config_dict['git-basedir'],
+            'results', 'task', shared_config_dict['data-set-name'], subset
+        ),
+        'log-interval': 100,
+        'max-n-cpus': 10,
+        'mgarch-models': [
+            'DCC'
+        ],
+        'mgarch-training-types': [
+            'joint',
+            'bivariate_loop'
+        ],
+        'n-iterations': 14000,
+        'n-iterations-svwp': 14000,
+        'n-time-steps': 240,
+        'plot-likelihoods-models': [
+            # 'VWP_joint',
+            'SVWP_joint',
+            'DCC_joint',
+            # 'DCC_bivariate_loop',
+            'SW_cross_validated',
+            # 'SW_16',  # in seconds, based on Di2015
+            # 'SW_30',
+            # 'SW_60',
+            'sFC'
+        ],
+        'plot-stimulus-prediction-models': [
+            # 'VWP_joint',
+            'SVWP_joint',
+            'DCC_joint',
+            # 'DCC_bivariate_loop',
+            'SW_cross_validated',
+            # 'SW_16',  # in seconds, based on Di2015
+            # 'SW_30',
+            # 'SW_60',
+            # 'sFC'
+        ],
+        'plot-time-series-figsize': (12, 6),
+        'repetition-time': 0.645,  # in seconds (either 1.4 or 0.645)
+        'roi-list': np.array(['V1', 'V2', 'V3', 'V4', 'mPFC', 'M1']),
+        'roi-list-name': roi_list_name,
+        'roi-edges-list': np.array([
+            [0, 1],
+            [0, 2],
+            [0, 3],
+            [0, 4],
+            [0, 5]
+        ]),
+        'stimulus-prediction-models': [
+            'VWP_joint',
+            'SVWP_joint',
+            'DCC_joint',
+            'DCC_bivariate_loop',
+            'SW_cross_validated',
+            'SW_16',  # in seconds, based on Di2015
+            'SW_30',
+            'SW_60',
+            # 'sFC'
+        ],
+        'subset': subset,
+        'test-set-ratio': 0.2
     }
 
 

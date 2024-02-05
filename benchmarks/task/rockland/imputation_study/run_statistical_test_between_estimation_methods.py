@@ -22,6 +22,7 @@ if __name__ == "__main__":
     )
     models_list = cfg['plot-likelihoods-models']
     test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
+    test_likelihoods_ttests_savedir = os.path.join(test_likelihoods_savedir, 'ttests')
 
     all_method_significances_df = pd.DataFrame(
         np.nan,
@@ -65,7 +66,7 @@ if __name__ == "__main__":
 
     likelihoods_pvals_filename = f'{data_split:s}_likelihoods_pvals.csv'
     all_method_significances_df.to_csv(
-        os.path.join(test_likelihoods_savedir, likelihoods_pvals_filename),
+        os.path.join(test_likelihoods_ttests_savedir, likelihoods_pvals_filename),
         index=True,
         float_format='%.3f'
     )
@@ -73,7 +74,7 @@ if __name__ == "__main__":
 
     likelihoods_cod_filename = f'{data_split:s}_likelihoods_cod.csv'
     all_method_cod_df.to_csv(
-        os.path.join(test_likelihoods_savedir, likelihoods_cod_filename),
+        os.path.join(test_likelihoods_ttests_savedir, likelihoods_cod_filename),
         index=True,
         float_format='%.3f'
     )

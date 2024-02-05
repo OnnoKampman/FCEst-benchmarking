@@ -16,14 +16,17 @@ def get_config_dict(
         data_set_name: str,
         subset: str = None,
         subset_dimensionality: str = None,
+        experiment_data: str = None,
         hostname: str = 'local'
 ) -> dict:
     """
     :param data_set_name:
+        simulations: 'sim', 'd2', 'd3d', 'd3s', 'd4s', 'd6s', 'd9s', 'd15s'
         resting state data: 'HCP_PTN1200_recon2'
         task data: 'rockland'
     :param subset:
     :param subset_dimensionality:
+    :param experiment_data: expected in format 'Nxxx_Txxx'
     :param hostname:
     :return:
     """
@@ -65,6 +68,26 @@ def get_config_dict(
             config_dict = _get_human_connectome_project_config_dict(
                 shared_config_dict=shared_config_dict,
                 data_dimensionality=subset_dimensionality
+            )
+        case 'sim':
+            config_dict = _get_simulations_shared_config_dict(
+                shared_config_dict=shared_config_dict,
+                benchmark_dimensions=experiment_data
+            )
+        case 'd2':
+            config_dict = _get_d2_config_dict(
+                shared_config_dict=shared_config_dict,
+                benchmark_dimensions=experiment_data
+            )
+        case 'd3d':
+            config_dict = _get_d3d_config_dict(
+                shared_config_dict=shared_config_dict,
+                benchmark_dimensions=experiment_data
+            )
+        case 'd3s' | 'd4s' | 'd5s' | 'd6s' | 'd9s' | 'd15s':
+            config_dict = _get_sparse_config_dict(
+                shared_config_dict=shared_config_dict,
+                benchmark_dimensions=experiment_data
             )
         case 'rockland':
             config_dict = _get_rockland_config_dict(
@@ -246,6 +269,276 @@ def _get_human_connectome_project_config_dict(
             'sFC',
         ]
     }
+
+
+def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dimensions: str) -> dict:
+    """
+    Define all global properties of simulated data sets.
+    """
+    simulated_data_dirpath = os.path.join(
+        shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets', 'simulations', shared_config_dict['data-set-name']
+    )
+    if os.path.exists(simulated_data_dirpath):
+        logging.info("Existing data sets found:")
+        print(sorted(os.listdir(simulated_data_dirpath)))
+    return {
+        'all-covs-types': [  # these are the ones we train on and may be different from the ones we report
+            'null',
+            'constant',
+            'periodic_1',
+            'periodic_2',
+            'periodic_3',
+            'periodic_4',
+            'periodic_5',
+            'checkerboard',
+            'stepwise',
+            'state_transition',
+            'change_point',
+        ],
+        'constant-covariance': 0.8,
+        'data-dir': os.path.join(
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets', 'simulations',
+            shared_config_dict['data-set-name'], benchmark_dimensions
+        ),
+        'experiments-basedir': os.path.join(
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'benchmarks', 'simulations',
+            shared_config_dict['data-set-name'], benchmark_dimensions
+        ),
+        'figures-basedir': os.path.join(
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'figures', 'simulations',
+            shared_config_dict['data-set-name'], benchmark_dimensions
+        ),
+        'git-results-basedir': os.path.join(
+            shared_config_dict['git-basedir'], 'results', 'simulations',
+            shared_config_dict['data-set-name'], benchmark_dimensions
+        ),
+        'hcp-data-dir': os.path.join(shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets', 'resting_state'),
+        'figure-quantitative-results-dpi': 300,
+        'figure-covariance-structures-dpi': 250,
+        'figure-covariance-structures-figsize': (12, 4),
+        'figure-model-predictions-dpi': 300,
+        'figure-quantitative-results-figsize': (12, 3.5),
+        'log-interval': 200,
+        'max-n-cpus': 10,  # the maximum number of CPUs used on the Hivemind
+        'n-inducing-points': 200,
+        'noise-routines': [
+            [None, None],
+            # [None, 0.5],
+            [None, 1],
+            [None, 2],
+            [None, 6],
+            # [0.5, None],
+            [1, None],
+            [2, None],
+            [6, None]
+        ],
+        'plot-covs-types': [  # these will be plotted in this order
+            'null',
+            'constant',
+            'periodic_1',
+            'periodic_3',
+            'stepwise',
+            'state_transition',
+            'checkerboard',
+        ],
+        'plot-covs-types-palette': 'Set2',
+        'plot-lengthscales-window-lengths': (12, 10),
+        'plot-data-xlim': [-0.01, 1.01],
+        'repetition-time': 1,  # synthetic TR is one second for simplicity
+        'window-lengths': [
+            15,
+            30,
+            60,
+            120
+        ]
+    }
+
+
+def _get_d2_config_dict(shared_config_dict: dict, benchmark_dimensions: str) -> dict:
+    """
+    :param shared_config_dict:
+    :param benchmark_dimensions:
+    :return:
+    """
+    simulations_shared_config_dict = _get_simulations_shared_config_dict(shared_config_dict, benchmark_dimensions)
+    config_dict = {
+        'all-quantitative-results-models': [
+            'VWP',
+            'SVWP',
+            'DCC_joint',
+            'SW_cross_validated',
+            'SW_15',
+            'SW_30',
+            'SW_60',
+            'SW_120',
+            'sFC'
+        ],
+        'figure-model-estimates-figsize': (12, 5),
+        'mgarch-models': [
+            'DCC',
+            # 'GO'
+        ],
+        'mgarch-training-types': [
+            'joint'
+        ],
+        'n-iterations-svwp': 14000,
+        'n-iterations-vwp': 14000,
+        'noise-types': [
+            'no_noise',
+            'HCP_noise_snr_2',
+            'HCP_noise_snr_1',
+            'HCP_noise_snr_6',
+        ],
+        'performance-metrics': [
+            'covariance_RMSE',
+            'correlation_RMSE',
+            # 'covariance_correlation',
+            'covariance_matrix_RMSE',
+            'correlation_matrix_RMSE',
+            # 'test_log_likelihood',
+        ],
+        'plot-models': [
+            # 'VWP',
+            'SVWP',
+            'DCC_joint',
+            'SW_cross_validated',
+            # 'SW_15',
+            # 'SW_30',
+            # 'SW_60',
+            # 'SW_120',
+            'sFC'
+        ],
+        'plot-time-series-figsize': (12, 6),
+    }
+    # Merge general simulations and experiment-specific dictionaries.
+    config_dict = config_dict | simulations_shared_config_dict
+    return config_dict
+
+
+def _get_d3d_config_dict(shared_config_dict: dict, benchmark_dimensions: str) -> dict:
+    """
+    :param shared_config_dict:
+    :param benchmark_dimensions:
+    :return:
+    """
+    simulations_shared_config_dict = _get_simulations_shared_config_dict(shared_config_dict, benchmark_dimensions)
+    config_dict = {
+        'all-quantitative-results-models': [
+            'VWP_joint',
+            # 'SVWP',
+            'SVWP_joint',
+            'DCC_joint',
+            'DCC_bivariate_loop',
+            'SW_cross_validated',
+            'SW_15',
+            'SW_30',
+            'SW_60',
+            'SW_120',
+            'sFC'
+        ],
+        'figure-model-estimates-figsize': (12, 13),
+        'mgarch-models': [
+            'DCC',
+            # 'GO'  # TODO: GO models do not always converge or train properly
+        ],
+        'mgarch-training-types': [
+            'joint',
+            'bivariate_loop'
+        ],
+        'n-iterations-svwp': 14000,
+        'n-iterations-vwp': 14000,
+        'noise-types': [
+            'no_noise',
+            'HCP_noise_snr_2',
+            'HCP_noise_snr_1',
+            'HCP_noise_snr_6',
+        ],
+        'performance-metrics': [
+            'covariance_matrix_RMSE',
+            'correlation_matrix_RMSE',
+            # 'test_log_likelihood',
+        ],
+        'plot-models': [
+            # 'VWP_joint',
+            # 'SVWP',
+            'SVWP_joint',
+            'DCC_joint',
+            'DCC_bivariate_loop',
+            'SW_cross_validated',
+            # 'SW_15',
+            # 'SW_30',
+            # 'SW_60',
+            # 'SW_120',
+            'sFC'
+        ],
+    }
+    # Merge general simulations and experiment-specific dictionaries.
+    config_dict = config_dict | simulations_shared_config_dict
+    return config_dict
+
+
+def _get_sparse_config_dict(shared_config_dict: dict, benchmark_dimensions: str) -> dict:
+    """
+    :param shared_config_dict:
+    :param benchmark_dimensions:
+    :return:
+    """
+    simulations_shared_config_dict = _get_simulations_shared_config_dict(shared_config_dict, benchmark_dimensions)
+    config_dict = {
+        'all-quantitative-results-models': [
+            'VWP_joint',
+            'SVWP_joint',
+            'DCC_joint',
+            'DCC_bivariate_loop',
+            'SW_cross_validated',
+            'SW_15',
+            'SW_30',
+            'SW_60',
+            'SW_120',
+            'sFC'
+        ],
+        'figure-model-estimates-figsize': (12, 13),
+        'mgarch-models': [
+            'DCC'
+            # 'GO'  # TODO: GO models do not always converge or train properly
+        ],
+        'mgarch-training-types': [
+            'joint',
+            'bivariate_loop'
+        ],
+        'n-inducing-points': 200,
+        'n-iterations-svwp': 14000,
+        'n-iterations-vwp': 14000,
+        'noise-types': [
+            'no_noise',
+            'HCP_noise_snr_2',
+            'HCP_noise_snr_1',
+            'HCP_noise_snr_6',
+        ],
+        'performance-metrics': [
+            'covariance_RMSE',
+            'correlation_RMSE',
+            # 'covariance_correlation',
+            'covariance_matrix_RMSE',
+            'correlation_matrix_RMSE',
+            # 'test_log_likelihood',
+        ],
+        'plot-models': [
+            # 'VWP_joint',
+            'SVWP_joint',
+            'DCC_joint',
+            'DCC_bivariate_loop',
+            'SW_cross_validated',
+            # 'SW_15',
+            # 'SW_30',
+            # 'SW_60',
+            # 'SW_120',
+            'sFC'
+        ],
+    }
+    # Merge general simulations and experiment-specific dictionaries.
+    config_dict = config_dict | simulations_shared_config_dict
+    return config_dict
 
 
 def _get_rockland_config_dict(

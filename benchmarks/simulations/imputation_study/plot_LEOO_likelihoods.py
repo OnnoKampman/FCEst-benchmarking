@@ -22,8 +22,9 @@ def _plot_raincloud(
     """
     A "cloud", or smoothed version of a histogram, gives an idea of the distribution of scores.
     The "rain" are the individual data points, which can give an idea of outliers.
-    Source: https://github.com/RainCloudPlots/RainCloudPlots
-    TODO: figure out the right way of setting fonts and ticks on axes
+
+    Source:
+        https://github.com/RainCloudPlots/RainCloudPlots
     """
     sns.set(style="whitegrid", font_scale=1.5)
     # plt.rcParams["font.family"] = 'serif'
@@ -68,21 +69,22 @@ def _plot_all_covs_structures_bar(
     """
     Plot joint test likelihoods for all methods for all covariance structures.
     """
-
-    return
+    raise NotImplementedError
 
 
 if __name__ == '__main__':
 
     data_split = 'LEOO'  # leave-every-other-out
+
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd3s'
     experiment_data = sys.argv[2]  # e.g. 'N0200_T0003'
-    n_trials = int(experiment_data[-4:])
+
     cfg = get_config_dict(
         data_set_name=data_set_name,
         experiment_data=experiment_data,
         hostname=socket.gethostname()
     )
+    n_trials = int(experiment_data[-4:])
     test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
 
     for noise_type in cfg['noise-types']:

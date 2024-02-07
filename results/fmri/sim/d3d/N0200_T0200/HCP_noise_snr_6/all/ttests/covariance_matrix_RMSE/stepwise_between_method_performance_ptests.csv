@@ -1,0 +1,11 @@
+,VWP_joint,SVWP_joint,DCC_joint,DCC_bivariate_loop,SW_cross_validated,SW_15,SW_30,SW_60,SW_120,sFC
+VWP_joint,-,nan,nan,nan,nan,nan,nan,nan,nan,nan
+SVWP_joint,nan,-,nan,nan,nan,nan,nan,nan,nan,nan
+DCC_joint,nan,nan,-,0.5448,0.0000,0.0000,0.0000,0.0000,0.0000,0.
+DCC_bivariate_loop,nan,nan,-2.3462,-,0.0000,0.0000,0.0000,0.0096,0.0000,0.
+SW_cross_validated,nan,nan,-12.6206,-10.8482,-,0.0000,1.,0.0000,0.0001,0.0000
+SW_15,nan,nan,-34.3475,-32.5672,-18.35,-,0.0000,0.0000,0.0000,0.0000
+SW_30,nan,nan,-13.0563,-11.019,1.1297,21.1604,-,0.0000,0.0000,0.0000
+SW_60,nan,nan,-5.8751,-3.6114,7.8527,29.1478,7.5632,-,0.0000,0.
+SW_120,nan,nan,-19.9262,-17.9424,-4.7687,14.9242,-6.5299,-14.414,-,0.0000
+sFC,nan,nan,-161.0964,-156.7966,-85.9162,-58.3877,-106.606,-140.511,-92.2825,-

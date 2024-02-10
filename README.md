@@ -1,2 +1,3 @@
 # FCEst-benchmarking
-Benchmarks for FCEst Python package.
+
+Benchmarks for [FCEst](https://github.com/OnnoKampman/FCEst) Python package.

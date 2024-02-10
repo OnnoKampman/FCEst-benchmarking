@@ -3,7 +3,7 @@ import os
 import socket
 import time
 
-from fcest.helpers.inference import run_adam_vwp
+from fcest.helpers.inference import run_adam_vwp, run_adam_svwp
 from fcest.models.wishart_process import VariationalWishartProcess, SparseVariationalWishartProcess
 import gpflow
 from gpflow.ci_utils import ci_niter
@@ -15,7 +15,6 @@ import seaborn as sns
 
 from configs.configs import get_config_dict
 from helpers.figures import set_size
-from helpers.inference import run_adam_svwp
 from helpers.synthetic_covariance_structures import get_ground_truth_covariance_structure
 from helpers.simulations import simulate_time_series
 

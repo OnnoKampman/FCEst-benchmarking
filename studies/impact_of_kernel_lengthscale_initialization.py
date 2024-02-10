@@ -2,7 +2,7 @@ import logging
 import os
 import socket
 
-from fcest.helpers.inference import run_adam_vwp
+from fcest.helpers.inference import run_adam_vwp, run_adam_svwp
 from fcest.models.wishart_process import VariationalWishartProcess, SparseVariationalWishartProcess
 import gpflow
 from gpflow.ci_utils import ci_niter
@@ -12,7 +12,7 @@ import numpy as np
 import seaborn as sns
 
 from configs.configs import get_config_dict
-from helpers.inference import run_adam_svwp, save_elbo_plot
+from helpers.inference import save_elbo_plot
 from helpers.plotters import plot_wishart_process_covariances_pairwise
 from helpers.synthetic_covariance_structures import get_covariance_structure, get_ylim
 from helpers.synthetic_covariance_structures import get_d2_covariance_structure

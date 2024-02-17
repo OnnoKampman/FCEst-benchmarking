@@ -67,8 +67,6 @@ def save_cloud_plot(config_dict: dict) -> None:
 def save_violin_plot(config_dict: dict) -> None:
     """
     Show each distribution with both violins and points.
-
-    :return:
     """
     sns.set(style="whitegrid", font_scale=1.5)
     plt.rcParams["font.family"] = 'serif'
@@ -107,7 +105,6 @@ def _plot_raincloud(
 
     Source:
         https://github.com/RainCloudPlots/RainCloudPlots
-    :return:
     """
     sns.set(style="whitegrid", font_scale=1.5)
     plt.rcParams["font.family"] = 'sans-serif'

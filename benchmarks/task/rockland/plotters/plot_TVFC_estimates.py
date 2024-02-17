@@ -22,8 +22,6 @@ def _plot_average_over_subject_tvfc_estimates(
 ) -> None:
     """
     Plots average TVFC estimates over all subjects for a single TVFC estimation method.
-
-    :param config_dict:
     """
     sns.set(style="whitegrid", font_scale=0.4)
     # sns.set_palette("colorblind")

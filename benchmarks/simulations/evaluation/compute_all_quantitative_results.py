@@ -25,6 +25,8 @@ def _get_performance_metric(
     """
     Computes performance metric.
 
+    Parameters
+    ----------
     :param performance_metric:
     :param predicted_covariance_structure_test_locations: np.array,
     :param ground_truth_covariance_structure_test_locations:

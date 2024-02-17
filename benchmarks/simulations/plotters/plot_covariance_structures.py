@@ -17,6 +17,8 @@ def _plot_synthetic_covariance_structures(
     """
     Saves overview of all synthetic covariance structures used in the simulations benchmark.
 
+    Parameters
+    ----------
     :param config_dict:
     :param n_time_steps:
     :param figures_save_basedir:

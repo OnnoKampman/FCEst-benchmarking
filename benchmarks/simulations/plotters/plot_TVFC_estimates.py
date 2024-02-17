@@ -24,6 +24,8 @@ def _plot_d2_all_covariance_structures(
     """
     Plots bivariate correlation edge for all synthetic covariance structures considered.
 
+    Parameters
+    ----------
     :param config_dict:
     :param signal_to_noise_ratio:
     :param figure_filename: note that .eps files do not render transparency plots.
@@ -120,6 +122,8 @@ def _plot_d2_tvfc_estimates_single_covariance_structure(
     """
     Plots bivariate pair of time series and the predicted covariance structure in one figure.
 
+    Parameters
+    ----------
     :param config_dict:
     :param x_train_locations:
     :param y_train_locations:
@@ -208,6 +212,8 @@ def _plot_d3_tvfc_estimates(
     TODO: sync ylims across trials and noise types
     TODO: fix ylims for sparse case
 
+    Parameters
+    ----------
     :param config_dict:
     :param x_train_locations:
     :param y_train_locations:
@@ -305,6 +311,8 @@ def _plot_d4_tvfc_estimates(
         figure_filename: str = None, figure_savedir: str = None
 ) -> None:
     """
+    Parameters
+    ----------
     :param config_dict:
     :param x_train_locations:
     :param y_train_locations:
@@ -318,7 +326,6 @@ def _plot_d4_tvfc_estimates(
     :param bbox_to_anchor:
     :param figure_filename:
     :param figure_savedir:
-    :return:
     """
     raise NotImplementedError
 

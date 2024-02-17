@@ -23,8 +23,11 @@ def _plot_icc_scores_per_edge(
     """
     TODO: add single label for multiple ICA components belonging to the same RSN
 
+    Parameters
+    ----------
     :param config_dict:
-    :param icc_edgewise_df: DataFrame of shape (D, D).
+    :param icc_edgewise_df:
+        DataFrame of shape (D, D).
     :param tvfc_summary_measure:
     :param model_name:
     :param metric:

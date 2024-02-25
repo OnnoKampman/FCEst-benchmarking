@@ -114,7 +114,7 @@ fi
 
 printf "%s > STEP 3: non-linear registration to MNI space.\n" "$(date)"
 # ${FSLDir}/bin/imcp
-bash /home/"$(whoami)"/git_repos/neuro-dynamic-covariance/datasets/task/rockland/preprocessing/custom_fsl_pipeline/reg_fun2mni.sh "${fMRIPREP}"/"${AnatImgFileName}"
+bash /home/"$(whoami)"/git_repos/FCEst-benchmarking/datasets/task/rockland/preprocessing/custom_fsl_pipeline/reg_fun2mni.sh "${fMRIPREP}"/"${AnatImgFileName}"
 printf "%s > STEP 3 (non-linear registration) completed.\n" "$(date)"
 
 printf "%s > STEP 4: running the second bit of FEAT: motion correction (MC) (i.e. inter-slice correction)...\n" "$(date)"

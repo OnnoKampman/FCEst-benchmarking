@@ -36,7 +36,7 @@ end
 
 % git paths
 config.git_base_path =  fullfile(config.git_base_glass_patterns, 'git_repos', 'glass-patterns-three-session-mri');
-addpath(genpath(fullfile(config.git_base, 'git_repos', 'neuro-dynamic-covariance')));
+addpath(genpath(fullfile(config.git_base, 'git_repos', 'FCEst-benchmarking')));
 addpath(genpath(config.git_base_glass_patterns));
 
 % preprocessing paths

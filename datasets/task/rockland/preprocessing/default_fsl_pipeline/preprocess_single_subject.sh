@@ -40,7 +40,7 @@ export FSLDir="/usr/local/fsl"
 . ${FSLDir}/etc/fslconf/fsl.sh
 
 Path2Act=/mnt/Data/neuro-dynamic-covariance/datasets/task/rockland
-GitBaseDir=/home/opk20/git_repos/neuro-dynamic-covariance
+GitBaseDir=/home/opk20/git_repos/FCEst-benchmarking
 
 RawImageDir=${Path2Act}/CHECKERBOARD${TR}/raw/${SubID}/${SesID}
 AnatImgFileName=${SubID}_${SesID}_T1w

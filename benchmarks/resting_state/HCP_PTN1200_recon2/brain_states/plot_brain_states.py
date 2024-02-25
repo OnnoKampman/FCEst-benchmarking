@@ -22,6 +22,8 @@ def _plot_brain_state_cluster_centroids(
     TODO: add RSN names labels to brain states in plot?
     TODO: align brain states across scans automatically
 
+    Parameters
+    ----------
     :param config_dict:
     :param model_name:
     :param n_basis_states:

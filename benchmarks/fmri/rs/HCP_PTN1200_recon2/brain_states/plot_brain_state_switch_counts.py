@@ -19,9 +19,12 @@ def _plot_brain_state_switch_count(
     """
     The number of brain state switches is closely related to the idea of "dwell times".
 
+    Parameters
+    ----------
     :param config_dict:
     :param n_basis_states:
-    :param connectivity_metric: 'correlation', 'covariance'
+    :param connectivity_metric:
+        'correlation', 'covariance'
     :param figure_savedir:
     """
     sns.set(style="whitegrid", font_scale=1.0)

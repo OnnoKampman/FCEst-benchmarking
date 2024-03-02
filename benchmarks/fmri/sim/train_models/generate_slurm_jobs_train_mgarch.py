@@ -63,7 +63,7 @@ if __name__ == "__main__":
                              "echo \"SLURM_CPUS_PER_TASK: $SLURM_CPUS_PER_TASK\"\n"
                              "echo \"SLURM_JOB_CPUS_PER_NODE: $SLURM_JOB_CPUS_PER_NODE\"\n"
                              "#! Launch the executable (bash script, freesurfer, matlab etc)\n"
-                             f"srun --cpu_bind=threads --distribution=block:block python ./benchmarks/simulations/train_models/train_mgarch.py {data_set_name:s} {data_split:s} {experiment_data:s} {noise_type:s} {covs_type:s}")
+                             f"srun --cpu_bind=threads --distribution=block:block python ./benchmarks/fmri/sim/train_models/train_mgarch.py {data_set_name:s} {data_split:s} {experiment_data:s} {noise_type:s} {covs_type:s}")
             print('\n', slurm_job_str, '\n')
 
             # Create SLURM directory where logs will be saved (SLURM does not create these automatically).

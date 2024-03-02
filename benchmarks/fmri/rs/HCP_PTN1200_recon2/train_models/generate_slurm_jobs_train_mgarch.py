@@ -53,7 +53,7 @@ if __name__ == "__main__":
                      "pwd\n"
                      "which -a R\n"
                      "R --version\n"
-                     f"srun --cpu_bind=threads --distribution=block:block python ./benchmarks/resting_state/{data_set_name:s}/train_models/train_mgarch.py {data_dimensionality:s} {data_split:s} {experiment_dimensionality:s}")
+                     f"srun --cpu_bind=threads --distribution=block:block python ./benchmarks/fmri/rs/{data_set_name:s}/train_models/train_mgarch.py {data_dimensionality:s} {data_split:s} {experiment_dimensionality:s}")
     print('\n', slurm_job_str, '\n')
 
     # Create SLURM directory where logs will be saved (SLURM does not create these automatically).

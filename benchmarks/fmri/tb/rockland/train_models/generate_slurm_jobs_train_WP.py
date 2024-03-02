@@ -46,7 +46,7 @@ if __name__ == "__main__":
                      "conda info -e\n"
                      "export PYTHONPATH=$PWD:$PWD/GPflow\n"
                      "pwd\n"
-                     f"srun --cpu_bind=threads --distribution=block:block python ./benchmarks/task/{data_set_name:s}/train_models/train_WP.py {model_name:s} {data_split:s} {repetition_time:s}")
+                     f"srun --cpu_bind=threads --distribution=block:block python ./benchmarks/fmri/tb/{data_set_name:s}/train_models/train_WP.py {model_name:s} {data_split:s} {repetition_time:s}")
     print('\n', slurm_job_str, '\n')
 
     # Create SLURM directory where logs will be saved (SLURM does not create these automatically).

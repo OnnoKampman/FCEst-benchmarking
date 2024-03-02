@@ -52,7 +52,7 @@ if __name__ == "__main__":
                          "echo \"SLURM_NTASKS: $SLURM_NTASKS\"\n"
                          "echo \"SLURM_CPUS_PER_TASK: $SLURM_CPUS_PER_TASK\"\n"
                          "echo \"SLURM_JOB_CPUS_PER_NODE: $SLURM_JOB_CPUS_PER_NODE\"\n"
-                         f"srun --cpu_bind=threads --distribution=block:block python ./benchmarks/simulations/evaluation/compute_all_quantitative_results.py {data_set_name:s} {data_split:s} {experiment_data:s} {noise_type:s}")
+                         f"srun --cpu_bind=threads --distribution=block:block python ./benchmarks/fmri/sim/evaluation/compute_all_quantitative_results.py {data_set_name:s} {data_split:s} {experiment_data:s} {noise_type:s}")
         print('\n', slurm_job_str, '\n')
 
         # Create SLURM log directory (SLURM does not create these automatically).

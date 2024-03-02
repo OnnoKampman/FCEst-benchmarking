@@ -2,9 +2,6 @@
 .idea/
 __pycache__
 
-# Ignore d50 results.
-results/fmri/rs/HCP/HCP_PTN1200_recon2/3T_HCP1200_MSMAll_d50_ts2/
-
 # Ignore simulation benchmarks where N is not 400.
 results/fmri/sim/d2/N0120_T0200/
 results/fmri/sim/d2/N0200_T0200/

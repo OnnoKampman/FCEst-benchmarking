@@ -3,11 +3,12 @@ import os
 import socket
 import sys
 
+from fcest.helpers.array_operations import get_all_lower_triangular_indices_tuples
 import numpy as np
 import pandas as pd
 
 from configs.configs import get_config_dict
-from helpers.array_operations import get_all_lower_triangular_indices_tuples, slice_covariance_structure
+from helpers.array_operations import slice_covariance_structure
 from helpers.hcp import get_human_connectome_project_subjects, load_human_connectome_project_data
 from helpers.evaluation import leave_every_other_out_split, get_test_log_likelihood, get_test_location_estimated_covariance_structure
 

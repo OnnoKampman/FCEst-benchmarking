@@ -20,13 +20,18 @@ def get_config_dict(
         hostname: str = 'local'
 ) -> dict:
     """
+    Load benchmark-specific configurations.
+
+    Parameters
+    ----------
     :param data_set_name:
         simulations: 'sim', 'd2', 'd3d', 'd3s', 'd4s', 'd6s', 'd9s', 'd15s'
         resting state data: 'HCP_PTN1200_recon2'
         task data: 'rockland'
     :param subset:
     :param subset_dimensionality:
-    :param experiment_data: expected in format 'Nxxx_Txxx'
+    :param experiment_data: 
+        Expected in format 'Nxxx_Txxx'
     :param hostname:
     :return:
     """
@@ -64,11 +69,6 @@ def get_config_dict(
 
     # Get experiment-specific configs.
     match data_set_name:
-        case 'HCP_PTN1200_recon2':
-            config_dict = _get_human_connectome_project_config_dict(
-                shared_config_dict=shared_config_dict,
-                data_dimensionality=subset_dimensionality
-            )
         case 'sim':
             config_dict = _get_simulations_shared_config_dict(
                 shared_config_dict=shared_config_dict,
@@ -88,6 +88,11 @@ def get_config_dict(
             config_dict = _get_sparse_config_dict(
                 shared_config_dict=shared_config_dict,
                 benchmark_dimensions=experiment_data
+            )
+        case 'HCP_PTN1200_recon2':
+            config_dict = _get_human_connectome_project_config_dict(
+                shared_config_dict=shared_config_dict,
+                data_dimensionality=subset_dimensionality
             )
         case 'rockland':
             config_dict = _get_rockland_config_dict(
@@ -109,8 +114,12 @@ def _get_human_connectome_project_config_dict(
 ) -> dict:
     """
     Get configs dictionary for Human Connectome Project (HCP) data.
+
+    Parameters
+    ----------
     :param shared_config_dict:
-    :param data_dimensionality: 'd15' or 'd50'
+    :param data_dimensionality:
+        'd15' or 'd50'
     :return:
     """
     subset = f'3T_HCP1200_MSMAll_{data_dimensionality:s}_ts2'
@@ -132,7 +141,7 @@ def _get_human_connectome_project_config_dict(
             'resting_state', shared_config_dict['data-set-name'], subset
         ),
         'git-results-basedir': os.path.join(
-            shared_config_dict['git-basedir'], 'results', 'fmri', 'rs',
+            shared_config_dict['git-basedir'], 'results', 'fmri', 'rs', 'HCP',
             shared_config_dict['data-set-name'], subset
         ),
         # 'ica-id-to-rsn-id-manual-map': _get_ica_id_to_rsn_id_manual_map()[data_dimensionality],
@@ -142,7 +151,7 @@ def _get_human_connectome_project_config_dict(
         'max-n-cpus': 10,  # the maximum number of CPUs used on the Hivemind
         'mgarch-models': [
             'DCC',
-            # 'GO'
+            # 'GO',
         ],
         'mgarch-training-types': [
             'bivariate_loop',
@@ -334,7 +343,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
             # [0.5, None],
             [1, None],
             [2, None],
-            [6, None]
+            [6, None],
         ],
         'plot-covs-types': [  # these will be plotted in this order
             'null',
@@ -353,13 +362,17 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
             15,
             30,
             60,
-            120
+            120,
         ]
     }
 
 
-def _get_d2_config_dict(shared_config_dict: dict, benchmark_dimensions: str) -> dict:
+def _get_d2_config_dict(
+    shared_config_dict: dict, benchmark_dimensions: str
+) -> dict:
     """
+    Parameters
+    ----------
     :param shared_config_dict:
     :param benchmark_dimensions:
     :return:
@@ -375,12 +388,12 @@ def _get_d2_config_dict(shared_config_dict: dict, benchmark_dimensions: str) -> 
             'SW_30',
             'SW_60',
             'SW_120',
-            'sFC'
+            'sFC',
         ],
         'figure-model-estimates-figsize': (12, 5),
         'mgarch-models': [
             'DCC',
-            # 'GO'
+            # 'GO',
         ],
         'mgarch-training-types': [
             'joint'
@@ -410,7 +423,7 @@ def _get_d2_config_dict(shared_config_dict: dict, benchmark_dimensions: str) -> 
             # 'SW_30',
             # 'SW_60',
             # 'SW_120',
-            'sFC'
+            'sFC',
         ],
         'plot-time-series-figsize': (12, 6),
     }
@@ -419,8 +432,12 @@ def _get_d2_config_dict(shared_config_dict: dict, benchmark_dimensions: str) -> 
     return config_dict
 
 
-def _get_d3d_config_dict(shared_config_dict: dict, benchmark_dimensions: str) -> dict:
+def _get_d3d_config_dict(
+    shared_config_dict: dict, benchmark_dimensions: str
+) -> dict:
     """
+    Parameters
+    ----------
     :param shared_config_dict:
     :param benchmark_dimensions:
     :return:
@@ -429,7 +446,6 @@ def _get_d3d_config_dict(shared_config_dict: dict, benchmark_dimensions: str) ->
     config_dict = {
         'all-quantitative-results-models': [
             'VWP_joint',
-            # 'SVWP',
             'SVWP_joint',
             'DCC_joint',
             'DCC_bivariate_loop',
@@ -438,12 +454,12 @@ def _get_d3d_config_dict(shared_config_dict: dict, benchmark_dimensions: str) ->
             'SW_30',
             'SW_60',
             'SW_120',
-            'sFC'
+            'sFC',
         ],
         'figure-model-estimates-figsize': (12, 13),
         'mgarch-models': [
             'DCC',
-            # 'GO'  # TODO: GO models do not always converge or train properly
+            # 'GO',
         ],
         'mgarch-training-types': [
             'joint',
@@ -464,7 +480,6 @@ def _get_d3d_config_dict(shared_config_dict: dict, benchmark_dimensions: str) ->
         ],
         'plot-models': [
             # 'VWP_joint',
-            # 'SVWP',
             'SVWP_joint',
             'DCC_joint',
             'DCC_bivariate_loop',
@@ -473,7 +488,7 @@ def _get_d3d_config_dict(shared_config_dict: dict, benchmark_dimensions: str) ->
             # 'SW_30',
             # 'SW_60',
             # 'SW_120',
-            'sFC'
+            'sFC',
         ],
     }
     # Merge general simulations and experiment-specific dictionaries.
@@ -481,8 +496,12 @@ def _get_d3d_config_dict(shared_config_dict: dict, benchmark_dimensions: str) ->
     return config_dict
 
 
-def _get_sparse_config_dict(shared_config_dict: dict, benchmark_dimensions: str) -> dict:
+def _get_sparse_config_dict(
+    shared_config_dict: dict, benchmark_dimensions: str
+) -> dict:
     """
+    Parameters
+    ----------
     :param shared_config_dict:
     :param benchmark_dimensions:
     :return:
@@ -503,8 +522,8 @@ def _get_sparse_config_dict(shared_config_dict: dict, benchmark_dimensions: str)
         ],
         'figure-model-estimates-figsize': (12, 13),
         'mgarch-models': [
-            'DCC'
-            # 'GO'  # TODO: GO models do not always converge or train properly
+            'DCC',
+            # 'GO',
         ],
         'mgarch-training-types': [
             'joint',
@@ -537,7 +556,7 @@ def _get_sparse_config_dict(shared_config_dict: dict, benchmark_dimensions: str)
             # 'SW_30',
             # 'SW_60',
             # 'SW_120',
-            'sFC'
+            'sFC',
         ],
     }
     # Merge general simulations and experiment-specific dictionaries.
@@ -550,9 +569,13 @@ def _get_rockland_config_dict(
 ) -> dict:
     """
     Rockland tb-fMRI specific configurations.
+
+    Parameters
+    ----------
     :param shared_config_dict:
     :param repetition_time:
-    :param roi_list_name: which set of ROIs we use; 'final', 'V1_V2_V3_V4_ACC'
+    :param roi_list_name:
+        Which set of ROIs we use; 'final', 'V1_V2_V3_V4_ACC'
     :return:
     """
     subset = f"CHECKERBOARD{repetition_time:s}"
@@ -628,7 +651,7 @@ def _get_rockland_config_dict(
             'SW_16',  # in seconds, based on Di2015
             'SW_30',
             'SW_60',
-            # 'sFC'
+            # 'sFC',
         ],
         'subset': subset,
         'test-set-ratio': 0.2

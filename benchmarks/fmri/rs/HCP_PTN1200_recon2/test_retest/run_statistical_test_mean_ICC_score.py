@@ -3,12 +3,12 @@ import os
 import socket
 import sys
 
+from fcest.helpers.array_operations import get_all_lower_triangular_indices_tuples
 import numpy as np
 import pandas as pd
 import pingouin
 
 from configs.configs import get_config_dict
-from fcest.helpers.array_operations import get_all_lower_triangular_indices_tuples
 
 
 if __name__ == "__main__":

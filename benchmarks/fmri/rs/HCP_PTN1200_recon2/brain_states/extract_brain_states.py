@@ -63,14 +63,14 @@ if __name__ == "__main__":
         assert all_subjects_tril_tvfc_per_time_step.shape == (n_subjects * n_time_steps, int(n_time_series * (n_time_series-1) / 2))
 
         for n_brain_states in n_brain_states_list:
-            n_brain_states_inertia = compute_basis_state(
+            n_brain_states_inertia, _, _ = compute_basis_state(
                 config_dict=cfg,
                 all_subjects_tril_tvfc=all_subjects_tril_tvfc_per_time_step,
                 scan_session_id=scan_id,
                 model_name=model_name,
                 n_basis_states=n_brain_states,
                 n_time_series=n_time_series,
-                n_time_steps=n_time_steps
+                n_time_steps=n_time_steps,
             )
             distortions_df.loc[n_brain_states, scan_id] = n_brain_states_inertia / n_subjects
 

@@ -35,9 +35,9 @@ python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_I2C2_scores.py 
 python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_I2C2_scores.py d15 SW_cross_validated
 python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_I2C2_scores.py d15 sFC
 
-python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_ICC_edgewise_matrices.py d15 all SVWP_joint
-python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_ICC_edgewise_matrices.py d15 all DCC_joint
-python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_ICC_edgewise_matrices.py d15 all SW_cross_validated
-python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_ICC_edgewise_matrices.py d15 all sFC
+python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_ICC_edgewise_matrices.py d15 SVWP_joint
+python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_ICC_edgewise_matrices.py d15 DCC_joint
+python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_ICC_edgewise_matrices.py d15 SW_cross_validated
+python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/compute_ICC_edgewise_matrices.py d15 sFC
 
 python benchmarks/fmri/rs/HCP_PTN1200_recon2/test_retest/run_statistical_test_mean_ICC_score.py d15

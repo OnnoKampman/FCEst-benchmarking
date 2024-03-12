@@ -25,7 +25,9 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=hostname
     )
-    all_subjects_list = get_human_connectome_project_subjects(data_dir=cfg['data-dir'])
+    all_subjects_list = get_human_connectome_project_subjects(
+        data_dir=cfg['data-dir']
+    )
     n_subjects = len(all_subjects_list)
 
     # Allow for local and CPU cluster training.
@@ -53,7 +55,9 @@ if __name__ == "__main__":
             print(f'\nSCAN {scan_id:d} / 3\n')
 
             x, y = load_human_connectome_project_data(
-                data_file, scan_id=scan_id, verbose=False
+                data_file,
+                scan_id=scan_id,
+                verbose=False
             )  # (N, 1), (N, D)
 
             # TODO: pick two time series at random if 'experiment_dimensionality' == 'bivariate'?
@@ -83,11 +87,16 @@ if __name__ == "__main__":
                             cfg['experiments-basedir'], 'TVFC_estimates', f'scan_{scan_id:d}',
                             data_split, experiment_dimensionality, metric, f'{model_name:s}_{training_type:s}'
                         )
-                        tvfc_estimates_savepath = os.path.join(tvfc_estimates_savedir, f"{subject_filename.removesuffix('.txt'):s}.csv")
+                        tvfc_estimates_savepath = os.path.join(
+                            tvfc_estimates_savedir, f"{subject_filename.removesuffix('.txt'):s}.csv"
+                        )
                         if not os.path.exists(tvfc_estimates_savepath):
                             print(f'\nMODEL {model_name:s} | TRAINING {training_type:s}')
                             m = MGARCH(mgarch_type=model_name)
-                            m.fit_model(training_data_df=pd.DataFrame(y_train), training_type=training_type)
+                            m.fit_model(
+                                training_data_df=pd.DataFrame(y_train),
+                                training_type=training_type,
+                            )
                             m.save_tvfc_estimates(
                                 savedir=tvfc_estimates_savedir,
                                 model_name=f"{subject_filename.removesuffix('.txt'):s}.csv",

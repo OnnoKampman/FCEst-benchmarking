@@ -9,12 +9,12 @@ from helpers.test_retest import compute_tvfc_summary_measure_test_retest_scores
 
 if __name__ == "__main__":
 
+    data_split = 'all'
     experiment_dimensionality = 'multivariate'
     metric = 'correlation'
 
     data_dimensionality = sys.argv[1]  # 'd15', 'd50'
-    data_split = sys.argv[2]           # 'all', 'LEOO'
-    model_name = sys.argv[3]           # 'SVWP_joint', 'DCC_joint', 'SW_cross_validated', 'SW_30', 'SW_60', 'sFC'
+    model_name = sys.argv[2]           # 'SVWP_joint', 'DCC_joint', 'SW_cross_validated', 'SW_30', 'SW_60', 'sFC'
 
     cfg = get_config_dict(
         data_set_name='HCP_PTN1200_recon2',
@@ -38,7 +38,7 @@ if __name__ == "__main__":
             n_time_series=n_time_series,
             experiment_dimensionality=experiment_dimensionality,
             data_split=data_split,
-            connectivity_metric=metric
+            connectivity_metric=metric,
         )
         print(summary_measure_icc_df.shape)
 

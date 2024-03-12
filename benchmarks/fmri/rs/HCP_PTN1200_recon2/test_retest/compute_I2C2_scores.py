@@ -17,7 +17,7 @@ if __name__ == "__main__":
     metric = 'correlation'
 
     data_dimensionality = sys.argv[1]  # 'd15', 'd50'
-    model_name = sys.argv[2]           # 'SVWP_joint', 'DCC_joint', 'SW_cross_validated', 'SW_30', 'SW_60', 'sFC'
+    model_name = sys.argv[2]           # 'SVWP_joint', 'DCC_joint', 'DCC_bivariate_loop', 'SW_cross_validated', 'SW_30', 'SW_60', 'sFC'
 
     cfg = get_config_dict(
         data_set_name='HCP_PTN1200_recon2',

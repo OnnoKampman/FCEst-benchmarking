@@ -27,7 +27,9 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=hostname
     )
-    all_subjects_list = get_human_connectome_project_subjects(data_dir=cfg['data-dir'])
+    all_subjects_list = get_human_connectome_project_subjects(
+        data_dir=cfg['data-dir']
+    )
     n_subjects = cfg['n-subjects']
 
     # Allow for local and CPU cluster training.

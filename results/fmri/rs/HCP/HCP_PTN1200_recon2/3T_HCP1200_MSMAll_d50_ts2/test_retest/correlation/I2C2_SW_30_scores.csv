@@ -1,2 +1,2 @@
-,mean,variance,rate_of_change
-SW_30,0.3953183914391623,0.2941685965146709,0.2582600317734053
+,ar1,mean,variance,rate_of_change
+SW_30,0.206,0.395,0.294,0.258

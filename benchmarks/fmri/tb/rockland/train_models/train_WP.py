@@ -2,13 +2,14 @@ import os
 import socket
 import sys
 
+from helpers.inference import run_adam_svwp, run_adam_vwp
 from fcest.models.wishart_process import VariationalWishartProcess, SparseVariationalWishartProcess
 import gpflow
 from gpflow.ci_utils import ci_niter
 
 from configs.configs import get_config_dict
 from helpers.evaluation import leave_every_other_out_split
-from helpers.inference import run_adam_vwp, run_adam_svwp, save_elbo_plot
+from helpers.inference import save_elbo_plot
 from helpers.rockland import get_rockland_subjects, load_rockland_data
 
 
@@ -16,7 +17,7 @@ if __name__ == "__main__":
 
     pp_pipeline = 'custom_fsl_pipeline'
 
-    model_name = sys.argv[1]  # 'VWP_joint' or 'SVWP_joint'
+    model_name = sys.argv[1]       # 'VWP_joint' or 'SVWP_joint'
     data_split = sys.argv[2]       # 'all' or 'LEOO'
     repetition_time = sys.argv[3]  # in ms, either '1400' or '645'
 
@@ -98,6 +99,8 @@ if __name__ == "__main__":
         m.save_model_params_dict(savedir=model_savedir, model_name=f"{subject_filename.removesuffix('.csv'):s}.json")
         save_elbo_plot(
             maxiter, cfg['log-interval'], logf,
-            savedir=os.path.join(cfg['figures-basedir'], pp_pipeline, 'elbo_plots', cfg['roi-list-name'], data_split, model_name),
+            savedir=os.path.join(
+                cfg['figures-basedir'], pp_pipeline, 'elbo_plots', cfg['roi-list-name'], data_split, model_name
+            ),
             figure_name=f"{subject_filename.removesuffix('.csv'):s}.png"
         )

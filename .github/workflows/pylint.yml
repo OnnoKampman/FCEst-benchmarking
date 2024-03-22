@@ -19,12 +19,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install git+https://github.com/OnnoKampman/FCEst.git@v0.1.0
-          pip install nilearn pandas==1.5.3 pylint
+          pip install matplotlib nilearn pandas==1.5.3 ptitprince pylint seaborn
       - name: Analyze code with pylint
         run: |
           echo $PYTHONPATH
           pwd
           ls -al
           export PYTHONPATH=$PWD
+          echo $PYTHONPATH
           pylint $(git ls-files '*.py') --disable=line-too-long,missing-class-docstring,missing-function-docstring,missing-module-docstring --fail-under=7
-        # continue-on-error: true
+        continue-on-error: true

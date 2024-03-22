@@ -3,7 +3,7 @@ import os
 import socket
 import sys
 
-from fcest.helpers.inference import run_adam_vwp
+from fcest.helpers.inference import run_adam_svwp, run_adam_vwp
 from fcest.models.wishart_process import SparseVariationalWishartProcess, VariationalWishartProcess
 import gpflow
 from gpflow.ci_utils import ci_niter
@@ -11,7 +11,7 @@ from gpflow.ci_utils import ci_niter
 from configs.configs import get_config_dict
 from helpers.data import load_data
 from helpers.evaluation import leave_every_other_out_split
-from helpers.inference import run_adam_svwp, save_elbo_plot
+from helpers.inference import save_elbo_plot
 
 
 if __name__ == "__main__":

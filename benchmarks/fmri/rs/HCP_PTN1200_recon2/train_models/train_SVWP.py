@@ -3,6 +3,7 @@ import os
 import socket
 import sys
 
+from fcest.helpers.inference import run_adam_svwp
 from fcest.models.wishart_process import SparseVariationalWishartProcess
 import gpflow
 from gpflow.ci_utils import ci_niter
@@ -10,12 +11,12 @@ from gpflow.ci_utils import ci_niter
 from configs.configs import get_config_dict
 from helpers.evaluation import leave_every_other_out_split
 from helpers.hcp import get_human_connectome_project_subjects, load_human_connectome_project_data
-from helpers.inference import run_adam_svwp, save_elbo_plot
+from helpers.inference import save_elbo_plot
 
 
 if __name__ == "__main__":
 
-    model_name = 'SVWP_joint'  # TODO: the bivariate loop SVWP has not been implemented yet
+    model_name = 'SVWP_joint'
 
     data_dimensionality = sys.argv[1]  # 'd15' or 'd50'
     data_split = sys.argv[2]  # 'all' or 'LEOO'

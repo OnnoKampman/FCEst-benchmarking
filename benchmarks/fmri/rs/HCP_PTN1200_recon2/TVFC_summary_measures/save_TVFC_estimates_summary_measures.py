@@ -9,9 +9,9 @@ from nilearn import connectome
 import numpy as np
 import pandas as pd
 
-from ......configs.configs import get_config_dict
-from ....helpers.array_operations import reconstruct_symmetric_summary_measure_matrix_from_tril
-from .....helpers.hcp import get_human_connectome_project_subjects
+from .configs.configs import get_config_dict
+from ..helpers.array_operations import reconstruct_symmetric_summary_measure_matrix_from_tril
+from ...helpers.hcp import get_human_connectome_project_subjects
 
 
 if __name__ == "__main__":

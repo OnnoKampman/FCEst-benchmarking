@@ -30,14 +30,31 @@ def get_config_dict(
         task data: 'rockland'
     :param subset:
     :param subset_dimensionality:
-    :param experiment_data: 
+    :param experiment_data:
         Expected in format 'Nxxx_Txxx'
     :param hostname:
     :return:
     """
+    # Get filepaths.
+    # filepaths_dict = _load_filepaths()
+    # try:
+        # filepaths_dict = filepaths_dict[hostname]
+        # git_basedir = filepaths_dict['git-basedir']
+        # project_basedir = filepaths_dict['project-basedir']
+    # except KeyError:
+        # logging.warning(f"Unexpected hostname '{hostname:s}' found.")
+        # git_basedir = ''
+        # project_basedir = ''
+
+    # if 'login-' in hostname:  # TODO: this changes for each login
+    #     git_basedir = ''
+    #     project_basedir = ''
+
     # Define general configs, shared across experiments.
     shared_config_dict = dict()
     shared_config_dict['data-set-name'] = data_set_name
+    # shared_config_dict['git-basedir'] = git_basedir
+    # shared_config_dict['project-basedir'] = project_basedir
     match hostname:
         case _:
             logging.warning(f"Unexpected hostname '{hostname:s}' found.")
@@ -126,11 +143,11 @@ def _get_human_connectome_project_config_dict(
     return {
         'data-dir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-            'fmri', 'rs', shared_config_dict['data-set-name'], 'node_timeseries', subset
+            'resting_state', shared_config_dict['data-set-name'], 'node_timeseries', subset
         ),
         'data-dir-subject-measures': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-            'fmri', 'rs', 'hcp-openaccess'
+            'resting_state', 'hcp-openaccess'
         ),
         'experiments-basedir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'experiments',
@@ -287,7 +304,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
     """
     simulated_data_dirpath = os.path.join(
         shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-        'fmri', 'sim', shared_config_dict['data-set-name']
+        'simulations', shared_config_dict['data-set-name']
     )
     if os.path.exists(simulated_data_dirpath):
         logging.info("Existing data sets found:")
@@ -309,7 +326,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
         'constant-covariance': 0.8,
         'data-dir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-            'fmri', 'sim', shared_config_dict['data-set-name'], benchmark_dimensions
+            'simulations', shared_config_dict['data-set-name'], benchmark_dimensions
         ),
         'experiments-basedir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'benchmarks',

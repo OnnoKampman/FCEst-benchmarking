@@ -9,9 +9,9 @@ from nilearn import connectome
 import numpy as np
 import pandas as pd
 
-from configs.configs import get_config_dict
-from helpers.array_operations import reconstruct_symmetric_summary_measure_matrix_from_tril
-from helpers.hcp import get_human_connectome_project_subjects
+from .configs.configs import get_config_dict
+from ..helpers.array_operations import reconstruct_symmetric_summary_measure_matrix_from_tril
+from ...helpers.hcp import get_human_connectome_project_subjects
 
 
 if __name__ == "__main__":
@@ -51,10 +51,11 @@ if __name__ == "__main__":
                 data_split, experiment_dimensionality, metric, model_name
             )
             for i_subject, subject_filename in enumerate(all_subjects_list):
-                print(f'\n> SUMMARY MEASURE: {tvfc_summary_measure:s}')
-                print(f'> MODEL NAME:      {model_name:s}')
-                print(f'> SCAN ID:         {scan_id:d}')
-                print(f'> SUBJECT {i_subject+1: 3d} / {n_subjects:d}: {subject_filename:s}')
+                print('')
+                logging.info(f'> SUMMARY MEASURE: {tvfc_summary_measure:s}')
+                logging.info(f'> MODEL NAME:      {model_name:s}')
+                logging.info(f'> SCAN ID:         {scan_id:d}')
+                logging.info(f'> SUBJECT {i_subject+1: 3d} / {n_subjects:d}: {subject_filename:s}')
 
                 # Load TVFC estimates - some may be missing.
                 tvfc_estimates_filepath = os.path.join(

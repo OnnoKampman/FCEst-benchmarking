@@ -1,0 +1,16 @@
+,kernel_lengthscales
+Age,0.109
+Gender,0.206
+PicSeq_Unadj,0.621
+CardSort_Unadj,0.232
+Flanker_Unadj,1.838
+PMAT24_A_CR,0.269
+ReadEng_Unadj,0.478
+PicVocab_Unadj,0.691
+ProcSpeed_Unadj,0.482
+DDisc_AUC_40K,0.730
+VSPLOT_TC,1.300
+SCPT_SEN,2.222
+SCPT_SPEC,0.727
+IWRD_TOT,0.220
+ListSort_Unadj,0.432

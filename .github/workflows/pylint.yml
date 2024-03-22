@@ -1,0 +1,31 @@
+name: Pylint
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install git+https://github.com/OnnoKampman/FCEst.git@v0.1.0
+          pip install matplotlib nilearn pandas==1.5.3 ptitprince pylint seaborn
+      - name: Analyze code with pylint
+        run: |
+          echo $PYTHONPATH
+          pwd
+          ls -al
+          export PYTHONPATH=$PWD
+          echo $PYTHONPATH
+          pylint $(git ls-files '*.py') --disable=line-too-long,missing-class-docstring,missing-function-docstring,missing-module-docstring --fail-under=7
+        continue-on-error: true

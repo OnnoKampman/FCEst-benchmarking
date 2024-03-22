@@ -36,15 +36,20 @@ def load_human_connectome_project_data(
 
 
 def get_human_connectome_project_subjects(
-        data_dir: str, first_n_subjects: int = None, as_ints: bool = False
+        data_dir: str,
+        first_n_subjects: int = None,
+        as_ints: bool = False,
 ) -> list[str]:
     """
     Returns the full list of HCP subjects.
     TODO: add option to only select (family) unrelated subjects
 
+    Parameters
+    ----------
     :param data_dir:
     :param first_n_subjects:
-    :param as_ints: whether or not to return a list of strings (e.g. '123456.txt') or integers (e.g. 123456).
+    :param as_ints:
+        Whether or not to return a list of strings (e.g. '123456.txt') or integers (e.g. 123456).
     :return:
     """
     all_subjects_list = sorted(os.listdir(data_dir))  # list of all files in this directory, alphabetically sorted

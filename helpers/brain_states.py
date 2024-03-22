@@ -16,7 +16,7 @@ def compute_basis_state(
         n_time_series: int, n_time_steps: int,
         scan_session_id: int = None, analysis_type: str = None, medication_status: str = None,
         connectivity_metric: str = 'correlation'
-) -> (float, pd.DataFrame, pd.DataFrame):
+) -> tuple[float, pd.DataFrame, pd.DataFrame]:
     """
     Brain states (recurring whole-brain patterns) are a way to summarize estimated TVFC.
     Here we follow Allen2012 and use k-means clustering to find the brain states across subjects,

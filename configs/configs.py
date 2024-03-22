@@ -126,11 +126,11 @@ def _get_human_connectome_project_config_dict(
     return {
         'data-dir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-            'resting_state', shared_config_dict['data-set-name'], 'node_timeseries', subset
+            'fmri', 'rs', shared_config_dict['data-set-name'], 'node_timeseries', subset
         ),
         'data-dir-subject-measures': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-            'resting_state', 'hcp-openaccess'
+            'fmri', 'rs', 'hcp-openaccess'
         ),
         'experiments-basedir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'experiments',
@@ -287,7 +287,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
     """
     simulated_data_dirpath = os.path.join(
         shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-        'simulations', shared_config_dict['data-set-name']
+        'fmri', 'sim', shared_config_dict['data-set-name']
     )
     if os.path.exists(simulated_data_dirpath):
         logging.info("Existing data sets found:")
@@ -309,7 +309,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
         'constant-covariance': 0.8,
         'data-dir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-            'simulations', shared_config_dict['data-set-name'], benchmark_dimensions
+            'fmri', 'sim', shared_config_dict['data-set-name'], benchmark_dimensions
         ),
         'experiments-basedir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'benchmarks',
@@ -324,7 +324,8 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
             shared_config_dict['data-set-name'], benchmark_dimensions
         ),
         'hcp-data-dir': os.path.join(
-            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets', 'resting_state'
+            shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
+            'resting_state'
         ),
         'figure-quantitative-results-dpi': 300,
         'figure-covariance-structures-dpi': 250,
@@ -658,9 +659,17 @@ def _get_rockland_config_dict(
     }
 
 
+def _load_filepaths() -> dict:
+    with open(os.path.join(
+        'configs', 'filepaths.yaml'
+    )) as f:
+        filepaths = yaml.load(f, Loader=yaml.FullLoader)
+    return filepaths
+
+
 def _get_ica_id_to_rsn_id_manual_map(shared_config_dict: dict) -> dict:
     with open(os.path.join(
-        shared_config_dict['git-basedir'], 'datasets', 'resting_state', 'HCP_PTN1200_recon2',
+        shared_config_dict['git-basedir'], 'datasets', 'fmri', 'rs', 'HCP_PTN1200_recon2',
         'ICA_ID_to_RSN_ID_manual_map.yaml'
     )) as f:
         ica_id_to_rsn_id_manual_map = yaml.load(f, Loader=yaml.FullLoader)
@@ -669,7 +678,7 @@ def _get_ica_id_to_rsn_id_manual_map(shared_config_dict: dict) -> dict:
 
 def _get_ica_id_to_rsn_id_algorithmic_map(shared_config_dict: dict) -> dict:
     with open(os.path.join(
-        shared_config_dict['git-basedir'], 'datasets', 'resting_state', 'HCP_PTN1200_recon2',
+        shared_config_dict['git-basedir'], 'datasets', 'fmri', 'rs', 'HCP_PTN1200_recon2',
         'ICA_ID_to_RSN_ID_algorithmic_map.yaml'
     )) as f:
         ica_id_to_rsn_id_algorithmic_map = yaml.load(f, Loader=yaml.FullLoader)
@@ -678,7 +687,7 @@ def _get_ica_id_to_rsn_id_algorithmic_map(shared_config_dict: dict) -> dict:
 
 def _get_rsn_id_to_functional_region_map(shared_config_dict: dict) -> dict:
     with open(os.path.join(
-        shared_config_dict['git-basedir'], 'datasets', 'resting_state', 'HCP_PTN1200_recon2',
+        shared_config_dict['git-basedir'], 'datasets', 'fmri', 'rs', 'HCP_PTN1200_recon2',
         'RSN_ID_to_RSN_name_map.yaml'
     )) as f:
         rsn_id_to_functional_region_map = yaml.load(f, Loader=yaml.FullLoader)
@@ -687,7 +696,7 @@ def _get_rsn_id_to_functional_region_map(shared_config_dict: dict) -> dict:
 
 def _get_subject_measures(shared_config_dict: dict) -> dict:
     with open(os.path.join(
-        shared_config_dict['git-basedir'], 'datasets', 'resting_state', 'HCP_PTN1200_recon2',
+        shared_config_dict['git-basedir'], 'datasets', 'fmri', 'rs', 'HCP_PTN1200_recon2',
         'HCP_subject_measures.yaml'
     )) as f:
         subject_measures = yaml.load(f, Loader=yaml.FullLoader)

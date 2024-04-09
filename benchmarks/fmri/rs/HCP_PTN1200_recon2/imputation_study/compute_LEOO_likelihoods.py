@@ -3,6 +3,7 @@ import os
 import socket
 import sys
 
+import numpy as np
 import pandas as pd
 
 from configs.configs import get_config_dict
@@ -13,10 +14,10 @@ from helpers.evaluation import leave_every_other_out_split, get_test_log_likelih
 if __name__ == "__main__":
 
     data_split = 'LEOO'  # leave-every-other-out
+    experiment_dimensionality = 'multivariate'  # or 'bivariate'
 
     data_dimensionality = sys.argv[1]        # 'd15', 'd50'
     model_name = sys.argv[2]                 # 'SVWP_joint', 'SW_30', 'SW_60', 'DCC_joint', 'DCC_bivariate_loop', 'SW_cross_validated', 'GO_joint', 'sFC'
-    experiment_dimensionality = sys.argv[3]  # 'multivariate', 'bivariate'
 
     cfg = get_config_dict(
         data_set_name='HCP_PTN1200_recon2',
@@ -30,16 +31,17 @@ if __name__ == "__main__":
     )
 
     test_log_likelihoods_df = pd.DataFrame(
+        np.nan,
         index=all_subjects_filenames_list,
         columns=cfg['scan-ids'],
     )
     for i_subject, subject_filename in enumerate(all_subjects_filenames_list):
         logging.info(f'> SUBJECT {i_subject+1:d} / {n_subjects:d}: {subject_filename:s}')
 
-        data_file = os.path.join(cfg['data-dir'], subject_filename)
+        data_file = os.path.join(
+            cfg['data-dir'], subject_filename
+        )
         for scan_id in cfg['scan-ids']:
-            print(f'SCAN ID {scan_id:d}\n')
-
             x, y = load_human_connectome_project_data(
                 data_file,
                 scan_id=scan_id,
@@ -67,8 +69,12 @@ if __name__ == "__main__":
                 scan_id=scan_id,
                 data_split=data_split,
                 experiment_dimensionality=experiment_dimensionality,
-                subject=subject_filename
+                subject=subject_filename,
             )
+
+            if test_locations_predicted_covariance_structure is None:
+                logging.warning(f"No estimated covariance structure for '{subject_filename:s}' scan {scan_id:d}.")
+                continue
 
             # Get likelihood of observed data at test locations under predicted covariance matrices.
             test_log_likelihood = get_test_log_likelihood(
@@ -79,7 +85,9 @@ if __name__ == "__main__":
 
     print(test_log_likelihoods_df)
     filename = f'{data_split}_{experiment_dimensionality:s}_likelihoods_{model_name:s}.csv'
-    savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
+    savedir = os.path.join(
+        cfg['git-results-basedir'], 'imputation_study'
+    )
     if not os.path.exists(savedir):
         os.makedirs(savedir)
     test_log_likelihoods_df.astype(float).to_csv(

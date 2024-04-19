@@ -14,9 +14,9 @@ from configs.configs import get_config_dict
 if __name__ == "__main__":
 
     data_split = 'LEOO'  # leave-every-other-out
+    experiment_dimensionality = 'multivariate'  # or 'bivariate'
 
     data_dimensionality = sys.argv[1]        # 'd15', 'd50'
-    experiment_dimensionality = sys.argv[2]  # 'multivariate', 'bivariate'
 
     cfg = get_config_dict(
         data_set_name='HCP_PTN1200_recon2',

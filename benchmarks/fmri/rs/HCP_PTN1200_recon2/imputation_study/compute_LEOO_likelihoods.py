@@ -36,7 +36,7 @@ if __name__ == "__main__":
         columns=cfg['scan-ids'],
     )
     for i_subject, subject_filename in enumerate(all_subjects_filenames_list):
-        logging.info(f'> SUBJECT {i_subject+1:d} / {n_subjects:d}: {subject_filename:s}')
+        logging.info(f'> SUBJECT {i_subject+1: 3d} / {n_subjects:d}: {subject_filename:s}')
 
         data_file = os.path.join(
             cfg['data-dir'], subject_filename
@@ -72,16 +72,13 @@ if __name__ == "__main__":
                 subject=subject_filename,
             )
 
-            if test_locations_predicted_covariance_structure is None:
-                logging.warning(f"No estimated covariance structure for '{subject_filename:s}' scan {scan_id:d}.")
-                continue
-
             # Get likelihood of observed data at test locations under predicted covariance matrices.
-            test_log_likelihood = get_test_log_likelihood(
-                predicted_covariance_structure=test_locations_predicted_covariance_structure,
-                y_test=y_test
-            )
-            test_log_likelihoods_df.loc[subject_filename, scan_id] = test_log_likelihood
+            if test_locations_predicted_covariance_structure is not None:
+                test_log_likelihood = get_test_log_likelihood(
+                    predicted_covariance_structure=test_locations_predicted_covariance_structure,
+                    y_test=y_test
+                )
+                test_log_likelihoods_df.loc[subject_filename, scan_id] = test_log_likelihood
 
     print(test_log_likelihoods_df)
     filename = f'{data_split}_{experiment_dimensionality:s}_likelihoods_{model_name:s}.csv'

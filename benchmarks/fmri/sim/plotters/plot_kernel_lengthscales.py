@@ -13,8 +13,10 @@ from helpers.figures import set_size
 
 
 def _plot_kernel_lengthscales(
-        config_dict: dict, model_name: str, kernel_lengthscales_df: pd.DataFrame, 
-        figure_savedir: str = None
+    config_dict: dict,
+    model_name: str,
+    kernel_lengthscales_df: pd.DataFrame,
+    figure_savedir: str = None,
 ) -> None:
     """
     Generates raincloud plot with distribution of learned kernel lengthscales for each synthetic covariance structure.
@@ -40,7 +42,7 @@ def _plot_kernel_lengthscales(
         box_whiskerprops={'linewidth': 0.5, "zorder": 10},
         width_viol=0.6,
         orient="h",  # "v" if you want a vertical plot
-        move=0.22
+        move=0.22,
     )
     ax.set_xlabel('learned kernel lengthscale')
     ax.set_ylabel('covariance structure')
@@ -89,7 +91,6 @@ if __name__ == "__main__":
             # Update covs types labels for plots.
             kernel_lengthscales_df.columns = kernel_lengthscales_df.columns.str.replace('periodic_1', 'periodic (slow)')
             kernel_lengthscales_df.columns = kernel_lengthscales_df.columns.str.replace('periodic_3', 'periodic (fast)')
-            kernel_lengthscales_df.columns = kernel_lengthscales_df.columns.str.replace('checkerboard', 'boxcar')
             kernel_lengthscales_df.columns = kernel_lengthscales_df.columns.str.replace('_', ' ')
 
             _plot_kernel_lengthscales(

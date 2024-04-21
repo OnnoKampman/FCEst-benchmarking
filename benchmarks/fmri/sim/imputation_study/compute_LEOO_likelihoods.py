@@ -23,15 +23,15 @@ if __name__ == "__main__":
         experiment_data=experiment_data,
         hostname=socket.gethostname()
     )
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
 
     for noise_type in cfg['noise-types']:
 
         test_likelihoods_df = pd.DataFrame(
-            index=range(n_trials),
+            index=range(num_trials),
             columns=cfg['all-covs-types'],
         )
-        for i_trial in range(n_trials):
+        for i_trial in range(num_trials):
 
             for covs_type in cfg['all-covs-types']:
                 data_filepath = os.path.join(
@@ -39,6 +39,7 @@ if __name__ == "__main__":
                     f'{covs_type:s}_covariance.csv'
                 )
                 if not os.path.exists(data_filepath):
+                    logging.warning(f"File '{data_filepath:s}' not found.")
                     if covs_type == 'boxcar':
                         data_filepath = os.path.join(
                             cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
@@ -47,7 +48,10 @@ if __name__ == "__main__":
                         if not os.path.exists(data_filepath):
                             logging.warning(f"File '{data_filepath:s}' not found.")
                             continue
-                x, y = load_data(data_filepath, verbose=False)  # (N, 1), (N, D)
+                x, y = load_data(
+                    data_filepath,
+                    verbose=False,
+                )  # (N, 1), (N, D)
                 n_time_series = y.shape[1]  # D
 
                 x_train, x_test = leave_every_other_out_split(x)  # (N/2, 1), (N/2, 1)

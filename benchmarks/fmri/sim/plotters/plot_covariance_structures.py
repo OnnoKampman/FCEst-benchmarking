@@ -83,8 +83,6 @@ def _convert_title(covariance_structure_type: str) -> str:
         covariance_structure_type = 'periodic (fast)'
     if covariance_structure_type == 'state_transition':
         covariance_structure_type = 'state transition'
-    if covariance_structure_type == 'checkerboard':
-        covariance_structure_type = 'boxcar'
     return covariance_structure_type
 
 

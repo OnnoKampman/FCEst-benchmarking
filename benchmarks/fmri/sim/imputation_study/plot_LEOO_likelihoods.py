@@ -13,11 +13,15 @@ from configs.configs import get_config_dict
 from helpers.figures import get_palette
 
 
-def _plot_raincloud(
-        config_dict: dict, test_likelihoods_df: pd.DataFrame,
-        noise_type: str, palette: str,
-        model_name: str = None, covs_type: str = None, data_split: str = 'LEOO',
-        figures_savedir: str = None
+def _plot_likelihoods_raincloud(
+    config_dict: dict,
+    test_likelihoods_df: pd.DataFrame,
+    noise_type: str,
+    palette: str,
+    model_name: str = None,
+    covs_type: str = None,
+    data_split: str = 'LEOO',
+    figures_savedir: str = None,
 ) -> None:
     """
     A "cloud", or smoothed version of a histogram, gives an idea of the distribution of scores.
@@ -90,18 +94,20 @@ if __name__ == '__main__':
     for noise_type in cfg['noise-types']:
 
         all_covs_models_test_likelihoods_mean_df = pd.DataFrame(
-            np.nan, index=cfg['plot-covs-types'], columns=cfg['plot-models']
+            np.nan,
+            index=cfg['plot-covs-types'],
+            columns=cfg['plot-models'],
         )
         all_covs_models_test_likelihoods_sem_df = pd.DataFrame(
-            np.nan, index=cfg['plot-covs-types'], columns=cfg['plot-models']
+            np.nan,
+            index=cfg['plot-covs-types'],
+            columns=cfg['plot-models'],
         )
         all_covs_models_test_likelihoods_mean_df.index = all_covs_models_test_likelihoods_mean_df.index.str.replace('periodic_1', 'periodic (slow)')
         all_covs_models_test_likelihoods_mean_df.index = all_covs_models_test_likelihoods_mean_df.index.str.replace('periodic_3', 'periodic (fast)')
-        all_covs_models_test_likelihoods_mean_df.index = all_covs_models_test_likelihoods_mean_df.index.str.replace('checkerboard', 'boxcar')
         all_covs_models_test_likelihoods_mean_df.index = all_covs_models_test_likelihoods_mean_df.index.str.replace('_', ' ')
         all_covs_models_test_likelihoods_sem_df.index = all_covs_models_test_likelihoods_sem_df.index.str.replace('periodic_1', 'periodic (slow)')
         all_covs_models_test_likelihoods_sem_df.index = all_covs_models_test_likelihoods_sem_df.index.str.replace('periodic_3', 'periodic (fast)')
-        all_covs_models_test_likelihoods_sem_df.index = all_covs_models_test_likelihoods_sem_df.index.str.replace('checkerboard', 'boxcar')
         all_covs_models_test_likelihoods_sem_df.index = all_covs_models_test_likelihoods_sem_df.index.str.replace('_', ' ')
 
         # Plot test likelihoods for all covariance structures for a single method.
@@ -110,16 +116,18 @@ if __name__ == '__main__':
             test_likelihoods_savepath = os.path.join(test_likelihoods_savedir, likelihoods_filename)
             if os.path.exists(test_likelihoods_savepath):
                 logging.info(f"Loading '{test_likelihoods_savepath:s}'...")
-                likelihoods_df = pd.read_csv(test_likelihoods_savepath, index_col=0)  # (n_trials, n_all_covs_types)
+                likelihoods_df = pd.read_csv(
+                    test_likelihoods_savepath,
+                    index_col=0,
+                )  # (n_trials, n_all_covs_types)
                 likelihoods_df = likelihoods_df.loc[:, cfg['plot-covs-types']]  # (n_trials, n_covs_types)
 
                 # Update covs types labels for plots.
                 likelihoods_df.columns = likelihoods_df.columns.str.replace('periodic_1', 'periodic (slow)')
                 likelihoods_df.columns = likelihoods_df.columns.str.replace('periodic_3', 'periodic (fast)')
-                likelihoods_df.columns = likelihoods_df.columns.str.replace('checkerboard', 'boxcar')
                 likelihoods_df.columns = likelihoods_df.columns.str.replace('_', ' ')
 
-                _plot_raincloud(
+                _plot_likelihoods_raincloud(
                     config_dict=cfg,
                     test_likelihoods_df=likelihoods_df,
                     noise_type=noise_type,
@@ -188,7 +196,7 @@ if __name__ == '__main__':
                 covs_type_df.columns = covs_type_df.columns.str.replace('_bivariate_loop', '-BL')
             covs_type_df.columns = covs_type_df.columns.str.replace('_', ' ')
 
-            _plot_raincloud(
+            _plot_likelihoods_raincloud(
                 config_dict=cfg,
                 test_likelihoods_df=covs_type_df,
                 noise_type=noise_type,

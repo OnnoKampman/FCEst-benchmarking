@@ -24,7 +24,7 @@ if __name__ == "__main__":
         hostname=socket.gethostname()
     )
     models_list = cfg['plot-models']
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
     test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
 
     for noise_type in cfg['noise-types']:

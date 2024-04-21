@@ -374,7 +374,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
             'periodic_3',
             'stepwise',
             'state_transition',
-            'checkerboard',
+            'boxcar',
         ],
         'plot-covs-types-palette': 'Set2',
         'plot-lengthscales-window-lengths': (12, 10),

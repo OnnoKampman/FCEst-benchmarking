@@ -1,6 +1,6 @@
-,null,constant,periodic_1,periodic_2,periodic_3,periodic_4,periodic_5,checkerboard,stepwise,state_transition,change_point,average
+,null,constant,periodic_1,periodic_2,periodic_3,periodic_4,periodic_5,boxcar,stepwise,state_transition,change_point,average
 VWP_joint,,,,,,,,,,,,
-SVWP_joint,0.079,0.106,0.140,0.194,0.239,0.311,0.369,0.205,0.186,0.152,0.107,0.190
+SVWP_joint,0.079,0.106,0.140,0.194,0.238,0.311,0.369,0.205,0.186,0.152,0.107,0.190
 DCC_joint,0.043,0.213,0.149,0.198,0.218,0.236,0.247,0.188,0.193,0.158,0.149,0.181
 DCC_bivariate_loop,0.054,0.216,0.194,0.240,0.242,0.239,0.257,0.192,0.225,0.166,0.152,0.198
 SW_cross_validated,0.148,0.132,0.156,0.205,0.231,0.272,0.337,0.215,0.183,0.168,0.136,0.198

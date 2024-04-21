@@ -1,4 +1,4 @@
-,null,constant,periodic_1,periodic_2,periodic_3,periodic_4,periodic_5,checkerboard,stepwise,state_transition,change_point,average
+,null,constant,periodic_1,periodic_2,periodic_3,periodic_4,periodic_5,boxcar,stepwise,state_transition,change_point,average
 VWP_joint,,,,,,,,,,,,
 SVWP_joint,0.011,0.010,0.017,0.022,0.020,0.239,0.010,0.013,,,,0.043
 DCC_joint,0.016,0.010,0.018,0.014,0.008,0.008,0.007,0.004,0.025,0.006,0.003,0.011

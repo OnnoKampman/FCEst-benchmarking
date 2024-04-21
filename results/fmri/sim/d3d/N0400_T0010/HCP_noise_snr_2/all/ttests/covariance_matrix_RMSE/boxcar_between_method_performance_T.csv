@@ -1,0 +1,11 @@
+,VWP_joint,SVWP_joint,DCC_joint,DCC_bivariate_loop,SW_cross_validated,SW_15,SW_30,SW_60,SW_120,sFC
+VWP_joint,,,,,,,,,,
+SVWP_joint,,,,,,,,,,
+DCC_joint,,,,,,,,,,
+DCC_bivariate_loop,,,,,,,,,,
+SW_cross_validated,,,,,,,,,,
+SW_15,,,,,,,-16.61,-18.33,-3.33,-10.34
+SW_30,,,,,,-16.61,,-5.14,11.25,11.89
+SW_60,,,,,,-18.33,-5.14,,13.90,14.18
+SW_120,,,,,,-3.33,11.25,13.90,,-4.69
+sFC,,,,,,-10.34,11.89,14.18,-4.69,

@@ -118,10 +118,9 @@ if __name__ == "__main__":
 
                         # Fix renaming issue.
                         if covs_type == 'boxcar':
-                            covs_type = 'checkerboard'
                             data_file = os.path.join(
                                 cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
-                                f'{covs_type:s}_covariance.csv'
+                                'checkerboard_covariance.csv'
                             )
 
                         if not os.path.exists(data_file):
@@ -139,7 +138,7 @@ if __name__ == "__main__":
                         covs_type=covs_type,
                         n_samples=len(x),
                         signal_to_noise_ratio=SNR,
-                        data_set_name=data_set_name
+                        data_set_name=data_set_name,
                     )
 
                     # Select train and test data through a leave-every-other-out (LEOO) split.
@@ -162,7 +161,7 @@ if __name__ == "__main__":
                             i_trial=i_trial,
                             covs_type=covs_type,
                             data_split=data_split,
-                            metric='covariance'
+                            metric='covariance',
                         )  # (N_test, D, D)
                         if estimated_cov_structure_test is None:
                             logging.warning(f"Estimates for '{tvfc_estimation_method:s}' not found.")

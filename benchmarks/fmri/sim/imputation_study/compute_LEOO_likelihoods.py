@@ -28,16 +28,25 @@ if __name__ == "__main__":
     for noise_type in cfg['noise-types']:
 
         test_likelihoods_df = pd.DataFrame(
-            index=range(n_trials), columns=cfg['all-covs-types']
+            index=range(n_trials),
+            columns=cfg['all-covs-types'],
         )
         for i_trial in range(n_trials):
 
             for covs_type in cfg['all-covs-types']:
                 data_filepath = os.path.join(
-                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
+                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                    f'{covs_type:s}_covariance.csv'
                 )
                 if not os.path.exists(data_filepath):
-                    continue
+                    if covs_type == 'boxcar':
+                        data_filepath = os.path.join(
+                            cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                            'checkerboard_covariance.csv'
+                        )
+                        if not os.path.exists(data_filepath):
+                            logging.warning(f"File '{data_filepath:s}' not found.")
+                            continue
                 x, y = load_data(data_filepath, verbose=False)  # (N, 1), (N, D)
                 n_time_series = y.shape[1]  # D
 
@@ -56,7 +65,7 @@ if __name__ == "__main__":
                     noise_type=noise_type,
                     covs_type=covs_type,
                     subject='',
-                    connectivity_metric='covariance'
+                    connectivity_metric='covariance',
                 )  # (N_test, D, D)
 
                 # Get likelihood of observed data at test locations under predicted covariance matrices.

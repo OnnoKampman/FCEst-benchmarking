@@ -49,7 +49,7 @@ if __name__ == "__main__":
                     cfg['experiments-basedir'], noise_type, data_split,
                     f'trial_{i_trial:03d}', f'{performance_metric:s}.csv'
                 )
-                
+
                 single_trial_results_df = pd.read_csv(
                     quantitative_results_savepath,
                     index_col=0

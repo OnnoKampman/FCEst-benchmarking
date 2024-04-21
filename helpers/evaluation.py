@@ -259,13 +259,11 @@ def get_tvfc_estimates(
             # Fix renaming issue.
             if not os.path.exists(os.path.join(wp_joint_model_savedir, wp_joint_model_filename)):
                 if covs_type == 'boxcar':
-                    covs_type = 'checkerboard'
-                    wp_joint_model_filename = f'{covs_type:s}.json'
+                    wp_joint_model_filename = 'checkerboard.json'
             if not os.path.exists(tvfc_estimates_filepath):
                 if covs_type == 'boxcar':
-                    covs_type = 'checkerboard'
                     tvfc_estimates_filepath = os.path.join(
-                        tvfc_estimates_savedir, f'{covs_type:s}.csv'
+                        tvfc_estimates_savedir, 'checkerboard.csv'
                     )
 
         case 'HCP_PTN1200_recon2':
@@ -303,7 +301,10 @@ def get_tvfc_estimates(
                     nu=n_time_series,
                     kernel=k
                 )
-                m.load_from_params_dict(savedir=wp_joint_model_savedir, model_name=wp_joint_model_filename)
+                m.load_from_params_dict(
+                    savedir=wp_joint_model_savedir,
+                    model_name=wp_joint_model_filename,
+                )
                 if metric == 'correlation':
                     all_covs_means, _ = m.predict_corr(x_train)  # Tensor of shape (N, D, D), _
                 else:
@@ -323,7 +324,10 @@ def get_tvfc_estimates(
                     kernel=k,
                     verbose=False
                 )
-                m.load_from_params_dict(savedir=wp_joint_model_savedir, model_name=wp_joint_model_filename)
+                m.load_from_params_dict(
+                    savedir=wp_joint_model_savedir,
+                    model_name=wp_joint_model_filename,
+                )
                 if metric == 'correlation':
                     all_covs_means, _ = m.predict_corr(x_train)  # Tensor of shape (N, D, D), _
                 else:

@@ -62,36 +62,53 @@ def plot_node_timeseries(
 
 
 def plot_method_tvfc_estimates(
-    config_dict: dict, model_name: str, i_time_series: int, j_time_series: int,
-    x_train_locations: np.array, y_train_locations: np.array,
-    data_split: str, metric: str,
-    parcellation: str = None, subject_name: str = None,
-    noise_type: str = None, i_trial: int = None, covs_type: str = None,
-    pp_pipeline: str = None, label_name: str = None,
+    config_dict: dict,
+    model_name: str,
+    i_time_series: int,
+    j_time_series: int,
+    x_train_locations: np.array,
+    y_train_locations: np.array,
+    data_split: str,
+    metric: str,
+    parcellation: str = None,
+    subject_name: str = None,
+    noise_type: str = None,
+    i_trial: int = None,
+    covs_type: str = None,
+    pp_pipeline: str = None,
+    label_name: str = None,
     plot_color: str = None,
-    ax=None
+    ax=None,
 ) -> None:
     """
     Plots a time series of TVFC estimates for a given estimation method.
     For the leave-every-other-out scheme, we only plot at the train locations.
 
     TODO: add compatability with HCP benchmarks
+    TODO: merge with helpers.evaluation.get_tvfc_estimates
 
+    Parameters
+    ----------
     :param config_dict:
-    :param x_train_locations: array of shape (N, 1).
-    :param y_train_locations: array of shape (N, D).
+    :param model_name:
+    :param x_train_locations:
+        Array of shape (N, 1).
+    :param y_train_locations:
+        Array of shape (N, D).
     :param noise_type:
     :param data_split:
     :param i_trial:
     :param covs_type:
     :param pp_pipeline:
     :param label_name:
-    :param model_name:
-    :param metric: 'correlation' or 'covariance'.
+    :param metric:
+        'correlation' or 'covariance'.
     :param parcellation:
     :param subject_name:
-    :param i_time_series: by default we expect the bivariate case
-    :param j_time_series: by default we expect the bivariate case
+    :param i_time_series:
+        By default we expect the bivariate case.
+    :param j_time_series:
+        By default we expect the bivariate case.
     """
     n_time_series = y_train_locations.shape[1]
     data_set_name = config_dict['data-set-name']
@@ -102,6 +119,7 @@ def plot_method_tvfc_estimates(
                 f'trial_{i_trial:03d}', model_name
             )
             wp_model_filename = f'{covs_type:s}.json'
+
             tvfc_estimates_savedir = os.path.join(
                 config_dict['experiments-basedir'], noise_type,
                 f'trial_{i_trial:03d}', 'TVFC_estimates',
@@ -110,6 +128,18 @@ def plot_method_tvfc_estimates(
             tvfc_estimates_filepath = os.path.join(
                 tvfc_estimates_savedir, f"{covs_type:s}.csv"
             )
+
+            # Fix renaming issue.
+            if not os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
+                logging.warning(f"Model file {os.path.join(wp_model_savedir, wp_model_filename):s} not found.")
+                if covs_type == 'boxcar':
+                    wp_model_filename = 'checkerboard.json'
+            if not os.path.exists(tvfc_estimates_filepath):
+                if covs_type == 'boxcar':
+                    tvfc_estimates_filepath = os.path.join(
+                        tvfc_estimates_savedir, 'checkerboard.csv'
+                    )
+
             rescale_x_axis = None
         case 'HCP_PTN1200_recon2':
             raise NotImplementedError
@@ -143,7 +173,10 @@ def plot_method_tvfc_estimates(
                     nu=n_time_series,
                     kernel=k
                 )
-                m.load_from_params_dict(savedir=wp_model_savedir, model_name=wp_model_filename)
+                m.load_from_params_dict(
+                    savedir=wp_model_savedir,
+                    model_name=wp_model_filename,
+                )
                 x_predict = np.linspace(0., 1., config_dict['wp-n-predict-samples']).reshape(-1, 1)
                 plot_wishart_process_covariances_pairwise(
                     x_predict, m,
@@ -169,7 +202,10 @@ def plot_method_tvfc_estimates(
                     kernel=k,
                     verbose=False
                 )
-                m.load_from_params_dict(savedir=wp_model_savedir, model_name=wp_model_filename)
+                m.load_from_params_dict(
+                    savedir=wp_model_savedir,
+                    model_name=wp_model_filename,
+                )
                 x_predict = np.linspace(0., 1., config_dict['wp-n-predict-samples']).reshape(-1, 1)
                 plot_wishart_process_covariances_pairwise(
                     x_predict, m,
@@ -276,7 +312,7 @@ def plot_method_tvfc_estimates(
                 connectivity_metric=metric,
                 repetition_time=config_dict['repetition-time'],
                 plot_color=plot_color,
-                ax=ax
+                ax=ax,
             )
         case _:
             logging.error(f"Model name '{model_name:s}' not recognized.")
@@ -284,15 +320,18 @@ def plot_method_tvfc_estimates(
 
 
 def plot_wishart_process_covariances_pairwise(
-        test_locations: np.array, m,
+        test_locations: np.array, 
+        m,
         n_mc_samples: int = 3000,
-        i: int = 0, j: int = 1,
+        i: int = 0, 
+        j: int = 1,
         ax=None,
         rescale_x_axis: str = None,
-        repetition_time: float = None, data_length: int = None,
+        repetition_time: float = None, 
+        data_length: int = None,
         connectivity_metric: str = 'correlation',
-        linewidth: float = 2.5,
-        label: str = 'WP'
+        linewidth: float = 2.0,
+        label: str = 'WP',
 ) -> None:
     """
     We plot the mean of the predictive posterior as well as a 2 standard deviations (95%) confidence interval.
@@ -328,26 +367,35 @@ def plot_wishart_process_covariances_pairwise(
 
 
 def plot_wishart_process_covariances(
-        xx: np.array,
-        all_covs_means_pair: np.array, all_covs_stddevs_pair: np.array,
-        ax=None,
-        rescale_x_axis: str = None, repetition_time: float = None, data_length=None,
-        linewidth: float = 2.5, alpha: float = 0.2,
-        label: str = 'WP'
+    xx: np.array,
+    all_covs_means_pair: np.array, 
+    all_covs_stddevs_pair: np.array,
+    ax=None,
+    rescale_x_axis: str = None, 
+    repetition_time: float = None, 
+    data_length=None,
+    linewidth: float = 2.0,
+    alpha: float = 0.2,
+    label: str = 'WP',
 ) -> None:
     """
     TODO: refactor this - change scale at the end of plotting
     """
     if rescale_x_axis == 'seconds':
-        xx = convert_to_seconds(xx, repetition_time=repetition_time, data_length=data_length)
+        xx = convert_to_seconds(
+            xx, repetition_time=repetition_time, data_length=data_length
+        )
     if rescale_x_axis == 'minutes':
-        xx = convert_to_minutes(xx, repetition_time=repetition_time, data_length=data_length)
+        xx = convert_to_minutes(
+            xx, repetition_time=repetition_time, data_length=data_length
+        )
 
     if ax is not None:
         (line, ) = ax.plot(
             xx, all_covs_means_pair,
             linewidth=linewidth,
-            label=label
+            label=label,
+            alpha=0.7,
         )
         col = line.get_color()
         ax.fill_between(
@@ -362,7 +410,8 @@ def plot_wishart_process_covariances(
         (line,) = plt.plot(
             xx, all_covs_means_pair,
             linewidth=linewidth,
-            label=label
+            label=label,
+            alpha=0.7,
         )
         col = line.get_color()
         plt.fill_between(
@@ -401,10 +450,15 @@ def plot_estimated_covariance_structure_edge(
 
 
 def plot_mgarch_estimated_covariance_structure(
-        estimated_tvfc_array: np.array, xx: np.array, model_name: str,
-        i: int, j: int,
-        markersize: float = 3.6, linewidth: float = 2.5,
-        connectivity_metric: str = 'correlation', ax=None
+        estimated_tvfc_array: np.array,
+        xx: np.array,
+        model_name: str,
+        i: int,
+        j: int,
+        markersize: float = 3.6,
+        linewidth: float = 2.0,
+        connectivity_metric: str = 'correlation',
+        ax=None,
 ) -> None:
     """
     We want the covariance plot to take up twice the space of the time series plots.
@@ -437,22 +491,32 @@ def plot_mgarch_estimated_covariance_structure(
     if ax is not None:
         ax.plot(
             xx, covariance_estimates, 'x-',
-            linewidth=linewidth, markersize=markersize, label=model_name_str
+            linewidth=linewidth, 
+            markersize=markersize, 
+            label=model_name_str,
+            alpha=0.7,
         )
     else:
         plt.plot(
             xx, covariance_estimates, 'x-',
-            linewidth=linewidth, markersize=markersize, label=model_name_str
+            linewidth=linewidth,
+            markersize=markersize,
+            label=model_name_str,
+            alpha=0.7,
         )
 
 
 def plot_cross_validated_sliding_windows_estimated_covariance_structure(
-        estimated_tvfc_array: np.array,
-        xx: np.array, model_name: str,
-        i: int, j: int,
-        markersize: float = 3.6, linewidth: float = 2.5,
-        connectivity_metric: str = 'correlation', plot_color: str = None,
-        ax=None
+    estimated_tvfc_array: np.array,
+    xx: np.array,
+    model_name: str,
+    i: int,
+    j: int,
+    markersize: float = 3.6,
+    linewidth: float = 2.0,
+    connectivity_metric: str = 'correlation',
+    plot_color: str = None,
+    ax=None,
 ) -> None:
     """
     Simple function to plot cross validated sliding window estimates.
@@ -473,7 +537,8 @@ def plot_cross_validated_sliding_windows_estimated_covariance_structure(
             linewidth=linewidth,
             markersize=markersize,
             color=plot_color,
-            label=model_name_str
+            label=model_name_str,
+            alpha=0.7,
         )
     else:
         plt.plot(
@@ -481,18 +546,24 @@ def plot_cross_validated_sliding_windows_estimated_covariance_structure(
             linewidth=linewidth,
             markersize=markersize,
             color=plot_color,
-            label=model_name_str
+            label=model_name_str,
+            alpha=0.7
         )
 
 
 def plot_sliding_windows_estimated_covariance_structure(
-        xx: np.array, y: np.array, window_length: int,
-        i: int = 0, j: int = 1,
-        repetition_time: float = None,
-        markersize: float = 3.6, label: str = 'SW',
-        linewidth: float = 2.5,
-        connectivity_metric: str = 'correlation', plot_color: str = None,
-        ax=None
+    xx: np.array,
+    y: np.array,
+    window_length: int,
+    i: int = 0,
+    j: int = 1,
+    repetition_time: float = None,
+    markersize: float = 3.6,
+    label: str = 'SW',
+    linewidth: float = 2.0,
+    connectivity_metric: str = 'correlation',
+    plot_color: str = None,
+    ax=None,
 ) -> None:
     """
     Plot covariance estimates from sliding window approach.
@@ -500,7 +571,7 @@ def plot_sliding_windows_estimated_covariance_structure(
     sw = SlidingWindows(
         x_train_locations=xx,
         y_train_locations=y,
-        repetition_time=repetition_time
+        repetition_time=repetition_time,
     )
     estimated_tvfc_array = sw.overlapping_windowed_cov_estimation(
         window_length=window_length,
@@ -513,7 +584,8 @@ def plot_sliding_windows_estimated_covariance_structure(
             markersize=markersize,
             linewidth=linewidth,
             color=plot_color,
-            label=label
+            label=label,
+            alpha=0.7,
         )
     else:
         plt.plot(
@@ -521,7 +593,8 @@ def plot_sliding_windows_estimated_covariance_structure(
             markersize=markersize,
             linewidth=linewidth,
             color=plot_color,
-            label=label
+            label=label,
+            alpha=0.7,
         )
 
 
@@ -572,11 +645,16 @@ def plot_windowed_covariances(
 
 
 def plot_static_estimated_covariance_structure(
-        xx: np.array, y: np.array,
-        i: int = 0, j: int = 1,
-        connectivity_metric: str = 'correlation', repetition_time: float = None,
-        plot_color: str = None, linewidth: float = 2.5,
-        label: str = 'sFC', ax=None
+    xx: np.array,
+    y: np.array,
+    i: int = 0,
+    j: int = 1,
+    connectivity_metric: str = 'correlation',
+    repetition_time: float = None,
+    plot_color: str = None,
+    linewidth: float = 2.0,
+    label: str = 'sFC',
+    ax=None,
 ) -> None:
     """
     Plot static covariance estimates.
@@ -593,7 +671,7 @@ def plot_static_estimated_covariance_structure(
     sw = SlidingWindows(
         x_train_locations=xx,
         y_train_locations=y,
-        repetition_time=repetition_time
+        repetition_time=repetition_time,
     )
     estimated_tvfc_array = sw.estimate_static_functional_connectivity(
         connectivity_metric=connectivity_metric
@@ -607,12 +685,14 @@ def plot_static_estimated_covariance_structure(
             xx, estimated_cov_array,
             color=plot_color,
             linewidth=linewidth,
-            label=label
+            label=label,
+            alpha=0.7,
         )
     else:
         plt.plot(
             xx, estimated_cov_array,
             color=plot_color,
             linewidth=linewidth,
-            label=label
+            label=label,
+            alpha=0.7,
         )

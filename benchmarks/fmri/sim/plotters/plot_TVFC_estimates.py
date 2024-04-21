@@ -22,7 +22,8 @@ def plot_d2_all_covariance_structures(
     time_series_noise_type: str,
     data_split: str,
     i_trial: int,
-    figsize: tuple[float] = (4, 7),
+    figsize: tuple[float] = (4.1, 6.7),
+    ground_truth_linewidth: float = 3.0,
     figures_savedir: str = None,
 ) -> None:
     """
@@ -83,13 +84,13 @@ def plot_d2_all_covariance_structures(
             data_set_name=config_dict['data-set-name'],
         )
 
-        # Plot ground truth.
         ax[i_covs_type].plot(
             x, [step[0, 1] for step in ground_truth_covariance_structure],
             color='black',
-            linewidth=3.0,
+            linewidth=ground_truth_linewidth,
             label='Ground\nTruth'
         )
+
         for i_model_name, model_name in enumerate(config_dict['plot-models']):
 
             plot_color = get_palette(config_dict['plot-models'])[i_model_name]

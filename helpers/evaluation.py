@@ -258,6 +258,7 @@ def get_tvfc_estimates(
 
             # Fix renaming issue.
             if not os.path.exists(os.path.join(wp_joint_model_savedir, wp_joint_model_filename)):
+                logging.warning(f"Model file {os.path.join(wp_joint_model_savedir, wp_joint_model_filename):s} not found.")
                 if covs_type == 'boxcar':
                     wp_joint_model_filename = 'checkerboard.json'
             if not os.path.exists(tvfc_estimates_filepath):
@@ -339,7 +340,10 @@ def get_tvfc_estimates(
                 return
         case 'DCC' | 'DCC_joint' | 'DCC_bivariate_loop' | 'GO' | 'GO_joint' | 'GO_bivariate_loop':
             if os.path.exists(tvfc_estimates_filepath):
-                mgarch_df = pd.read_csv(tvfc_estimates_filepath, index_col=0)  # (D*D, N_train)
+                mgarch_df = pd.read_csv(
+                    tvfc_estimates_filepath,
+                    index_col=0,
+                )  # (D*D, N_train)
                 estimated_tvfc = to_3d_format(mgarch_df.values)  # (N_train, D, D)
                 logging.info(f"Loaded {model_name:s} estimates '{tvfc_estimates_filepath:s}'.")
                 if data_split == 'LEOO':

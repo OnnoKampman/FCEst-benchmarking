@@ -4,7 +4,10 @@ import numpy as np
 
 
 def get_ground_truth_covariance_structure(
-        covs_type: str, n_samples: int, signal_to_noise_ratio, data_set_name: str
+    covs_type: str,
+    n_samples: int,
+    signal_to_noise_ratio,
+    data_set_name: str,
 ) -> np.array:
     """
     TODO: make this more flexible
@@ -33,7 +36,9 @@ def get_ground_truth_covariance_structure(
 
 
 def get_covariance_time_series(
-    cov_type: str, n_samples: int, signal_to_noise_ratio=None
+    cov_type: str,
+    n_samples: int,
+    signal_to_noise_ratio=None,
 ) -> np.array:
     """
     This function is only called from the plotting and quantitative results scripts.
@@ -174,6 +179,9 @@ def get_boxcar_covariances(n_samples: int) -> np.array:
     The final segment can be of variable length to make sure the total number of samples is correct.
     The signal is also convolved with a hemodynamic response function.
 
+    Parameters
+    ----------
+    n_samples: int
     :return:
         array of shape (N, ).
     """

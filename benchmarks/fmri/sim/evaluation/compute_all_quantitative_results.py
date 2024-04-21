@@ -82,7 +82,7 @@ if __name__ == "__main__":
         hostname=hostname
     )
     models_list = cfg['all-quantitative-results-models']
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
 
     if hostname == 'hivemind':
         if len(sys.argv) == 5:
@@ -90,11 +90,11 @@ if __name__ == "__main__":
             i_trials = [int(os.environ['SLURM_ARRAY_TASK_ID']) - 1]  # to make zero-index
         else:
             noise_types = cfg['noise-types']
-            i_trials = range(n_trials)
+            i_trials = range(num_trials)
     else:
         print('Running locally...')
         noise_types = cfg['noise-types']
-        i_trials = range(n_trials)
+        i_trials = range(num_trials)
 
     for noise_type in noise_types:
         if noise_type != 'no_noise':

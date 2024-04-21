@@ -45,7 +45,7 @@ if __name__ == "__main__":
             likelihoods_filename = f'{data_split}_{experiment_dimensionality:s}_likelihoods_{model_name:s}.csv'
             test_likelihoods_savepath = os.path.join(test_likelihoods_savedir, likelihoods_filename)
             if not os.path.exists(test_likelihoods_savepath):
-                logging.info("Test likelihoods not found.")
+                logging.warning(f"Test likelihoods not found {model_name:s}.")
                 continue
             test_likelihoods_df = pd.read_csv(
                 test_likelihoods_savepath,

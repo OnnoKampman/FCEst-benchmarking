@@ -57,7 +57,7 @@ def get_config_dict(
     # shared_config_dict['project-basedir'] = project_basedir
     match hostname:
         case 'hivemind':
-            logging.warning(f"Running on '{hostname:s}'.")
+            logging.info(f"Running on '{hostname:s}'.")
             git_basedir = '/home/opk20/git_repos/FCEst-benchmarking'
             project_basedir = '/mnt/Data/neuro-dynamic-covariance'
         case _:

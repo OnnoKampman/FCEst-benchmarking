@@ -216,7 +216,7 @@ def plot_method_tvfc_estimates(
                     repetition_time=config_dict['repetition-time'] if data_set_name[0] != 'd' else None,
                     data_length=x_train_locations.shape[0],
                     label=label_name if data_set_name == 'rockland' else 'WP',  # use SVWP-J to refer to specific implementation
-                    ax=ax
+                    ax=ax,
                 )
                 del m
             else:
@@ -320,27 +320,31 @@ def plot_method_tvfc_estimates(
 
 
 def plot_wishart_process_covariances_pairwise(
-        test_locations: np.array, 
-        m,
-        n_mc_samples: int = 3000,
-        i: int = 0, 
-        j: int = 1,
-        ax=None,
-        rescale_x_axis: str = None,
-        repetition_time: float = None, 
-        data_length: int = None,
-        connectivity_metric: str = 'correlation',
-        linewidth: float = 1.5,
-        label: str = 'WP',
+    test_locations: np.array,
+    m,
+    n_mc_samples: int = 3000,
+    i: int = 0,
+    j: int = 1,
+    ax=None,
+    rescale_x_axis: str = None,
+    repetition_time: float = None,
+    data_length: int = None,
+    connectivity_metric: str = 'correlation',
+    linewidth: float = 1.5,
+    label: str = 'WP',
 ) -> None:
     """
     We plot the mean of the predictive posterior as well as a 2 standard deviations (95%) confidence interval.
     We don't plot crosses at test locations, since these are arbitrary.
     """
     if connectivity_metric == 'correlation':
-        all_covs_means, all_covs_stddevs = m.predict_corr(test_locations, n_mc_samples=n_mc_samples)  # (N, D, D), (N, D, D)
+        all_covs_means, all_covs_stddevs = m.predict_corr(
+            test_locations, n_mc_samples=n_mc_samples
+        )  # (N, D, D), (N, D, D)
     else:
-        all_covs_means, all_covs_stddevs = m.predict_cov(test_locations, n_mc_samples=n_mc_samples)  # (N, D, D), (N, D, D)
+        all_covs_means, all_covs_stddevs = m.predict_cov(
+            test_locations, n_mc_samples=n_mc_samples
+        )  # (N, D, D), (N, D, D)
 
     # In the 2-dimensional case there is no distinction between joint or pairwise modeling.
     n_time_series = all_covs_means.shape[-1]
@@ -362,17 +366,17 @@ def plot_wishart_process_covariances_pairwise(
         repetition_time=repetition_time,
         data_length=data_length,
         linewidth=linewidth,
-        label=label
+        label=label,
     )
 
 
 def plot_wishart_process_covariances(
     xx: np.array,
-    all_covs_means_pair: np.array, 
+    all_covs_means_pair: np.array,
     all_covs_stddevs_pair: np.array,
     ax=None,
-    rescale_x_axis: str = None, 
-    repetition_time: float = None, 
+    rescale_x_axis: str = None,
+    repetition_time: float = None,
     data_length=None,
     linewidth: float = 1.5,
     alpha: float = 0.2,
@@ -395,7 +399,7 @@ def plot_wishart_process_covariances(
             xx, all_covs_means_pair,
             linewidth=linewidth,
             label=label,
-            alpha=0.7,
+            alpha=1.0,
         )
         col = line.get_color()
         ax.fill_between(
@@ -411,7 +415,7 @@ def plot_wishart_process_covariances(
             xx, all_covs_means_pair,
             linewidth=linewidth,
             label=label,
-            # alpha=0.7,
+            alpha=1.0,
         )
         col = line.get_color()
         plt.fill_between(
@@ -429,13 +433,14 @@ def plot_wishart_process_variances() -> None:
 
 
 def plot_estimated_covariance_structure_edge(
-    estimated_tvfc_array: np.array, 
-    xx: np.array, 
+    estimated_tvfc_array: np.array,
+    xx: np.array,
     label_name: str,
-    i: int, j: int,
-    markersize: float = 3.6, 
+    i: int,
+    j: int,
+    markersize: float = 3.6,
     linewidth: float = 2.5,
-    connectivity_metric: str = 'correlation'
+    connectivity_metric: str = 'correlation',
 ) -> None:
     """
     This only plots the estimated TVFC array.

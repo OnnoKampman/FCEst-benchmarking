@@ -67,12 +67,16 @@ if __name__ == "__main__":
             print('\n', slurm_job_str, '\n')
 
             # Create SLURM directory where logs will be saved (SLURM does not create these automatically).
-            slurm_log_dir = os.path.join(cfg['experiments-basedir'], 'slurm_logs', noise_type, covs_type, data_split, model_name)
+            slurm_log_dir = os.path.join(
+                cfg['experiments-basedir'], 'slurm_logs', noise_type, covs_type, data_split, model_name
+            )
             if not os.path.exists(slurm_log_dir):
                 os.makedirs(slurm_log_dir)
 
             # Save SLURM job to file.
-            slurm_job_dir = os.path.join(cfg['experiments-basedir'], 'slurm_jobs', data_split, model_name)
+            slurm_job_dir = os.path.join(
+                cfg['experiments-basedir'], 'slurm_jobs', data_split, model_name
+            )
             if not os.path.exists(slurm_job_dir):
                 os.makedirs(slurm_job_dir)
             slurm_job_filepath = os.path.join(slurm_job_dir, f'{noise_type:s}_{covs_type:s}')

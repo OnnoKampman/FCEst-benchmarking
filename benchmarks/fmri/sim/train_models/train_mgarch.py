@@ -61,9 +61,19 @@ if __name__ == "__main__":
                 print('covs_type ', covs_type)
                 print('noise_type', noise_type, '\n----------\n')
                 data_file = os.path.join(
-                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
+                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                    f'{covs_type:s}_covariance.csv'
                 )
-                x, y = load_data(data_file, verbose=False)  # (N, 1), (N, D)
+                if not os.path.exists(data_file):
+                    if covs_type == 'boxcar':
+                        data_file = os.path.join(
+                            cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                            'checkerboard_covariance.csv'
+                        )
+                x, y = load_data(
+                    data_file,
+                    verbose=False
+                )  # (N, 1), (N, D)
                 n_time_series = y.shape[1]
 
                 match data_split:

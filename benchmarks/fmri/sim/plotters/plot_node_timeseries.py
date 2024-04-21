@@ -33,16 +33,31 @@ if __name__ == "__main__":
                 print(f"\n> TRIAL {i_trial+1:d} / {n_trials:d}\n")
 
                 data_file = os.path.join(
-                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
+                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                    f'{covs_type:s}_covariance.csv'
                 )
 
+                if not os.path.exists(data_file):
+                    if covs_type == 'boxcar':
+                        data_file = os.path.join(
+                            cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                            'checkerboard_covariance.csv'
+                        )
+                        if not os.path.exists(data_file):
+                            logging.warning(f"File '{data_file:s}' not found.")
+                            continue
+
                 figures_savedir = os.path.join(
-                    cfg['figures-basedir'], noise_type, data_split, 'time_series', f'trial_{i_trial:03d}'
+                    cfg['figures-basedir'], noise_type, data_split, 'time_series',
+                    f'trial_{i_trial:03d}'
                 )
                 if not os.path.exists(figures_savedir):
                     os.makedirs(figures_savedir)
 
-                x, y = load_data(data_file, verbose=False)  # (N, 1), (N, D)
+                x, y = load_data(
+                    data_file,
+                    verbose=False,
+                )  # (N, 1), (N, D)
                 match data_split:
                     case "LEOO":
                         x_train, _ = leave_every_other_out_split(x)  # (N/2, 1), _

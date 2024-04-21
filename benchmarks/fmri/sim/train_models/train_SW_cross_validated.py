@@ -27,7 +27,7 @@ if __name__ == "__main__":
         experiment_data=experiment_data,
         hostname=hostname
     )
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
 
     # Allow for local and CPU cluster training.
     # When running on the Hivemind with SLURM, only one model is trained here.
@@ -47,12 +47,12 @@ if __name__ == "__main__":
             noise_types = [noise_type]
             covs_types = [covs_type]
         except KeyError:
-            i_trials = range(n_trials)
+            i_trials = range(num_trials)
             noise_types = cfg['noise-types']
             covs_types = cfg['all-covs-types']
     else:
         print('Running locally...')
-        i_trials = range(n_trials)
+        i_trials = range(num_trials)
         noise_types = cfg['noise-types']
         covs_types = cfg['all-covs-types']
 
@@ -68,12 +68,25 @@ if __name__ == "__main__":
                 print('noise_type', noise_type, '\n----------\n')
 
                 data_file = os.path.join(
-                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
+                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                    f'{covs_type:s}_covariance.csv'
                 )
                 if not os.path.exists(data_file):
-                    logging.warning("Data file not found.")
+                    logging.warning(f"Data file {data_file:s} not found.")
+
+                    if covs_type == 'boxcar':
+                        data_file = os.path.join(
+                            cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                            'checkerboard_covariance.csv'
+                        )
+                        if not os.path.exists(data_file):
+                            logging.warning(f"Data file {data_file:s} not found.")
+                            continue
                     continue
-                x, y = load_data(data_file, verbose=False)  # (N, 1), (N, D)
+                x, y = load_data(
+                    data_file,
+                    verbose=False,
+                )  # (N, 1), (N, D)
                 n_time_series = y.shape[1]
 
                 match data_split:

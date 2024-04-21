@@ -24,13 +24,13 @@ if __name__ == "__main__":
         experiment_data=experiment_data,
         hostname=hostname
     )
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
 
     kernel_params_savedir = os.path.join(cfg['git-results-basedir'], 'kernel_analysis')
     if not os.path.exists(kernel_params_savedir):
         os.makedirs(kernel_params_savedir)
 
-    i_trials = range(n_trials)
+    i_trials = range(num_trials)
     noise_types = cfg['noise-types']
     covs_types = cfg['all-covs-types']
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
         for noise_type in noise_types:
 
-            kernel_params_df = pd.DataFrame()  # (n_trials, n_covs_types)
+            kernel_params_df = pd.DataFrame()  # (num_trials, num_covs_types)
             for covs_type in covs_types:
 
                 kernel_params_array = []

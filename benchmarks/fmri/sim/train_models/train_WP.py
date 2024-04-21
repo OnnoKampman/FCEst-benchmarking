@@ -69,9 +69,15 @@ if __name__ == "__main__":
                 print(f'covs_type  {covs_type:s}')
                 print(f'noise_type {noise_type:s}', '\n----------\n')
                 data_file = os.path.join(
-                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}', 
+                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
                     f'{covs_type:s}_covariance.csv'
                 )
+                if not os.path.exists(data_file):
+                    if covs_type == 'boxcar':
+                        data_file = os.path.join(
+                            cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                            'checkerboard_covariance.csv'
+                        )
 
                 # Check if model already exists.
                 model_savedir = os.path.join(

@@ -23,29 +23,46 @@ if __name__ == "__main__":
         experiment_data=experiment_data,
         hostname=socket.gethostname()
     )
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
 
-    i_trials = range(n_trials)
+    i_trials = range(num_trials)
     for noise_type in cfg['noise-types']:
         for i_trial in i_trials:
+
             for covs_type in cfg['all-covs-types']:
+
                 data_filepath = os.path.join(
-                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
+                    cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                    f'{covs_type:s}_covariance.csv'
                 )
                 if not os.path.exists(data_filepath):
                     logging.warning(f"Node time series not found: '{data_filepath:s}'")
+                    if covs_type == 'boxcar':
+                        data_filepath = os.path.join(
+                            cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                            'checkerboard_covariance.csv'
+                        )
+                    if not os.path.exists(data_filepath):
+                        logging.warning(f"Node time series not found: '{data_filepath:s}'")
+                        continue
                     continue
+
                 tvfc_estimates_savedir = os.path.join(
                     cfg['experiments-basedir'], noise_type, f'trial_{i_trial:03d}', 'TVFC_estimates',
                     data_split, metric, model_name
                 )
-                tvfc_estimates_savefilepath = os.path.join(tvfc_estimates_savedir, f'{covs_type:s}.csv')
+                tvfc_estimates_savefilepath = os.path.join(
+                    tvfc_estimates_savedir, f'{covs_type:s}.csv'
+                )
                 if os.path.exists(tvfc_estimates_savefilepath):
                     logging.info(f"Found existing TVFC estimates in '{tvfc_estimates_savefilepath:s}'.")
                     continue
                 if not os.path.exists(tvfc_estimates_savedir):
                     os.makedirs(tvfc_estimates_savedir)
-                x, y = load_data(data_filepath, verbose=False)  # (N, 1), (N, D)
+                x, y = load_data(
+                    data_filepath,
+                    verbose=False,
+                )  # (N, 1), (N, D)
                 n_time_steps = x.shape[0]
                 n_time_series = y.shape[1]
 

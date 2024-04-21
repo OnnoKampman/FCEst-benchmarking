@@ -210,10 +210,19 @@ def _interpolate_matrices(matrix_i: np.array, matrix_j: np.array) -> np.array:
 
 
 def get_tvfc_estimates(
-        config_dict: dict, model_name: str, data_split: str,
-        x_train: np.array, y_train: np.array, metric: str,
-        scan_id: int = None, experiment_dimensionality: str = None, subject=None, parcellation: str = None,
-        noise_type: str = None, i_trial: int = None, covs_type: str = None
+    config_dict: dict,
+    model_name: str,
+    data_split: str,
+    x_train: np.array,
+    y_train: np.array,
+    metric: str,
+    scan_id: int = None,
+    experiment_dimensionality: str = None,
+    subject=None,
+    parcellation: str = None,
+    noise_type: str = None,
+    i_trial: int = None,
+    covs_type: str = None,
 ) -> np.array:
     """
     Estimates train locations covariance structure.
@@ -230,12 +239,15 @@ def get_tvfc_estimates(
             assert noise_type is not None
             assert i_trial is not None
             assert covs_type is not None
+
+            repetition_time = None
+
             wp_joint_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], noise_type, data_split,
                 f'trial_{i_trial:03d}', model_name
             )
             wp_joint_model_filename = f'{covs_type:s}.json'
-            repetition_time = None
+
             tvfc_estimates_savedir = os.path.join(
                 config_dict['experiments-basedir'], noise_type, f'trial_{i_trial:03d}',
                 'TVFC_estimates', data_split, metric, model_name
@@ -243,6 +255,19 @@ def get_tvfc_estimates(
             tvfc_estimates_filepath = os.path.join(
                 tvfc_estimates_savedir, f'{covs_type:s}.csv'
             )
+
+            # Fix renaming issue.
+            if not os.path.exists(os.path.join(wp_joint_model_savedir, wp_joint_model_filename)):
+                if covs_type == 'boxcar':
+                    covs_type = 'checkerboard'
+                    wp_joint_model_filename = f'{covs_type:s}.json'
+            if not os.path.exists(tvfc_estimates_filepath):
+                if covs_type == 'boxcar':
+                    covs_type = 'checkerboard'
+                    tvfc_estimates_filepath = os.path.join(
+                        tvfc_estimates_savedir, f'{covs_type:s}.csv'
+                    )
+
         case 'HCP_PTN1200_recon2':
             assert experiment_dimensionality is not None
             assert scan_id is not None

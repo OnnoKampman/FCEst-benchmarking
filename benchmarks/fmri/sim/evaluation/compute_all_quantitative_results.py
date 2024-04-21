@@ -17,10 +17,10 @@ from helpers.synthetic_covariance_structures import get_ground_truth_covariance_
 
 
 def _get_performance_metric(
-        performance_metric: str,
-        predicted_covariance_structure_test_locations: np.array,
-        ground_truth_covariance_structure_test_locations: np.array,
-        y_test_locations: np.array
+    performance_metric: str,
+    predicted_covariance_structure_test_locations: np.array,
+    ground_truth_covariance_structure_test_locations: np.array,
+    y_test_locations: np.array,
 ) -> float:
     """
     Computes performance metric.
@@ -109,14 +109,30 @@ if __name__ == "__main__":
                     columns=cfg['all-covs-types']
                 )
                 for covs_type in cfg['all-covs-types']:
+
                     data_file = os.path.join(
-                        cfg['data-dir'], noise_type, f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
+                        cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                        f'{covs_type:s}_covariance.csv'
                     )
                     if not os.path.exists(data_file):
-                        logging.warning(f"Data file '{data_file:s}' not found.")
-                        performance_df.loc[:, covs_type] = np.nan
-                        continue
-                    x, y = load_data(data_file, verbose=False)  # (N, 1), (N, D)
+
+                        # Fix renaming issue.
+                        if covs_type == 'boxcar':
+                            covs_type = 'checkerboard'
+                            data_file = os.path.join(
+                                cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                                f'{covs_type:s}_covariance.csv'
+                            )
+
+                        if not os.path.exists(data_file):
+                            logging.warning(f"Data file '{data_file:s}' not found.")
+                            performance_df.loc[:, covs_type] = np.nan
+                            continue
+
+                    x, y = load_data(
+                        data_file,
+                        verbose=False,
+                    )  # (N, 1), (N, D)
                     n_time_series = y.shape[1]  # D
 
                     gt_covariance_structure = get_ground_truth_covariance_structure(

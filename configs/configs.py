@@ -318,7 +318,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
             'periodic_3',
             'periodic_4',
             'periodic_5',
-            'checkerboard',
+            'boxcar',
             'stepwise',
             'state_transition',
             'change_point',

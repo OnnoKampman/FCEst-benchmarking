@@ -289,7 +289,7 @@ def plot_method_tvfc_estimates(
                 label=model_name.replace('_', '-'),
                 connectivity_metric=metric,
                 markersize=3.6,
-                ax=ax
+                ax=ax,
             )
         case 'SW':  # TODO: should we divide by 2 for leave-one-out?
             for window_length in config_dict['window-lengths']:
@@ -301,7 +301,7 @@ def plot_method_tvfc_estimates(
                     j=j_time_series,
                     label=f'SW-{window_length:d}',
                     connectivity_metric=metric,
-                    ax=ax
+                    ax=ax,
                 )
         case "sFC":
             plot_static_estimated_covariance_structure(
@@ -330,7 +330,7 @@ def plot_wishart_process_covariances_pairwise(
         repetition_time: float = None, 
         data_length: int = None,
         connectivity_metric: str = 'correlation',
-        linewidth: float = 2.0,
+        linewidth: float = 1.5,
         label: str = 'WP',
 ) -> None:
     """
@@ -374,7 +374,7 @@ def plot_wishart_process_covariances(
     rescale_x_axis: str = None, 
     repetition_time: float = None, 
     data_length=None,
-    linewidth: float = 2.0,
+    linewidth: float = 1.5,
     alpha: float = 0.2,
     label: str = 'WP',
 ) -> None:
@@ -411,7 +411,7 @@ def plot_wishart_process_covariances(
             xx, all_covs_means_pair,
             linewidth=linewidth,
             label=label,
-            alpha=0.7,
+            # alpha=0.7,
         )
         col = line.get_color()
         plt.fill_between(
@@ -429,10 +429,13 @@ def plot_wishart_process_variances() -> None:
 
 
 def plot_estimated_covariance_structure_edge(
-        estimated_tvfc_array: np.array, xx: np.array, label_name: str,
-        i: int, j: int,
-        markersize: float = 3.6, linewidth: float = 2.5,
-        connectivity_metric: str = 'correlation'
+    estimated_tvfc_array: np.array, 
+    xx: np.array, 
+    label_name: str,
+    i: int, j: int,
+    markersize: float = 3.6, 
+    linewidth: float = 2.5,
+    connectivity_metric: str = 'correlation'
 ) -> None:
     """
     This only plots the estimated TVFC array.
@@ -450,15 +453,15 @@ def plot_estimated_covariance_structure_edge(
 
 
 def plot_mgarch_estimated_covariance_structure(
-        estimated_tvfc_array: np.array,
-        xx: np.array,
-        model_name: str,
-        i: int,
-        j: int,
-        markersize: float = 3.6,
-        linewidth: float = 2.0,
-        connectivity_metric: str = 'correlation',
-        ax=None,
+    estimated_tvfc_array: np.array,
+    xx: np.array,
+    model_name: str,
+    i: int,
+    j: int,
+    markersize: float = 3.6,
+    linewidth: float = 1.5,
+    connectivity_metric: str = 'correlation',
+    ax=None,
 ) -> None:
     """
     We want the covariance plot to take up twice the space of the time series plots.
@@ -513,7 +516,7 @@ def plot_cross_validated_sliding_windows_estimated_covariance_structure(
     i: int,
     j: int,
     markersize: float = 3.6,
-    linewidth: float = 2.0,
+    linewidth: float = 1.5,
     connectivity_metric: str = 'correlation',
     plot_color: str = None,
     ax=None,
@@ -560,7 +563,7 @@ def plot_sliding_windows_estimated_covariance_structure(
     repetition_time: float = None,
     markersize: float = 3.6,
     label: str = 'SW',
-    linewidth: float = 2.0,
+    linewidth: float = 1.5,
     connectivity_metric: str = 'correlation',
     plot_color: str = None,
     ax=None,
@@ -599,11 +602,14 @@ def plot_sliding_windows_estimated_covariance_structure(
 
 
 def plot_windowed_covariances(
-        xx: np.array, y: np.array,
-        n_windows_list: list = [1, 4, 8, 12],
-        repetition_time: float = None,
-        i: int = 0, j: int = 1,
-        connectivity_metric: str = 'correlation', ax=None
+    xx: np.array, 
+    y: np.array,
+    n_windows_list: list = [1, 4, 8, 12],
+    repetition_time: float = None,
+    i: int = 0, 
+    j: int = 1,
+    connectivity_metric: str = 'correlation', 
+    ax=None,
 ) -> None:
     """
     Plot covariance estimates from windowed approach, which divides the data into non-overlapping regions..
@@ -652,7 +658,7 @@ def plot_static_estimated_covariance_structure(
     connectivity_metric: str = 'correlation',
     repetition_time: float = None,
     plot_color: str = None,
-    linewidth: float = 2.0,
+    linewidth: float = 1.5,
     label: str = 'sFC',
     ax=None,
 ) -> None:

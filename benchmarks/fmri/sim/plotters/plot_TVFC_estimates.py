@@ -23,7 +23,7 @@ def plot_d2_all_covariance_structures(
     data_split: str,
     i_trial: int,
     figsize: tuple[float] = (4.1, 6.7),
-    ground_truth_linewidth: float = 3.0,
+    ground_truth_linewidth: float = 1.5,
     figures_savedir: str = None,
 ) -> None:
     """
@@ -43,6 +43,7 @@ def plot_d2_all_covariance_structures(
     :param figures_savedir:
     """
     sns.set(style="whitegrid")
+    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
     n_covs_types = len(config_dict['plot-covs-types'])
 
@@ -86,9 +87,11 @@ def plot_d2_all_covariance_structures(
 
         ax[i_covs_type].plot(
             x, [step[0, 1] for step in ground_truth_covariance_structure],
-            color='black',
+            color='dimgray',
+            linestyle='dashed',
             linewidth=ground_truth_linewidth,
-            label='Ground\nTruth'
+            alpha=0.7,
+            label='Ground\nTruth',
         )
 
         for i_model_name, model_name in enumerate(config_dict['plot-models']):

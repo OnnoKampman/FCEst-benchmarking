@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', 'd{%d}s'
     data_split = sys.argv[2]       # 'all', 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0100'
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,
@@ -83,6 +83,7 @@ if __name__ == "__main__":
                             logging.warning(f"Data file {data_file:s} not found.")
                             continue
                     continue
+
                 x, y = load_data(
                     data_file,
                     verbose=False,
@@ -107,14 +108,14 @@ if __name__ == "__main__":
 
                 for metric in ['correlation', 'covariance']:
                     tvfc_estimates_savedir = os.path.join(
-                        cfg['experiments-basedir'], noise_type, f'trial_{i_trial:03d}', 'TVFC_estimates',
-                        data_split, metric, model_name
+                        cfg['experiments-basedir'], noise_type, f'trial_{i_trial:03d}',
+                        'TVFC_estimates', data_split, metric, model_name
                     )
                     m.save_tvfc_estimates(
                         optimal_window_length=optimal_window_length,
                         savedir=tvfc_estimates_savedir,
                         model_name=f'{covs_type:s}.csv',
-                        connectivity_metric=metric
+                        connectivity_metric=metric,
                     )
 
                 optimal_window_length_array.append(optimal_window_length)
@@ -123,10 +124,14 @@ if __name__ == "__main__":
                 optimal_window_length_df[covs_type] = optimal_window_length_array  # (n_trials, )
 
         optimal_window_length_filename = 'optimal_window_lengths.csv'
-        optimal_window_length_savedir = os.path.join(cfg['git-results-basedir'], noise_type, data_split)
+        optimal_window_length_savedir = os.path.join(
+            cfg['git-results-basedir'], noise_type, data_split
+        )
         if not os.path.exists(optimal_window_length_savedir):
             os.makedirs(optimal_window_length_savedir)
         optimal_window_length_df.to_csv(
             os.path.join(optimal_window_length_savedir, optimal_window_length_filename)
         )
-        logging.info(f"Saved optimal window lengths '{optimal_window_length_filename:s}' in '{optimal_window_length_savedir:s}'.")
+        logging.info(
+            f"Saved optimal window lengths '{optimal_window_length_filename:s}' in '{optimal_window_length_savedir:s}'."
+        )

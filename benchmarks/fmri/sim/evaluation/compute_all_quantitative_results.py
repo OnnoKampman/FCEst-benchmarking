@@ -106,7 +106,7 @@ if __name__ == "__main__":
             for perform_metric in cfg['performance-metrics']:
                 performance_df = pd.DataFrame(
                     index=models_list,
-                    columns=cfg['all-covs-types']
+                    columns=cfg['all-covs-types'],
                 )
                 for covs_type in cfg['all-covs-types']:
 
@@ -115,6 +115,7 @@ if __name__ == "__main__":
                         f'{covs_type:s}_covariance.csv'
                     )
                     if not os.path.exists(data_file):
+                        logging.warning(f"Data file '{data_file:s}' not found.")
 
                         # Fix renaming issue.
                         if covs_type == 'boxcar':
@@ -122,9 +123,11 @@ if __name__ == "__main__":
                                 cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
                                 'checkerboard_covariance.csv'
                             )
-
-                        if not os.path.exists(data_file):
-                            logging.warning(f"Data file '{data_file:s}' not found.")
+                            if not os.path.exists(data_file):
+                                logging.warning(f"Data file '{data_file:s}' not found.")
+                                performance_df.loc[:, covs_type] = np.nan
+                                continue
+                        else:
                             performance_df.loc[:, covs_type] = np.nan
                             continue
 

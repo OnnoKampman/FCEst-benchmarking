@@ -54,22 +54,31 @@ if __name__ == "__main__":
         covs_types = cfg['all-covs-types']
 
     for noise_type in noise_types:
+
         for covs_type in covs_types:
+
             for i_trial in i_trials:
                 print('\n----------')
                 print(f'Trial      {i_trial:d}')
                 print('covs_type ', covs_type)
                 print('noise_type', noise_type, '\n----------\n')
+
                 data_file = os.path.join(
                     cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
                     f'{covs_type:s}_covariance.csv'
                 )
                 if not os.path.exists(data_file):
+                    logging.warning(f"Data file {data_file:s} not found.")
                     if covs_type == 'boxcar':
                         data_file = os.path.join(
                             cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
                             'checkerboard_covariance.csv'
                         )
+                        if not os.path.exists(data_file):
+                            logging.warning(f"Data file {data_file:s} not found.")
+                            continue
+                    else:
+                        continue
                 x, y = load_data(
                     data_file,
                     verbose=False
@@ -93,17 +102,24 @@ if __name__ == "__main__":
                         for metric in ['correlation', 'covariance']:
 
                             tvfc_estimates_savedir = os.path.join(
-                                cfg['experiments-basedir'], noise_type, f'trial_{i_trial:03d}', 'TVFC_estimates',
-                                data_split, metric, f'{model_name:s}_{training_type:s}'
+                                cfg['experiments-basedir'], noise_type, f'trial_{i_trial:03d}',
+                                'TVFC_estimates', data_split, metric, f'{model_name:s}_{training_type:s}'
                             )
-                            tvfc_estimates_savepath = os.path.join(tvfc_estimates_savedir, f"{covs_type:s}.csv")
+                            tvfc_estimates_savepath = os.path.join(
+                                tvfc_estimates_savedir, f"{covs_type:s}.csv"
+                            )
                             if not os.path.exists(tvfc_estimates_savepath):
                                 m = MGARCH(mgarch_type=model_name)
-                                m.fit_model(training_data_df=pd.DataFrame(y_train), training_type=training_type)
+                                m.fit_model(
+                                    training_data_df=pd.DataFrame(y_train),
+                                    training_type=training_type,
+                                )
                                 m.save_tvfc_estimates(
                                     savedir=tvfc_estimates_savedir,
                                     model_name=f'{covs_type:s}.csv',
-                                    connectivity_metric=metric
+                                    connectivity_metric=metric,
                                 )
                             else:
-                                logging.info(f"Skipping training: existing model found in '{tvfc_estimates_savedir:s}'.")
+                                logging.info(
+                                    f"Skipping training: Existing model found in '{tvfc_estimates_savedir:s}'."
+                                )

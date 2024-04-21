@@ -59,6 +59,19 @@ def plot_d2_all_covariance_structures(
             config_dict['data-dir'], time_series_noise_type,
             f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
         )
+        if not os.path.exists(data_file):
+            logging.warning(f"Data file '{data_file:s}' not found.")
+            if covs_type == 'boxcar':
+                data_file = os.path.join(
+                    config_dict['data-dir'], time_series_noise_type,
+                    f'trial_{i_trial:03d}', 'checkerboard_covariance.csv'
+                )
+                if not os.path.exists(data_file):
+                    logging.warning(f"Data file '{data_file:s}' not found.")
+                    continue
+            else:
+                continue
+
         x, y = load_data(
             data_file,
             verbose=False,

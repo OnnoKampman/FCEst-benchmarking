@@ -56,6 +56,10 @@ def get_config_dict(
     # shared_config_dict['git-basedir'] = git_basedir
     # shared_config_dict['project-basedir'] = project_basedir
     match hostname:
+        case 'hivemind':
+            logging.warning(f"Running on '{hostname:s}'.")
+            git_basedir = '/home/opk20/git_repos/FCEst-benchmarking'
+            project_basedir = '/mnt/Data/neuro-dynamic-covariance'
         case _:
             logging.warning(f"Unexpected hostname '{hostname:s}' found.")
     if 'login-' in hostname:  # TODO: this changes for each login

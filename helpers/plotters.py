@@ -500,7 +500,7 @@ def plot_mgarch_estimated_covariance_structure(
             linewidth=linewidth, 
             markersize=markersize, 
             label=model_name_str,
-            alpha=0.7,
+            alpha=0.6,
         )
     else:
         plt.plot(
@@ -508,7 +508,7 @@ def plot_mgarch_estimated_covariance_structure(
             linewidth=linewidth,
             markersize=markersize,
             label=model_name_str,
-            alpha=0.7,
+            alpha=0.6,
         )
 
 
@@ -544,7 +544,7 @@ def plot_cross_validated_sliding_windows_estimated_covariance_structure(
             markersize=markersize,
             color=plot_color,
             label=model_name_str,
-            alpha=0.7,
+            alpha=0.6,
         )
     else:
         plt.plot(
@@ -553,7 +553,7 @@ def plot_cross_validated_sliding_windows_estimated_covariance_structure(
             markersize=markersize,
             color=plot_color,
             label=model_name_str,
-            alpha=0.7
+            alpha=0.6,
         )
 
 
@@ -591,7 +591,7 @@ def plot_sliding_windows_estimated_covariance_structure(
             linewidth=linewidth,
             color=plot_color,
             label=label,
-            alpha=0.7,
+            alpha=0.6,
         )
     else:
         plt.plot(
@@ -600,7 +600,7 @@ def plot_sliding_windows_estimated_covariance_structure(
             linewidth=linewidth,
             color=plot_color,
             label=label,
-            alpha=0.7,
+            alpha=0.6,
         )
 
 
@@ -695,7 +695,7 @@ def plot_static_estimated_covariance_structure(
             color=plot_color,
             linewidth=linewidth,
             label=label,
-            alpha=0.7,
+            alpha=0.6,
         )
     else:
         plt.plot(
@@ -703,5 +703,5 @@ def plot_static_estimated_covariance_structure(
             color=plot_color,
             linewidth=linewidth,
             label=label,
-            alpha=0.7,
+            alpha=0.6,
         )

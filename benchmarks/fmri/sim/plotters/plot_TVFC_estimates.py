@@ -22,7 +22,7 @@ def plot_d2_all_covariance_structures(
     time_series_noise_type: str,
     data_split: str,
     i_trial: int,
-    figsize: tuple[float] = (4.6, 6.7),
+    figsize: tuple[float] = (4.7, 6.6),
     ground_truth_linewidth: float = 1.5,
     figures_savedir: str = None,
 ) -> None:
@@ -90,7 +90,7 @@ def plot_d2_all_covariance_structures(
             color='dimgray',
             linestyle='dashed',
             linewidth=ground_truth_linewidth,
-            alpha=0.6,
+            alpha=0.5,
             label='Ground\nTruth',
         )
 
@@ -129,7 +129,7 @@ def plot_d2_all_covariance_structures(
     # plt.legend(frameon=True, title='cohort')
 
     ax[-1].set_xlabel('time [a.u.]')
-    plt.subplots_adjust(hspace=0.08, wspace=0)
+    plt.subplots_adjust(hspace=0.12, wspace=0)
 
     if figures_savedir is not None:
         figure_filename = f'all_covs_types_{connectivity_metric:s}s.pdf'

@@ -13,11 +13,11 @@ logging.basicConfig(
 
 
 def get_config_dict(
-        data_set_name: str,
-        subset: str = None,
-        subset_dimensionality: str = None,
-        experiment_data: str = None,
-        hostname: str = 'local'
+    data_set_name: str,
+    subset: str = None,
+    subset_dimensionality: str = None,
+    experiment_data: str = None,
+    hostname: str = 'local',
 ) -> dict:
     """
     Load benchmark-specific configurations.
@@ -378,7 +378,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
         ],
         'plot-covs-types-palette': 'Set2',
         'plot-lengthscales-window-lengths': (12, 10),
-        'plot-data-xlim': [-0.01, 1.01],
+        'plot-data-xlim': [-0.00, 1.00],
         'repetition-time': 1,  # synthetic TR is one second for simplicity
         'window-lengths': [
             15,
@@ -540,7 +540,7 @@ def _get_sparse_config_dict(
             'SW_30',
             'SW_60',
             'SW_120',
-            'sFC'
+            'sFC',
         ],
         'figure-model-estimates-figsize': (12, 13),
         'mgarch-models': [

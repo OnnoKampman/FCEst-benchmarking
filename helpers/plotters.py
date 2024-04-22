@@ -14,53 +14,6 @@ import seaborn as sns
 from helpers.array_operations import convert_to_seconds, convert_to_minutes
 
 
-def plot_node_timeseries(
-        config_dict: dict, x_plot: np.array, y_locations: np.array, figures_savedir: str = None
-) -> None:
-    """
-    Plots the synthetic time series.
-
-    :param config_dict:
-    :param x_plot:
-    :param y_locations:
-    :param figures_savedir:
-    """
-    sns.set(style="whitegrid", font_scale=1.8)
-    # plt.rcParams["font.family"] = 'serif'
-    font = {
-        'family': 'Times New Roman',
-        #     'weight': 'normal',
-        #     'size': 14
-    }
-    plt.rc('font', **font)
-    figure_name_time_series = "time_series.pdf"
-
-    n_time_series = y_locations.shape[1]
-
-    plt.figure(figsize=config_dict['plot-time-series-figsize'])
-    for i_time_series in range(n_time_series):
-        plt.subplot(n_time_series, 1, i_time_series+1)
-        plt.plot(
-            x_plot, y_locations[:, i_time_series], 'x-',
-            markersize=0, label=f"TS_{i_time_series+1}"
-        )
-        # plt.xlim(config_dict['plot-time-series-xlim'])
-        plt.ylim(config_dict['plot-time-series-ylim'])
-        if not i_time_series == (n_time_series - 1):
-            plt.gca().get_xaxis().set_ticklabels([])
-    plt.xlabel("time [a.u.]")
-    # plt.tight_layout()
-
-    if figures_savedir is not None:
-        plt.savefig(
-            os.path.join(figures_savedir, figure_name_time_series),
-            format='pdf',
-            bbox_inches='tight'
-        )
-        logging.info(f"Saved figure '{figure_name_time_series:s}' in '{figures_savedir:s}'.")
-        plt.close()
-
-
 def plot_method_tvfc_estimates(
     config_dict: dict,
     model_name: str,
@@ -128,10 +81,11 @@ def plot_method_tvfc_estimates(
             )
 
             # Fix renaming issue.
-            if not os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
-                logging.warning(f"Model file {os.path.join(wp_model_savedir, wp_model_filename):s} not found.")
-                if covs_type == 'boxcar':
-                    wp_model_filename = 'checkerboard.json'
+            if model_name in ['VWP', 'SVWP', 'VWP_joint', 'SVWP_joint']:
+                if not os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
+                    logging.warning(f"Model file {os.path.join(wp_model_savedir, wp_model_filename):s} not found.")
+                    if covs_type == 'boxcar':
+                        wp_model_filename = 'checkerboard.json'
             if not os.path.exists(tvfc_estimates_filepath):
                 if covs_type == 'boxcar':
                     tvfc_estimates_filepath = os.path.join(
@@ -695,7 +649,7 @@ def plot_static_estimated_covariance_structure(
             color=plot_color,
             linewidth=linewidth,
             label=label,
-            alpha=0.6,
+            # alpha=0.6,
         )
     else:
         plt.plot(
@@ -703,5 +657,52 @@ def plot_static_estimated_covariance_structure(
             color=plot_color,
             linewidth=linewidth,
             label=label,
-            alpha=0.6,
+            # alpha=0.6,
         )
+
+
+def plot_node_timeseries(
+        config_dict: dict, x_plot: np.array, y_locations: np.array, figures_savedir: str = None
+) -> None:
+    """
+    Plots the synthetic time series.
+
+    :param config_dict:
+    :param x_plot:
+    :param y_locations:
+    :param figures_savedir:
+    """
+    sns.set(style="whitegrid", font_scale=1.8)
+    # plt.rcParams["font.family"] = 'serif'
+    font = {
+        'family': 'Times New Roman',
+        #     'weight': 'normal',
+        #     'size': 14
+    }
+    plt.rc('font', **font)
+    figure_name_time_series = "time_series.pdf"
+
+    n_time_series = y_locations.shape[1]
+
+    plt.figure(figsize=config_dict['plot-time-series-figsize'])
+    for i_time_series in range(n_time_series):
+        plt.subplot(n_time_series, 1, i_time_series+1)
+        plt.plot(
+            x_plot, y_locations[:, i_time_series], 'x-',
+            markersize=0, label=f"TS_{i_time_series+1}"
+        )
+        # plt.xlim(config_dict['plot-time-series-xlim'])
+        plt.ylim(config_dict['plot-time-series-ylim'])
+        if not i_time_series == (n_time_series - 1):
+            plt.gca().get_xaxis().set_ticklabels([])
+    plt.xlabel("time [a.u.]")
+    # plt.tight_layout()
+
+    if figures_savedir is not None:
+        plt.savefig(
+            os.path.join(figures_savedir, figure_name_time_series),
+            format='pdf',
+            bbox_inches='tight'
+        )
+        logging.info(f"Saved figure '{figure_name_time_series:s}' in '{figures_savedir:s}'.")
+        plt.close()

@@ -113,10 +113,13 @@ def _plot_violin(config_dict: dict) -> None:
     logging.info(f"Saved figure '{figure_name:s}' in '{savedir:s}'.")
 
 
-def _plot_raincloud(
-        config_dict: dict, all_likelihoods_df: pd.DataFrame,
-        data_dimensionality: str, experiment_dimensionality: str,
-        data_split: str = 'LEOO', figure_savedir: str = None
+def _plot_likelihoods_raincloud(
+    config_dict: dict,
+    all_likelihoods_df: pd.DataFrame,
+    data_dimensionality: str,
+    experiment_dimensionality: str,
+    data_split: str = 'LEOO',
+    figure_savedir: str = None,
 ) -> None:
     """
     A "cloud", or smoothed version of a histogram, gives an idea of the distribution of scores.
@@ -235,7 +238,7 @@ if __name__ == '__main__':
     _plot_bar_graph_scores(config_dict=cfg)
     _plot_cloud(config_dict=cfg)
     _plot_violin(config_dict=cfg)
-    _plot_raincloud(
+    _plot_likelihoods_raincloud(
         config_dict=cfg, 
         all_likelihoods_df=all_likelihoods_df,
         data_dimensionality=data_dimensionality,

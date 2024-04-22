@@ -12,7 +12,7 @@ from helpers.data import load_data
 from helpers.evaluation import leave_every_other_out_split
 from helpers.figures import get_palette
 from helpers.plotters import plot_method_tvfc_estimates
-from helpers.synthetic_covariance_structures import get_ground_truth_covariance_structure, get_ylim
+from helpers.synthetic_covariance_structures import get_ground_truth_covariance_structure, get_ylim, to_human_readable
 
 
 def plot_d2_all_covariance_structures(
@@ -22,7 +22,7 @@ def plot_d2_all_covariance_structures(
     time_series_noise_type: str,
     data_split: str,
     i_trial: int,
-    figsize: tuple[float] = (5.7, 10.4),
+    figsize: tuple[float] = (5.4, 10.4),
     ground_truth_linewidth: float = 1.5,
     figures_savedir: str = None,
 ) -> None:
@@ -141,8 +141,8 @@ def plot_d2_all_covariance_structures(
             get_ylim(covs_type=covs_type)
         )
         ax[i_covs_type].set_ylabel(
-            covs_type,
-            rotation=0,
+            to_human_readable(covs_type),
+            # rotation=0,
         )
 
         if i_covs_type == 0:

@@ -1,5 +1,7 @@
 # FCEst-benchmarking
 
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 Functional connectivity (FC) estimates are sensitive to choice of estimation method (e.g., sliding windows, MGARCH, Wishart processes, hidden markov models).
 This project aims to design a range of benchmarks to determine what estimation method to use.
 

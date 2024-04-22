@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd3s'
     experiment_data = sys.argv[2]  # 'Nxxxx_Txxxx'
-    model_name = sys.argv[3]       # 'SVWP_joint', 'DCC_joint', 'DCC_bivariate_loop', 'SW_cross_validated', 'SW_{%d}', 'sFC'
+    model_name = sys.argv[3]       # 'SVWP' (for d2), 'SVWP_joint', 'DCC' (for d2), 'DCC_joint', 'DCC_bivariate_loop', 'SW_cross_validated', 'SW_{%d}', 'sFC'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,

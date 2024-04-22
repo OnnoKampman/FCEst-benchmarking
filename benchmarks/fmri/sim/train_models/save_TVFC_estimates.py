@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd{%d}s'
     data_split = sys.argv[2]       # 'all' or 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0200'
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
     metric = sys.argv[4]           # 'correlation' or 'covariance'
     model_name = sys.argv[5]       # 'VWP', 'VWP_joint', 'SVWP', 'SVWP_joint', 'SW_15', 'SW_30', 'SW_60', 'SW_120', or 'sFC'
 

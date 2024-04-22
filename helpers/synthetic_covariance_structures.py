@@ -309,3 +309,17 @@ def get_ylim(covs_type: str) -> list[float]:
             return [-1.1, 1.1]
         case _:
             return [-1.0, 1.0]
+
+def to_human_readable(covs_type: str) -> str:
+    """
+    Convert covs_type to human readable format used in figures.
+    """
+    match covs_type:
+        case 'periodic_1':
+            return 'periodic (slow)'
+        case 'periodic_3':
+            return 'periodic (fast)'
+        case 'checkerboard':
+            return 'boxcar'
+        case _:
+            return covs_type.replace('_', ' ')

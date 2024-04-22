@@ -70,7 +70,6 @@ def plot_method_tvfc_estimates(
     y_train_locations: np.array,
     data_split: str,
     metric: str,
-    parcellation: str = None,
     subject_name: str = None,
     noise_type: str = None,
     i_trial: int = None,
@@ -103,7 +102,6 @@ def plot_method_tvfc_estimates(
     :param label_name:
     :param metric:
         'correlation' or 'covariance'.
-    :param parcellation:
     :param subject_name:
     :param i_time_series:
         By default we expect the bivariate case.

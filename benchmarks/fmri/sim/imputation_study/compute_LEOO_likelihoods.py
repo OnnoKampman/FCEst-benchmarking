@@ -15,7 +15,7 @@ if __name__ == "__main__":
     data_split = 'LEOO'  # leave-every-other-out
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd3s'
-    experiment_data = sys.argv[2]  # e.g. 'N0200_T0200'
+    experiment_data = sys.argv[2]  # 'Nxxxx_Txxxx'
     model_name = sys.argv[3]       # 'SVWP_joint', 'DCC_joint', 'DCC_bivariate_loop', 'SW_cross_validated', 'SW_{%d}', 'sFC'
 
     cfg = get_config_dict(
@@ -83,12 +83,14 @@ if __name__ == "__main__":
         print(test_likelihoods_df.astype(float).round(2))
 
         likelihoods_filename = f'{data_split:s}_{noise_type:s}_likelihoods_{model_name:s}.csv'
-        test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
+        test_likelihoods_savedir = os.path.join(
+            cfg['git-results-basedir'], 'imputation_study'
+        )
         if not os.path.exists(test_likelihoods_savedir):
             os.makedirs(test_likelihoods_savedir)
         test_likelihoods_df.astype(float).to_csv(
             os.path.join(test_likelihoods_savedir, likelihoods_filename),
             index=True,
-            float_format='%.2f'
+            float_format='%.2f',
         )
         logging.info(f"Saved {data_split:s} likelihoods '{likelihoods_filename:s}' in '{test_likelihoods_savedir:s}'.")

@@ -299,11 +299,13 @@ def get_sparse_covariance_structure(covariance_time_series: np.array, n_time_ser
 
 def get_ylim(covs_type: str) -> list[float]:
     match covs_type:
-        case 'null':
-            return [-0.45, 0.45]
         case 'constant':
             return [0.0, 1.0]
+        case 'null':
+            return [-0.45, 0.45]
         case 'state_transition':
-            return [-0.1, 1.0]
+            return [0.0, 1.0]
+        case 'stepwise':
+            return [-1.1, 1.1]
         case _:
-            return [-1.1, 1.0]
+            return [-1.0, 1.0]

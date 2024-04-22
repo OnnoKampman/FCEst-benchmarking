@@ -39,7 +39,7 @@ if __name__ == "__main__":
                     f'{covs_type:s}_covariance.csv'
                 )
                 if not os.path.exists(data_filepath):
-                    logging.warning(f"File '{data_filepath:s}' not found.")
+                    logging.warning(f"Data file '{data_filepath:s}' not found.")
                     if covs_type == 'boxcar':
                         data_filepath = os.path.join(
                             cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
@@ -48,6 +48,8 @@ if __name__ == "__main__":
                         if not os.path.exists(data_filepath):
                             logging.warning(f"File '{data_filepath:s}' not found.")
                             continue
+                    else:
+                        continue
                 x, y = load_data(
                     data_filepath,
                     verbose=False,

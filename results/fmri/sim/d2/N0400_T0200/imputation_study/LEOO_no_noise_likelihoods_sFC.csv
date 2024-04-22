@@ -1,4 +1,4 @@
-,null,constant,periodic_1,periodic_2,periodic_3,periodic_4,periodic_5,checkerboard,stepwise,state_transition,change_point
+,null,constant,periodic_1,periodic_2,periodic_3,periodic_4,periodic_5,boxcar,stepwise,state_transition,change_point
 0,-2.85,-2.38,-2.82,-2.79,-2.79,,,-2.75,-2.86,-2.64,
 1,-2.88,-2.37,-2.75,-2.85,-2.75,,,-2.68,-2.78,-2.68,
 2,-2.87,-2.28,-2.79,-2.86,-2.87,,,-2.71,-2.95,-2.68,

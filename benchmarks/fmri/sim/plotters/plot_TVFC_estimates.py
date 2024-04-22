@@ -22,7 +22,7 @@ def plot_d2_all_covariance_structures(
     time_series_noise_type: str,
     data_split: str,
     i_trial: int,
-    figsize: tuple[float] = (4.7, 6.6),
+    figsize: tuple[float] = (4.7, 6.7),
     ground_truth_linewidth: float = 1.5,
     figures_savedir: str = None,
 ) -> None:
@@ -115,8 +115,13 @@ def plot_d2_all_covariance_structures(
             )
 
         ax[i_covs_type].set_xlim(config_dict['plot-data-xlim'])
-        ax[i_covs_type].set_ylim(get_ylim(covs_type=covs_type))
-        # ax[i_covs_type].set_ylabel(covs_type, rotation=0)
+        ax[i_covs_type].set_ylim(
+            get_ylim(covs_type=covs_type)
+        )
+        # ax[i_covs_type].set_ylabel(
+        #     covs_type,
+        #     rotation=0,
+        # )
 
         if i_covs_type == 0:
             ax[i_covs_type].legend(

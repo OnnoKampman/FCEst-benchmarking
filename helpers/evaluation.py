@@ -424,6 +424,7 @@ def get_test_location_estimated_covariance_structure(
     data_set_name = config_dict['data-set-name']
     match data_set_name:
         case 'd2' | 'd3d' | 'd3s' | 'd4s' | 'd6s' | 'd9s' | 'd15s':  # TODO: generalize this
+
             wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], noise_type, data_split,
                 f'trial_{i_trial:03d}', model_name
@@ -439,10 +440,11 @@ def get_test_location_estimated_covariance_structure(
             )
 
             # Fix renaming issue.
-            if not os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
-                logging.warning(f"WP model file {os.path.join(wp_model_savedir, wp_model_filename):s} not found.")
-                if covs_type == 'boxcar':
-                    wp_model_filename = 'checkerboard.json'
+            if model_name in ['SVWP', 'VWP', 'SVWP_joint', 'VWP_joint']:
+                if not os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
+                    logging.warning(f"WP model file {os.path.join(wp_model_savedir, wp_model_filename):s} not found.")
+                    if covs_type == 'boxcar':
+                        wp_model_filename = 'checkerboard.json'
             if not os.path.exists(tvfc_estimates_filepath):
                 if covs_type == 'boxcar':
                     tvfc_estimates_filepath = os.path.join(
@@ -498,7 +500,7 @@ def get_test_location_estimated_covariance_structure(
         case 'SVWP' | 'SVWP_joint':  # we do not have to interpolate linearly here
             wp_model_filepath = os.path.join(wp_model_savedir, wp_model_filename)
             if not os.path.exists(wp_model_filepath):
-                raise FileNotFoundError(f"Could not load model '{wp_model_filepath:s}'.")
+                raise FileNotFoundError(f"Could not load WP model '{wp_model_filepath:s}'.")
             k = gpflow.kernels.Matern52()
             m = SparseVariationalWishartProcess(
                 D=n_time_series,
@@ -518,7 +520,10 @@ def get_test_location_estimated_covariance_structure(
                 logging.warning(f"Could not load TVFC estimates '{tvfc_estimates_filepath:s}'.")
                 return
             # TODO: the Rockland load did not have an index_col=0 before!
-            tvfc_estimates_df = pd.read_csv(tvfc_estimates_filepath, index_col=0)  # (D*D, N_train)
+            tvfc_estimates_df = pd.read_csv(
+                tvfc_estimates_filepath,
+                index_col=0,
+            )  # (D*D, N_train)
             train_locations_predicted_covariance_structure = to_3d_format(tvfc_estimates_df.values)  # (N_train, D, D)
             test_locations_predicted_covariance_structure = interpolate_all_matrices(
                 train_estimated_covs=train_locations_predicted_covariance_structure,

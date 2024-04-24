@@ -129,7 +129,9 @@ def plot_method_tvfc_estimates(
                     savedir=wp_model_savedir,
                     model_name=wp_model_filename,
                 )
-                x_predict = np.linspace(0., 1., config_dict['wp-n-predict-samples']).reshape(-1, 1)
+                x_predict = np.linspace(
+                    0., 1., config_dict['wp-n-predict-samples']
+                ).reshape(-1, 1)
                 plot_wishart_process_covariances_pairwise(
                     x_predict, m,
                     i=i_time_series,
@@ -158,7 +160,9 @@ def plot_method_tvfc_estimates(
                     savedir=wp_model_savedir,
                     model_name=wp_model_filename,
                 )
-                x_predict = np.linspace(0., 1., config_dict['wp-n-predict-samples']).reshape(-1, 1)
+                x_predict = np.linspace(
+                    0., 1., config_dict['wp-n-predict-samples']
+                ).reshape(-1, 1)
                 plot_wishart_process_covariances_pairwise(
                     x_predict, m,
                     i=i_time_series,
@@ -417,6 +421,7 @@ def plot_mgarch_estimated_covariance_structure(
     j: int,
     markersize: float = 3.6,
     linewidth: float = 1.5,
+    plot_alpha: float = 0.6,
     connectivity_metric: str = 'correlation',
     ax=None,
 ) -> None:
@@ -454,7 +459,7 @@ def plot_mgarch_estimated_covariance_structure(
             linewidth=linewidth, 
             markersize=markersize, 
             label=model_name_str,
-            alpha=0.6,
+            # alpha=plot_alpha,
         )
     else:
         plt.plot(
@@ -462,7 +467,7 @@ def plot_mgarch_estimated_covariance_structure(
             linewidth=linewidth,
             markersize=markersize,
             label=model_name_str,
-            alpha=0.6,
+            # alpha=plot_alpha,
         )
 
 
@@ -474,6 +479,7 @@ def plot_cross_validated_sliding_windows_estimated_covariance_structure(
     j: int,
     markersize: float = 3.6,
     linewidth: float = 1.5,
+    plot_alpha: float = 0.6,
     connectivity_metric: str = 'correlation',
     plot_color: str = None,
     ax=None,
@@ -498,7 +504,7 @@ def plot_cross_validated_sliding_windows_estimated_covariance_structure(
             markersize=markersize,
             color=plot_color,
             label=model_name_str,
-            alpha=0.6,
+            # alpha=plot_alpha,
         )
     else:
         plt.plot(
@@ -507,7 +513,7 @@ def plot_cross_validated_sliding_windows_estimated_covariance_structure(
             markersize=markersize,
             color=plot_color,
             label=model_name_str,
-            alpha=0.6,
+            # alpha=plot_alpha,
         )
 
 
@@ -521,6 +527,7 @@ def plot_sliding_windows_estimated_covariance_structure(
     markersize: float = 3.6,
     label: str = 'SW',
     linewidth: float = 1.5,
+    plot_alpha: float = 0.6,
     connectivity_metric: str = 'correlation',
     plot_color: str = None,
     ax=None,
@@ -545,7 +552,7 @@ def plot_sliding_windows_estimated_covariance_structure(
             linewidth=linewidth,
             color=plot_color,
             label=label,
-            alpha=0.6,
+            # alpha=plot_alpha,
         )
     else:
         plt.plot(
@@ -554,7 +561,7 @@ def plot_sliding_windows_estimated_covariance_structure(
             linewidth=linewidth,
             color=plot_color,
             label=label,
-            alpha=0.6,
+            # alpha=plot_alpha,
         )
 
 
@@ -616,6 +623,7 @@ def plot_static_estimated_covariance_structure(
     repetition_time: float = None,
     plot_color: str = None,
     linewidth: float = 1.5,
+    plot_alpha: float = 0.6,
     label: str = 'sFC',
     ax=None,
 ) -> None:
@@ -649,7 +657,7 @@ def plot_static_estimated_covariance_structure(
             color=plot_color,
             linewidth=linewidth,
             label=label,
-            # alpha=0.6,
+            # alpha=plot_alpha,
         )
     else:
         plt.plot(
@@ -657,7 +665,7 @@ def plot_static_estimated_covariance_structure(
             color=plot_color,
             linewidth=linewidth,
             label=label,
-            # alpha=0.6,
+            # alpha=plot_alpha,
         )
 
 

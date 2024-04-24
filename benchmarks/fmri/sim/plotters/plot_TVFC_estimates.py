@@ -15,6 +15,9 @@ from helpers.plotters import plot_method_tvfc_estimates
 from helpers.synthetic_covariance_structures import get_ground_truth_covariance_structure, get_ylim, to_human_readable
 
 
+LINEWIDTH = 1.5
+
+
 def plot_d2_all_covariance_structures(
     config_dict: dict,
     signal_to_noise_ratio: float,
@@ -23,7 +26,7 @@ def plot_d2_all_covariance_structures(
     data_split: str,
     i_trial: int,
     figsize: tuple[float] = (5.4, 10.4),
-    ground_truth_linewidth: float = 1.5,
+    ground_truth_linewidth: float = LINEWIDTH,
     figures_savedir: str = None,
 ) -> None:
     """
@@ -142,7 +145,8 @@ def plot_d2_all_covariance_structures(
         )
         ax[i_covs_type].set_ylabel(
             to_human_readable(covs_type),
-            # rotation=0,
+            rotation=0,
+            labelpad=10,
         )
 
         if i_covs_type == 0:
@@ -156,7 +160,10 @@ def plot_d2_all_covariance_structures(
     # plt.legend(frameon=True, title='cohort')
 
     ax[-1].set_xlabel('time [a.u.]')
-    plt.subplots_adjust(hspace=0.12, wspace=0)
+    plt.subplots_adjust(
+        hspace=0.12,
+        wspace=0,
+    )
 
     if figures_savedir is not None:
         figure_filename = f'all_covs_types_{connectivity_metric:s}s.pdf'

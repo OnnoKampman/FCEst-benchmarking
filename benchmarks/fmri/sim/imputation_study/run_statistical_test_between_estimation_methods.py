@@ -68,7 +68,7 @@ if __name__ == "__main__":
                 ttest_results_pingouin_df = pingouin.ttest(
                     all_methods_test_likelihoods[0], all_methods_test_likelihoods[1],
                     alternative='two-sided',
-                    correction='auto'
+                    correction='auto',
                 )
                 print(ttest_results_pingouin_df.round(3))
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
             all_method_significances_df.to_csv(
                 os.path.join(test_likelihoods_savedir, likelihoods_pvals_filename),
                 index=True,
-                float_format='%.3f'
+                float_format='%.3f',
             )
             logging.info(f"Saved {data_split:s} likelihoods p-values '{likelihoods_pvals_filename:s}' in '{test_likelihoods_savedir:s}'.")
 

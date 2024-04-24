@@ -25,7 +25,7 @@ def plot_d2_all_covariance_structures(
     time_series_noise_type: str,
     data_split: str,
     i_trial: int,
-    figsize: tuple[float] = (5.4, 10.4),
+    figsize: tuple[float] = (5.3, 10.4),
     ground_truth_linewidth: float = LINEWIDTH,
     figures_savedir: str = None,
 ) -> None:
@@ -48,10 +48,10 @@ def plot_d2_all_covariance_structures(
     sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
-    n_covs_types = len(config_dict['plot-covs-types'])
+    num_covs_types = len(config_dict['plot-covs-types'])
 
     fig, ax = plt.subplots(
-        nrows=n_covs_types,
+        nrows=num_covs_types,
         ncols=1,
         sharex=True,
         figsize=figsize,
@@ -90,14 +90,17 @@ def plot_d2_all_covariance_structures(
 
         ax[i_covs_type].plot(
             x, [step[0, 1] for step in ground_truth_covariance_structure],
-            color='dimgray',
+            # color='dimgray',
+            color='black',
             # linestyle='dashed',
             linewidth=ground_truth_linewidth,
             alpha=0.5,
             label='Ground\nTruth',
         )
 
-        for i_model_name, model_name in enumerate(config_dict['plot-models']):
+        models_list = config_dict['plot-models']
+        models_list.remove('sFC')  # the sFC estimate is not really informative here
+        for i_model_name, model_name in enumerate(models_list):
 
             plot_color = get_palette(
                 config_dict['plot-models']
@@ -119,25 +122,25 @@ def plot_d2_all_covariance_structures(
                 ax=ax[i_covs_type],
             )
 
-        plot_color = get_palette(
-            config_dict['plot-models']
-        )[0]
+        # plot_color = get_palette(
+        #     config_dict['plot-models']
+        # )[0]
 
-        plot_method_tvfc_estimates(
-            config_dict=config_dict,
-            model_name='SVWP',
-            x_train_locations=x,
-            y_train_locations=y,
-            data_split=data_split,
-            i_trial=i_trial,
-            noise_type=time_series_noise_type,
-            covs_type=covs_type,
-            metric=connectivity_metric,
-            i_time_series=0,
-            j_time_series=1,
-            plot_color=plot_color,
-            ax=ax[i_covs_type],
-        )
+        # plot_method_tvfc_estimates(
+        #     config_dict=config_dict,
+        #     model_name='SVWP',
+        #     x_train_locations=x,
+        #     y_train_locations=y,
+        #     data_split=data_split,
+        #     i_trial=i_trial,
+        #     noise_type=time_series_noise_type,
+        #     covs_type=covs_type,
+        #     metric=connectivity_metric,
+        #     i_time_series=0,
+        #     j_time_series=1,
+        #     plot_color=plot_color,
+        #     ax=ax[i_covs_type],
+        # )
 
         ax[i_covs_type].set_xlim(config_dict['plot-data-xlim'])
         ax[i_covs_type].set_ylim(
@@ -145,8 +148,11 @@ def plot_d2_all_covariance_structures(
         )
         ax[i_covs_type].set_ylabel(
             to_human_readable(covs_type),
-            rotation=0,
-            labelpad=10,
+            rotation='horizontal',
+            # rotation=0,
+            # labelpad=40,
+            horizontalalignment='right',
+            verticalalignment='center',
         )
 
         if i_covs_type == 0:

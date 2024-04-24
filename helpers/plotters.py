@@ -335,7 +335,7 @@ def plot_wishart_process_covariances(
     repetition_time: float = None,
     data_length=None,
     linewidth: float = 1.5,
-    alpha: float = 0.2,
+    alpha: float = 0.15,
     label: str = 'WP',
 ) -> None:
     """
@@ -355,7 +355,8 @@ def plot_wishart_process_covariances(
             xx, all_covs_means_pair,
             linewidth=linewidth,
             label=label,
-            alpha=1.0,
+            # alpha=1.0,
+            zorder=99,  # to keep this line on top
         )
         col = line.get_color()
         ax.fill_between(
@@ -371,7 +372,8 @@ def plot_wishart_process_covariances(
             xx, all_covs_means_pair,
             linewidth=linewidth,
             label=label,
-            alpha=1.0,
+            # alpha=1.0,
+            zorder=99,
         )
         col = line.get_color()
         plt.fill_between(

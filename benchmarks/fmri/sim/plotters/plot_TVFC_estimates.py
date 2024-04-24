@@ -94,7 +94,7 @@ def plot_d2_all_covariance_structures(
             color='black',
             # linestyle='dashed',
             linewidth=ground_truth_linewidth,
-            alpha=0.5,
+            alpha=0.8,
             label='Ground\nTruth',
         )
 
@@ -148,8 +148,6 @@ def plot_d2_all_covariance_structures(
         ax[i_covs_type].set_ylabel(
             to_human_readable(covs_type),
             rotation='horizontal',
-            # rotation=0,
-            # labelpad=40,
             horizontalalignment='right',
             verticalalignment='center',
         )
@@ -161,8 +159,6 @@ def plot_d2_all_covariance_structures(
                 title='TVFC\nestimator',
                 alignment='left',
             )
-
-    # plt.legend(frameon=True, title='cohort')
 
     ax[-1].set_xlabel('time [a.u.]')
     plt.subplots_adjust(

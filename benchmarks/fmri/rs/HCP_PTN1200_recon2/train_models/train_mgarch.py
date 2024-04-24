@@ -28,7 +28,7 @@ if __name__ == "__main__":
     all_subjects_list = get_human_connectome_project_subjects(
         data_dir=cfg['data-dir']
     )
-    n_subjects = len(all_subjects_list)
+    num_subjects = len(all_subjects_list)
 
     # Allow for local and CPU cluster training.
     # When running on the Hivemind with SLURM, only one model is trained here.
@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
     for i_subject, subject_filename in enumerate(subjects):
 
-        print(f'\n> SUBJECT {i_subject+1:d} / {n_subjects:d}: {subject_filename:s}')
+        print(f'\n> SUBJECT {i_subject+1:d} / {num_subjects:d}: {subject_filename:s}')
 
         data_file = os.path.join(cfg['data-dir'], subject_filename)
         for scan_id in cfg['scan-ids']:

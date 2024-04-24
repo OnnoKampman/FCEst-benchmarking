@@ -25,12 +25,12 @@ if __name__ == "__main__":
     )
     data_set_name = cfg['data-set-name']
     experiments_basedir = cfg['experiments-basedir']
-    max_number_of_cpus = cfg['max-n-cpus']
+    max_num_cpus = cfg['max-n-cpus']
 
-    n_subjects = cfg['n-subjects']
+    num_subjects = cfg['n-subjects']
     all_subjects_list = get_human_connectome_project_subjects(
         data_dir=cfg['data-dir'],
-        first_n_subjects=n_subjects
+        first_n_subjects=num_subjects
     )
 
     slurm_job_str = ("#!/bin/bash\n"
@@ -45,7 +45,7 @@ if __name__ == "__main__":
                      "#! #SBATCH --ntasks-per-node=2\n"
                      "#SBATCH --cpus-per-task=1\n"
                      "#SBATCH --time=20:00:00\n"
-                     f"#SBATCH --array=1-{n_subjects:d}%{max_number_of_cpus:d}\n"
+                     f"#SBATCH --array=1-{num_subjects:d}%{max_num_cpus:d}\n"
                      ". /home/opk20/miniconda3/bin/activate\n"
                      "conda activate fcest-env\n"
                      "conda info -e\n"
@@ -57,7 +57,9 @@ if __name__ == "__main__":
     print('\n', slurm_job_str, '\n')
 
     # Create SLURM directory where logs will be saved (SLURM does not create these automatically).
-    slurm_log_dir = os.path.join(cfg['experiments-basedir'], 'slurm_logs', data_split, model_name)
+    slurm_log_dir = os.path.join(
+        cfg['experiments-basedir'], 'slurm_logs', data_split, model_name
+    )
     if not os.path.exists(slurm_log_dir):
         os.makedirs(slurm_log_dir)
 

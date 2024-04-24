@@ -30,7 +30,7 @@ if __name__ == "__main__":
     all_subjects_list = get_human_connectome_project_subjects(
         data_dir=cfg['data-dir']
     )
-    n_subjects = cfg['n-subjects']
+    num_subjects = cfg['n-subjects']
 
     # Allow for local and CPU cluster training.
     # When running on the Hivemind with SLURM, only one model is trained here.
@@ -43,22 +43,24 @@ if __name__ == "__main__":
                 all_subjects_list[i_subject]
             ]
         except KeyError:
-            subjects = all_subjects_list[:n_subjects]
+            subjects = all_subjects_list[:num_subjects]
     else:
         print('Running locally...')
-        subjects = all_subjects_list[:n_subjects]
+        subjects = all_subjects_list[:num_subjects]
 
     optimal_window_lengths_df = pd.DataFrame()
     for i_subject, subject_filename in enumerate(subjects):
 
-        print(f'\n> SUBJECT {i_subject+1:d} / {n_subjects:d}: {subject_filename:s}')
+        print(f'\n> SUBJECT {i_subject+1:d} / {num_subjects:d}: {subject_filename:s}')
 
         data_file = os.path.join(cfg['data-dir'], subject_filename)
         for scan_id in cfg['scan-ids']:
             print(f'\nSCAN {scan_id+1:d} / 4\n')
 
             x, y = load_human_connectome_project_data(
-                data_file, scan_id=scan_id, verbose=False
+                data_file,
+                scan_id=scan_id,
+                verbose=False,
             )  # (N, 1), (N, D)
 
             match data_split:
@@ -75,7 +77,7 @@ if __name__ == "__main__":
             m = SlidingWindows(
                 x_train_locations=x_train,
                 y_train_locations=y_train,
-                repetition_time=cfg['repetition-time']
+                repetition_time=cfg['repetition-time'],
             )
             optimal_window_length = m.compute_cross_validated_optimal_window_length()
 
@@ -84,8 +86,8 @@ if __name__ == "__main__":
 
             for metric in ['correlation', 'covariance']:
                 model_estimates_savedir = os.path.join(
-                    cfg['experiments-basedir'], 'TVFC_estimates', f'scan_{scan_id:d}', data_split,
-                    experiment_dimensionality, metric, model_name
+                    cfg['experiments-basedir'], 'TVFC_estimates', f'scan_{scan_id:d}',
+                    data_split, experiment_dimensionality, metric, model_name
                 )
                 m.save_tvfc_estimates(
                     optimal_window_length=optimal_window_length,

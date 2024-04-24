@@ -30,7 +30,7 @@ def plot_tvfc_estimates(
     experiment_dimensionality: str,
     subject: int,
     random_edges: bool = False,
-    figsize: tuple[float] = (4.8, 3.0),
+    figsize: tuple[float] = (5.0, 4.0),
     figures_savedir: str = None,
 ) -> None:
     """
@@ -40,6 +40,17 @@ def plot_tvfc_estimates(
     ----------
     config_dict : dict
         Configuration dictionary.
+    x_train_locations : np.array
+        Time points of the training data.
+    y_train_locations : np.array
+        Time series data.
+    metric : str
+        Connectivity metric.
+    data_split : str
+        Data split.
+    scan_id : int
+        Scan ID.
+    experiment_dimensionality : str
     """
     n_time_series = y_train_locations.shape[1]
 
@@ -238,8 +249,8 @@ def _plot_method_tvfc_estimates(
             estimates_path = os.path.join(model_estimates_dir, f"{subject:d}.csv")
             if os.path.exists(estimates_path):
                 covariance_structure_df = pd.read_csv(
-                    estimates_path, 
-                    index_col=0
+                    estimates_path,
+                    index_col=0,
                 )  # (D*D, N)
                 covariance_structure = to_3d_format(covariance_structure_df.values)  # (N, D, D)
                 plot_cross_validated_sliding_windows_estimated_covariance_structure(
@@ -267,7 +278,7 @@ def _plot_method_tvfc_estimates(
                 j=j_time_series,
                 label=model_name,
                 connectivity_metric=metric,
-                markersize=0
+                markersize=0,
             )
         case 'sFC':
             plot_windowed_covariances(
@@ -277,7 +288,7 @@ def _plot_method_tvfc_estimates(
                 i=i_time_series,
                 j=j_time_series,
                 repetition_time=config_dict['repetition-time'],
-                connectivity_metric=metric
+                connectivity_metric=metric,
             )
         case _:
             logging.error(f"Model name '{model_name:s}' not recognized.")
@@ -293,7 +304,7 @@ if __name__ == "__main__":
     ]
     scan_ids = [
         0,
-        1
+        1,
     ]
 
     data_dimensionality = sys.argv[1]  # 'd15' or 'd50'
@@ -354,7 +365,7 @@ if __name__ == "__main__":
                 experiment_dimensionality=experiment_dimensionality,
                 subject=subject,
                 random_edges=False,
-                figures_savedir=figures_savedir
+                figures_savedir=figures_savedir,
             )
             plot_tvfc_estimates(
                 config_dict=cfg,
@@ -366,5 +377,5 @@ if __name__ == "__main__":
                 experiment_dimensionality=experiment_dimensionality,
                 subject=subject,
                 random_edges=True,
-                figures_savedir=figures_savedir
+                figures_savedir=figures_savedir,
             )

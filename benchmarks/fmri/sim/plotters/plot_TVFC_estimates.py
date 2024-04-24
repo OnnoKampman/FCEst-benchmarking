@@ -99,8 +99,7 @@ def plot_d2_all_covariance_structures(
         )
 
         models_list = config_dict['plot-models']
-        models_list.remove('sFC')  # the sFC estimate is not really informative here
-        for i_model_name, model_name in enumerate(models_list):
+        for i_model_name, model_name in enumerate(models_list[:-1]):  # the sFC estimate is not really informative here
 
             plot_color = get_palette(
                 config_dict['plot-models']

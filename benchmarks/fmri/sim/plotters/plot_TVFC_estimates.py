@@ -15,9 +15,6 @@ from helpers.plotters import plot_method_tvfc_estimates
 from helpers.synthetic_covariance_structures import get_ground_truth_covariance_structure, get_ylim, to_human_readable
 
 
-LINEWIDTH = 1.5
-
-
 def plot_d2_all_covariance_structures(
     config_dict: dict,
     signal_to_noise_ratio: float,
@@ -25,24 +22,25 @@ def plot_d2_all_covariance_structures(
     time_series_noise_type: str,
     data_split: str,
     i_trial: int,
-    figsize: tuple[float] = (5.3, 10.4),
-    ground_truth_linewidth: float = LINEWIDTH,
+    figsize: tuple[float] = (5.2, 10.8),
+    ground_truth_linewidth: float = 1.5,
     figures_savedir: str = None,
 ) -> None:
     """
     Plots bivariate correlation edge for all synthetic covariance structures considered.
 
+    Note that .eps files do not render transparency plots.
+
     Parameters
     ----------
     :param config_dict:
     :param signal_to_noise_ratio:
-    :param figure_filename:
-        Note that .eps files do not render transparency plots.
     :param connectivity_metric:
     :param time_series_noise_type:
     :param data_split:
     :param i_trial:
     :param figsize:
+    :param ground_truth_linewidth:
     :param figures_savedir:
     """
     sns.set(style="whitegrid")
@@ -120,26 +118,6 @@ def plot_d2_all_covariance_structures(
                 plot_color=plot_color,
                 ax=ax[i_covs_type],
             )
-
-        # plot_color = get_palette(
-        #     config_dict['plot-models']
-        # )[0]
-
-        # plot_method_tvfc_estimates(
-        #     config_dict=config_dict,
-        #     model_name='SVWP',
-        #     x_train_locations=x,
-        #     y_train_locations=y,
-        #     data_split=data_split,
-        #     i_trial=i_trial,
-        #     noise_type=time_series_noise_type,
-        #     covs_type=covs_type,
-        #     metric=connectivity_metric,
-        #     i_time_series=0,
-        #     j_time_series=1,
-        #     plot_color=plot_color,
-        #     ax=ax[i_covs_type],
-        # )
 
         ax[i_covs_type].set_xlim(config_dict['plot-data-xlim'])
         ax[i_covs_type].set_ylim(

@@ -20,27 +20,41 @@ from helpers.plotters import plot_cross_validated_sliding_windows_estimated_cova
 from helpers.plotters import plot_wishart_process_covariances_pairwise
 
 
-def _plot_tvfc_estimates(
-        config_dict: dict,
-        x_train_locations: np.array, y_train_locations: np.array,
-        metric: str, data_split: str, scan_id: int, experiment_dimensionality: str, subject: int, 
-        random_edges: bool = False, figures_savedir: str = None
+def plot_tvfc_estimates(
+    config_dict: dict,
+    x_train_locations: np.array,
+    y_train_locations: np.array,
+    metric: str,
+    data_split: str,
+    scan_id: int,
+    experiment_dimensionality: str,
+    subject: int,
+    random_edges: bool = False,
+    figsize: tuple[float] = (4.8, 3.0),
+    figures_savedir: str = None,
 ) -> None:
     """
     Plots estimated TVFC for a specified or random selection of edges.
+
+    Parameters
+    ----------
+    config_dict : dict
+        Configuration dictionary.
     """
     n_time_series = y_train_locations.shape[1]
 
-    sns.set(style="whitegrid", font_scale=1.0)
+    sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
-    n_rows = 3
-    n_columns = 2
+    num_rows = 3
+    num_columns = 2
     fig, ax = plt.subplots(
-        nrows=n_rows, ncols=n_columns,
+        nrows=num_rows,
+        ncols=num_columns,
         # figsize=config_dict['plot-model-estimates-figsize'],
-        figsize=(8, 5),
-        sharex=True, sharey=True
+        figsize=figsize,
+        sharex=True,
+        sharey=True,
     )
 
     if random_edges:
@@ -48,28 +62,29 @@ def _plot_tvfc_estimates(
         interaction_pairs_indices = np.array(interaction_pairs_indices).T
         n_interactions = int(n_time_series * (n_time_series - 1) / 2)
         assert n_interactions == len(interaction_pairs_indices)
-        random_interactions = np.random.choice(len(interaction_pairs_indices), n_rows*n_columns)
+        random_interactions = np.random.choice(len(interaction_pairs_indices), num_rows*num_columns)
         interaction_pairs_indices = interaction_pairs_indices[random_interactions]
     else:
         # Pick some edges based on which ones show high imputation benchmark performance.
         edges_of_interest_indices = [
-            (0, 2),  # V(L) - V(M)
+            (0, 2),   # V(L) - V(M)
             (1, 9),
             (4, 10),  # AUD - CBM
             (4, 11),  # AUD - SM
-            (2, 3),  # V(M) - V(O)
+            (2, 3),   # V(M) - V(O)
             (12, 14),
         ]
         n_interactions = len(edges_of_interest_indices)
-        assert n_interactions == n_rows * n_columns
+        assert n_interactions == num_rows * num_columns
         interaction_pairs_indices = edges_of_interest_indices
 
     for i_interaction, (i_time_series, j_time_series) in enumerate(interaction_pairs_indices):
         print(f'\nEdge {i_interaction+1:d} / {n_interactions:d}: time series {i_time_series:d} <-> {j_time_series:d}')
 
-        splot = plt.subplot(n_rows, n_columns, i_interaction + 1)
+        splot = plt.subplot(num_rows, num_columns, i_interaction + 1)
 
         for tvfc_estimation_method in config_dict['plot-model-estimates-methods']:
+
             _plot_method_tvfc_estimates(
                 config_dict=config_dict,
                 model_name=tvfc_estimation_method,
@@ -91,10 +106,12 @@ def _plot_tvfc_estimates(
         # )
 
         bbox_to_anchor = (1.02, 1.0)  # used to put legend outside of plot
-        if i_interaction == (n_columns - 1):
+        if i_interaction == (num_columns - 1):
             plt.legend(
-                bbox_to_anchor=bbox_to_anchor, frameon=True,
-                title='TVFC\nestimator', alignment='left'
+                bbox_to_anchor=bbox_to_anchor,
+                frameon=True,
+                title='TVFC\nestimator',
+                alignment='left',
             )
 
         # plt.gca().get_xaxis().set_visible(False)
@@ -134,13 +151,24 @@ def _plot_tvfc_estimates(
 
 
 def _plot_method_tvfc_estimates(
-        config_dict: dict, model_name: str, i_time_series: int, j_time_series: int,
-        x_train_locations: np.array, y_train_locations: np.array,
-        data_split: str, scan_id: int, experiment_dimensionality: str, subject: int, metric: str
+    config_dict: dict,
+    model_name: str,
+    i_time_series: int,
+    j_time_series: int,
+    x_train_locations: np.array,
+    y_train_locations: np.array,
+    data_split: str,
+    scan_id: int,
+    experiment_dimensionality: str,
+    subject: int,
+    metric: str,
 ) -> None:
+    """
+    Plot TVFC estimates for a single estimation method.
+    """
     n_time_series = y_train_locations.shape[1]
 
-    sns.set(style="whitegrid", font_scale=1.0)
+    sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
     match model_name:
@@ -158,17 +186,23 @@ def _plot_method_tvfc_estimates(
                     kernel=k,
                     verbose=False
                 )
-                m.load_from_params_dict(savedir=model_savedir, model_name=f'{subject:d}.json')
-                x_predict = np.linspace(0., 1., config_dict['wp-n-predict-samples']).reshape(-1, 1)
+                m.load_from_params_dict(
+                    savedir=model_savedir,
+                    model_name=f'{subject:d}.json',
+                )
+                x_predict = np.linspace(
+                    0., 1., config_dict['wp-n-predict-samples']
+                ).reshape(-1, 1)
                 plot_wishart_process_covariances_pairwise(
-                    x_predict, m,
+                    x_predict,
+                    m,
                     i=i_time_series,
                     j=j_time_series,
                     rescale_x_axis='minutes',
                     connectivity_metric=metric,
                     repetition_time=config_dict['repetition-time'],
                     data_length=x_train_locations.shape[0],
-                    label='WP'  # SVWP-J for specific implementation
+                    label='WP',  # SVWP-J for specific implementation
                 )
                 del m
             else:
@@ -180,7 +214,10 @@ def _plot_method_tvfc_estimates(
             )
             estimates_path = os.path.join(model_estimates_dir, f"{subject:d}.csv")
             if os.path.exists(estimates_path):
-                covariance_structure_df = pd.read_csv(estimates_path, index_col=0)  # (D*D, N)
+                covariance_structure_df = pd.read_csv(
+                    estimates_path,
+                    index_col=0,
+                    )  # (D*D, N)
                 covariance_structure = to_3d_format(covariance_structure_df.values)  # (N, D, D)
                 plot_mgarch_estimated_covariance_structure(
                     estimated_tvfc_array=covariance_structure,
@@ -200,7 +237,10 @@ def _plot_method_tvfc_estimates(
             )
             estimates_path = os.path.join(model_estimates_dir, f"{subject:d}.csv")
             if os.path.exists(estimates_path):
-                covariance_structure_df = pd.read_csv(estimates_path, index_col=0)  # (D*D, N)
+                covariance_structure_df = pd.read_csv(
+                    estimates_path, 
+                    index_col=0
+                )  # (D*D, N)
                 covariance_structure = to_3d_format(covariance_structure_df.values)  # (N, D, D)
                 plot_cross_validated_sliding_windows_estimated_covariance_structure(
                     estimated_tvfc_array=covariance_structure,
@@ -304,7 +344,7 @@ if __name__ == "__main__":
                 repetition_time=cfg['repetition-time'],
                 data_length=n_time_steps
             )
-            _plot_tvfc_estimates(
+            plot_tvfc_estimates(
                 config_dict=cfg,
                 x_train_locations=xx,
                 y_train_locations=y_train,
@@ -316,7 +356,7 @@ if __name__ == "__main__":
                 random_edges=False,
                 figures_savedir=figures_savedir
             )
-            _plot_tvfc_estimates(
+            plot_tvfc_estimates(
                 config_dict=cfg,
                 x_train_locations=xx,
                 y_train_locations=y_train,

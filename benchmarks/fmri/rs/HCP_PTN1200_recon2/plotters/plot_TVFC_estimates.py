@@ -30,7 +30,7 @@ def plot_tvfc_estimates(
     experiment_dimensionality: str,
     subject: int,
     random_edges: bool = False,
-    figsize: tuple[float] = (5.0, 4.0),
+    figsize: tuple[float] = (6.2, 5.2),
     figures_savedir: str = None,
 ) -> None:
     """
@@ -94,7 +94,7 @@ def plot_tvfc_estimates(
 
         splot = plt.subplot(num_rows, num_columns, i_interaction + 1)
 
-        for tvfc_estimation_method in config_dict['plot-model-estimates-methods']:
+        for tvfc_estimation_method in config_dict['plot-model-estimates-methods'][:-1]:  # remove sFC plot
 
             _plot_method_tvfc_estimates(
                 config_dict=config_dict,
@@ -128,6 +128,7 @@ def plot_tvfc_estimates(
         # plt.gca().get_xaxis().set_visible(False)
         # plt.gca().get_yaxis().set_visible(False)
 
+        plt.ylim([-0.1, 15.0])
         plt.ylim([-1.01, 1.01])
         if data_dimensionality == 'd15':
             plt.title(f"{rsn_names[i_time_series]:s} - {rsn_names[j_time_series]:s}")

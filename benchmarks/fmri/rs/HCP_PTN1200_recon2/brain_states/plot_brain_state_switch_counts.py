@@ -12,9 +12,11 @@ from configs.configs import get_config_dict
 from helpers.figures import get_palette
 
 
-def _plot_brain_state_switch_count(
-        config_dict: dict, n_basis_states: int, connectivity_metric: str = 'correlation',
-        figure_savedir: str = None
+def plot_brain_state_switch_count(
+    config_dict: dict,
+    n_basis_states: int,
+    connectivity_metric: str = 'correlation',
+    figure_savedir: str = None,
 ) -> None:
     """
     The number of brain state switches is closely related to the idea of "dwell times".
@@ -27,12 +29,13 @@ def _plot_brain_state_switch_count(
         'correlation', 'covariance'
     :param figure_savedir:
     """
-    sns.set(style="whitegrid", font_scale=1.0)
+    sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
     n_brain_state_switches_savedir = os.path.join(
         config_dict['git-results-basedir'], 'brain_states', f'k{n_basis_states:02d}'
     )
+
     all_brain_state_switch_counts_df = pd.DataFrame()
     for model_name in config_dict['models-brain-state-analysis']:
         n_brain_state_switches_filename = f'number_of_brain_state_switches_{model_name:s}.csv'
@@ -52,7 +55,7 @@ def _plot_brain_state_switch_count(
 
     fig, ax = plt.subplots(
         # figsize=config_dict['plot-brain-state-switch-count-figsize']
-        figsize=(6, 3)
+        figsize=(6.9, 3.5)
     )
     pt.RainCloud(
         data=all_brain_state_switch_counts_df,
@@ -98,7 +101,7 @@ if __name__ == "__main__":
     n_brain_states_list = cfg['n-brain-states-list']
 
     for n_brain_states in n_brain_states_list:
-        _plot_brain_state_switch_count(
+        plot_brain_state_switch_count(
             config_dict=cfg,
             n_basis_states=n_brain_states,
             figure_savedir=os.path.join(

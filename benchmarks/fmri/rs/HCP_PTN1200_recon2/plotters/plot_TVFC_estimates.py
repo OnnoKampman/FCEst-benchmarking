@@ -30,7 +30,7 @@ def plot_tvfc_estimates(
     experiment_dimensionality: str,
     subject: int,
     random_edges: bool = False,
-    figsize: tuple[float] = (6.2, 5.2),
+    figsize: tuple[float] = (6.1, 5.1),
     figures_savedir: str = None,
 ) -> None:
     """
@@ -51,6 +51,10 @@ def plot_tvfc_estimates(
     scan_id : int
         Scan ID.
     experiment_dimensionality : str
+    subject: int
+    random_edges: bool
+    figsize: tuple[float]
+    figures_savedir: str
     """
     n_time_series = y_train_locations.shape[1]
 
@@ -129,7 +133,7 @@ def plot_tvfc_estimates(
         # plt.gca().get_yaxis().set_visible(False)
 
         plt.ylim([-0.1, 15.0])
-        plt.ylim([-1.01, 1.01])
+        plt.ylim([-1.0, 1.0])
         if data_dimensionality == 'd15':
             plt.title(f"{rsn_names[i_time_series]:s} - {rsn_names[j_time_series]:s}")
         else:

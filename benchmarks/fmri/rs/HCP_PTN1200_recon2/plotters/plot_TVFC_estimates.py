@@ -132,7 +132,7 @@ def plot_tvfc_estimates(
         # plt.gca().get_xaxis().set_visible(False)
         # plt.gca().get_yaxis().set_visible(False)
 
-        plt.ylim([-0.1, 15.0])
+        plt.xlim([-0.1, 15.0])
         plt.ylim([-1.0, 1.0])
         if data_dimensionality == 'd15':
             plt.title(f"{rsn_names[i_time_series]:s} - {rsn_names[j_time_series]:s}")

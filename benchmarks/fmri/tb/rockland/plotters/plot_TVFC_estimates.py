@@ -17,8 +17,15 @@ from helpers.rockland import get_rockland_subjects, get_convolved_stim_array, lo
 
 
 def _plot_average_over_subject_tvfc_estimates(
-        config_dict: dict, data_split: str, metric: str, preprocessing_pipeline: str, model_to_plot_name: str,
-        all_subjects_list: list, edges_to_plot_indices, column_names, figures_savedir: str
+    config_dict: dict,
+    data_split: str,
+    metric: str,
+    preprocessing_pipeline: str,
+    model_to_plot_name: str,
+    all_subjects_list: list,
+    edges_to_plot_indices,
+    column_names,
+    figures_savedir: str = None,
 ) -> None:
     """
     Plots average TVFC estimates over all subjects for a single TVFC estimation method.
@@ -47,9 +54,15 @@ def _plot_average_over_subject_tvfc_estimates(
         )
 
 
-def _plot_average_over_subject_tvfc_estimates_joint(
-        config_dict: dict, data_split: str, metric: str, preprocessing_pipeline: str,
-        all_subjects_list: list, edges_to_plot_indices, column_names, figures_savedir: str
+def plot_average_over_subject_tvfc_estimates_joint(
+    config_dict: dict,
+    data_split: str,
+    preprocessing_pipeline: str,
+    all_subjects_list: list,
+    edges_to_plot_indices,
+    column_names,
+    metric: str = 'correlation',
+    figures_savedir: str = None,
 ) -> None:
     """
     Plots TVFC estimates averaged over all subjects jointly for a collection of TVFC
@@ -103,13 +116,21 @@ def _plot_average_over_subject_tvfc_estimates_joint(
 
 
 def _plot_estimates(
-        config_dict: dict, data_split: str, metric: str, preprocessing_pipeline: str,
-        model_to_plot_name: str, all_subjects_list: list,
-        edges_to_plot_indices, column_names,
-        plot_type: str, figures_savedir: str,
-        fig, axes,
-        models_to_plot: list = None, i_model_name: int = None,
-        plot_hrf: bool = False
+    config_dict: dict,
+    data_split: str,
+    metric: str,
+    preprocessing_pipeline: str,
+    model_to_plot_name: str,
+    all_subjects_list: list,
+    edges_to_plot_indices,
+    column_names,
+    plot_type: str,
+    figures_savedir: str,
+    fig,
+    axes,
+    models_to_plot: list = None,
+    i_model_name: int = None,
+    plot_hrf: bool = False,
 ) -> None:
     """
     Plot raw (trended) or detrended TVFC estimates.
@@ -326,10 +347,18 @@ def _plot_individual_subjects(
 
 
 def _compute_average_over_subjects_tvfc_estimates(
-    config_dict: dict, n_time_steps: int, n_time_series: int, data_split: str, metric: str, pp_pipeline: str,
-    model_name: str, all_subjects_list: list
+    config_dict: dict,
+    n_time_steps: int,
+    n_time_series: int,
+    data_split: str,
+    metric: str,
+    pp_pipeline: str,
+    model_name: str,
+    all_subjects_list: list,
 ) -> np.array:
-
+    """
+    Compute average of TVFC estimates across all subjects.
+    """
     average_tvfc_estimates = np.zeros(shape=(n_time_steps, n_time_series, n_time_series))
 
     tvfc_estimates_savedir = os.path.join(
@@ -403,7 +432,7 @@ if __name__ == "__main__":
         column_names=brain_regions_of_interest,
         figures_savedir=figures_base_savedir
     )
-    _plot_average_over_subject_tvfc_estimates_joint(
+    plot_average_over_subject_tvfc_estimates_joint(
         config_dict=cfg,
         data_split=data_split,
         metric=metric,

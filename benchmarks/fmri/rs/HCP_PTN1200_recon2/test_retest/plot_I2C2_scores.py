@@ -5,7 +5,6 @@ import sys
 
 import matplotlib.pyplot as plt
 import matplotlib.colors
-import numpy as np
 import pandas as pd
 import seaborn as sns
 
@@ -13,11 +12,15 @@ from configs.configs import get_config_dict
 from helpers.figures import get_palette
 
 
-def _plot_i2c2_bar(
-        config_dict: dict, metric: str,
-        figures_savedir: str = None
+def plot_i2c2_bar(
+    config_dict: dict,
+    metric: str = 'correlation',
+    figures_savedir: str = None,
 ) -> None:
-    sns.set(style="whitegrid", font_scale=1.0)
+    """
+    Plot bar graph of I2C2 scores.
+    """
+    sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
     all_i2c2_scores_df = pd.DataFrame()
@@ -55,8 +58,10 @@ def _plot_i2c2_bar(
     plt.ylabel('I2C2 test-retest score')
     plt.ylim([0.0, 0.55])
     plt.legend(
-        bbox_to_anchor=(1.01, 1.0), frameon=True,
-        title='TVFC\nestimator', title_fontsize=8, alignment='left'
+        bbox_to_anchor=(1.01, 1.0),
+        frameon=True,
+        title='TVFC\nestimator',
+        alignment='left',
     )
 
     if figures_savedir is not None:
@@ -95,7 +100,7 @@ if __name__ == "__main__":
         hostname=socket.gethostname()
     )
 
-    _plot_i2c2_bar(
+    plot_i2c2_bar(
         config_dict=cfg,
         metric=metric,
         figures_savedir=os.path.join(

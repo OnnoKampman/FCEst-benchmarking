@@ -270,6 +270,7 @@ def get_tvfc_estimates(
             assert experiment_dimensionality is not None
             assert scan_id is not None
             assert subject is not None
+
             wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], 'saved_models', f'scan_{scan_id:d}',
                 data_split, experiment_dimensionality, model_name
@@ -374,7 +375,7 @@ def get_tvfc_estimates(
             sw = SlidingWindows(
                 x_train_locations=x_train,
                 y_train_locations=y_train,
-                repetition_time=repetition_time
+                repetition_time=repetition_time,
             )
             estimated_tvfc = sw.overlapping_windowed_cov_estimation(
                 window_length=window_length,

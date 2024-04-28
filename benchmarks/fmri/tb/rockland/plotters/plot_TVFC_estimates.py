@@ -217,12 +217,8 @@ def _plot_tvfc_estimates(
             label='Stimulus HRF',
         )
 
-    # ax_to_plot.grid(
-    #     linestyle='dashed',
-    #     linewidth=0.4,
-    # )
-    for axis in ['top', 'bottom', 'left', 'right']:
-        ax_to_plot.spines[axis].set_linewidth(0.4)
+    # for axis in ['top', 'bottom', 'left', 'right']:
+        # ax_to_plot.spines[axis].set_linewidth(0.4)
 
     ax_to_plot.set_xlim([0, 144.5])
     ax_to_plot.set_xticks([0, 20, 40, 60, 80, 100, 120, 140])
@@ -238,7 +234,7 @@ def _plot_tvfc_estimates(
             model_to_plot_name.replace('SVWP_joint', 'WP').replace('_joint', '-J').replace('_cross_validated', '-CV')
         )
         ax_to_plot_legend.legend(
-            bbox_to_anchor=(1.01, 1.0),
+            bbox_to_anchor=(1.61, 1.0),
             frameon=True,
             title='ROI edge',
             alignment='left',

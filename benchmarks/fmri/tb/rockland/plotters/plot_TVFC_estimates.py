@@ -264,8 +264,15 @@ def _plot_estimates(
 
 
 def _plot_individual_subjects(
-        config_dict: dict, edges_to_plot_indices, data_split: str, metric: str, pp_pipeline: str,
-        all_subjects_list:list, brain_regions_of_interest, model_name: str, figures_base_savedir: str
+    config_dict: dict,
+    edges_to_plot_indices,
+    data_split: str,
+    metric: str,
+    pp_pipeline: str,
+    all_subjects_list:list,
+    brain_regions_of_interest, 
+    model_name: str,
+    figures_base_savedir: str,
 ) -> None:
     """
     Plot TVFC estimates for each subject individually.
@@ -421,17 +428,17 @@ if __name__ == "__main__":
     if not os.path.exists(figures_base_savedir):
         os.makedirs(figures_base_savedir)
 
-    _plot_average_over_subject_tvfc_estimates(
-        config_dict=cfg,
-        data_split=data_split,
-        metric=metric,
-        preprocessing_pipeline=pp_pipeline,
-        model_to_plot_name=model_name,
-        all_subjects_list=all_subjects_list,
-        edges_to_plot_indices=edges_to_plot_indices,
-        column_names=brain_regions_of_interest,
-        figures_savedir=figures_base_savedir
-    )
+    # _plot_average_over_subject_tvfc_estimates(
+    #     config_dict=cfg,
+    #     data_split=data_split,
+    #     metric=metric,
+    #     preprocessing_pipeline=pp_pipeline,
+    #     model_to_plot_name=model_name,
+    #     all_subjects_list=all_subjects_list,
+    #     edges_to_plot_indices=edges_to_plot_indices,
+    #     column_names=brain_regions_of_interest,
+    #     figures_savedir=figures_base_savedir
+    # )
     plot_average_over_subject_tvfc_estimates_joint(
         config_dict=cfg,
         data_split=data_split,
@@ -442,9 +449,9 @@ if __name__ == "__main__":
         column_names=brain_regions_of_interest,
         figures_savedir=figures_base_savedir
     )
-    _plot_individual_subjects(
-        config_dict=cfg,
-        data_split=data_split,
-        metric=metric,
-        all_subjects_list=all_subjects_list,
-    )
+    # _plot_individual_subjects(
+    #     config_dict=cfg,
+    #     data_split=data_split,
+    #     metric=metric,
+    #     all_subjects_list=all_subjects_list,
+    # )

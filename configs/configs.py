@@ -81,6 +81,7 @@ def get_config_dict(
 
     # General figures configs.
     shared_config_dict['figure-dpi-imputation'] = 250
+    shared_config_dict['fig-figsize-likelihoods-raincloud'] = (5, 3)
     shared_config_dict['plot-likelihoods-figsize'] = (12, 6)
     shared_config_dict['plot-brain-state-switch-count-figsize'] = (12, 8)
     shared_config_dict['plot-time-series-dpi'] = 200
@@ -587,7 +588,9 @@ def _get_sparse_config_dict(
 
 
 def _get_rockland_config_dict(
-        shared_config_dict: dict, repetition_time: str, roi_list_name: str = 'final'
+    shared_config_dict: dict,
+    repetition_time: str,
+    roi_list_name: str = 'final',
 ) -> dict:
     """
     Rockland tb-fMRI specific configurations.
@@ -619,6 +622,7 @@ def _get_rockland_config_dict(
             shared_config_dict['git-basedir'],
             'results', 'fmri', 'tb', shared_config_dict['data-set-name'], subset
         ),
+        'fig-palette-roi-edges': 'Dark2',
         'log-interval': 100,
         'max-n-cpus': 10,
         'mgarch-models': [

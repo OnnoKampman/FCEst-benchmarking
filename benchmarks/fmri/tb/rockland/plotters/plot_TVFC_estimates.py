@@ -70,7 +70,7 @@ def plot_average_over_subject_tvfc_estimates_joint(
     """
     sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
-    sns.set_palette('Dark2')
+    sns.set_palette(config_dict['fig-palette-roi-edges'])
 
     for plot_type in ['raw', 'detrended']:
 

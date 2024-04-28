@@ -11,9 +11,6 @@ import seaborn as sns
 from configs.configs import get_config_dict
 from helpers.figures import get_palette
 
-sns.set(style="whitegrid", font_scale=1.5)
-plt.rcParams["font.family"] = 'serif'
-
 
 def _plot_bar_graph_scores(config_dict: dict) -> None:
     plt.figure(figsize=config_dict['plot-likelihoods-figsize'])
@@ -113,7 +110,7 @@ def _plot_violin(config_dict: dict) -> None:
     logging.info(f"Saved figure '{figure_name:s}' in '{savedir:s}'.")
 
 
-def _plot_likelihoods_raincloud(
+def plot_likelihoods_raincloud(
     config_dict: dict,
     all_likelihoods_df: pd.DataFrame,
     data_dimensionality: str,
@@ -124,12 +121,14 @@ def _plot_likelihoods_raincloud(
     """
     A "cloud", or smoothed version of a histogram, gives an idea of the distribution of scores.
     The "rain" are the individual data points, which can give an idea of outliers.
+
     Source: 
         https://github.com/RainCloudPlots/RainCloudPlots
+
     TODO: figure out the right way of setting fonts and ticks on axes
     """
-
-    plt.rcParams["font.family"] = 'sans-serif'
+    sns.set(style="whitegrid")
+    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
     # plt.figure(figsize=config_dict['plot-likelihoods-figsize'])
 
@@ -166,7 +165,7 @@ def _plot_likelihoods_raincloud(
     # )
     # This can also be summarized into a single call like below.
     fig, ax = plt.subplots(
-        figsize=config_dict['plot-likelihoods-figsize']
+        figsize=config_dict['fig-figsize-likelihoods-raincloud'],
     )
 
     pt.RainCloud(
@@ -176,17 +175,18 @@ def _plot_likelihoods_raincloud(
         bw=0.2,  # sets the smoothness of the distribution
         width_viol=0.6,
         orient="h",  # "v" if you want a vertical plot
-        move=0.22
+        move=0.22,
     )
 
     if data_dimensionality == 'd15':
         if experiment_dimensionality == 'bivariate':
             plt.xlim([-4.5, -2.4])
         else:
-            plt.xlim([-25.9, -12.1])
+            plt.xlim([-27, -13])
 
-    plt.xlabel('test log likelihood', fontsize=18)
-    plt.ylabel('TVFC estimator', fontsize=18)
+    plt.xlabel('test log likelihood')
+    plt.ylabel('TVFC estimator')
+
     # plt.tight_layout()
 
     if figure_savedir is not None:
@@ -238,7 +238,7 @@ if __name__ == '__main__':
     _plot_bar_graph_scores(config_dict=cfg)
     _plot_cloud(config_dict=cfg)
     _plot_violin(config_dict=cfg)
-    _plot_likelihoods_raincloud(
+    plot_likelihoods_raincloud(
         config_dict=cfg, 
         all_likelihoods_df=all_likelihoods_df,
         data_dimensionality=data_dimensionality,

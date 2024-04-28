@@ -14,30 +14,45 @@ from helpers.hcp import get_human_connectome_project_subjects, rename_variables_
 from helpers.figures import get_palette, set_size
 
 
-def _plot_morphometricity_scores_joint(
-        config_dict: dict, scores_savedir: str, subject_measures_list: list[str],
-        connectivity_metric: str = 'correlation', figures_savedir: str = None
+def plot_morphometricity_scores_joint(
+    config_dict: dict,
+    scores_savedir: str,
+    subject_measures_list: list[str],
+    connectivity_metric: str = 'correlation',
+    figures_savedir: str = None,
 ) -> None:
     """
     Plot all TVFC summary measures jointly in a single figure.
+
+    Parameters
+    ----------
+    config_dict : dict
+    scores_savedir : str
+    subject_measures_list : list[str]
+    connectivity_metric : str, optional
+    figures_savedir : str, optional
     """
     sns.set(style="whitegrid")
-    # plt.rcParams["font.family"] = 'serif'
-    # plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
+    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
     fig, axes = plt.subplots(
         # figsize=set_size(subplots=(3, 1)),
-        figsize=config_dict['plot-morphometricity-scores-figsize'],
-        nrows=len(config_dict['TVFC-summary-measures']),
-        ncols=1
+        # figsize=config_dict['plot-morphometricity-scores-figsize'],
+        figsize=(8.4, 7.0),
+        nrows=len(config_dict['plot-TVFC-summary-measures']),
+        ncols=1,
     )
-    for i_tvfc_summary_measure, tvfc_summary_measure in enumerate(config_dict['TVFC-summary-measures']):
+    for i_tvfc_summary_measure, tvfc_summary_measure in enumerate(config_dict['plot-TVFC-summary-measures']):
         morphometricity_results_df = pd.read_csv(
-            os.path.join(scores_savedir, f'{connectivity_metric:s}_morphometricity_scores_TVFC_{tvfc_summary_measure:s}.csv'),
+            os.path.join(
+                scores_savedir, f'{connectivity_metric:s}_morphometricity_scores_TVFC_{tvfc_summary_measure:s}.csv'
+            ),
             index_col=0
         )  # (n_subject_measures, n_models)
         morphometricity_results_standard_error_df = pd.read_csv(
-            os.path.join(scores_savedir, f'{connectivity_metric:s}_morphometricity_scores_standard_error_TVFC_{tvfc_summary_measure:s}.csv'),
+            os.path.join(
+                scores_savedir, f'{connectivity_metric:s}_morphometricity_scores_standard_error_TVFC_{tvfc_summary_measure:s}.csv'
+            ),
             index_col=0
         )  # (n_subject_measures, n_models)
 
@@ -78,18 +93,27 @@ def _plot_morphometricity_scores_joint(
             # xticks=xticks,
             legend=not i_tvfc_summary_measure,  # only add legend in first subplot
             # figsize=(10, 4),
-            yerr=morphometricity_results_standard_error_df
+            error_kw={
+                'elinewidth': 1,
+                'markeredgewidth': 1,
+            },
+            yerr=morphometricity_results_standard_error_df,
         )
         axes[i_tvfc_summary_measure].set_ylabel(f"TVFC {tvfc_summary_measure.replace('_', '-'):s}\nVariance explained")
         axes[i_tvfc_summary_measure].set_ylim([-0.03, 1.19])
-        if not i_tvfc_summary_measure + 1 == len(config_dict['TVFC-summary-measures']):
+        if not i_tvfc_summary_measure + 1 == len(config_dict['plot-TVFC-summary-measures']):
             axes[i_tvfc_summary_measure].set_xticklabels([])
 
     axes[0].legend(
-        bbox_to_anchor=(1.01, 1.0), frameon=True,
-        title='TVFC\nestimator', alignment='left'
+        bbox_to_anchor=(1.01, 1.0),
+        frameon=True,
+        title='TVFC\nestimator',
+        alignment='left',
     )
-    plt.xticks(rotation=35, ha="right")
+    plt.xticks(
+        rotation=35,
+        ha="right",
+    )
     # plt.tight_layout()
 
     if figures_savedir is not None:
@@ -186,10 +210,10 @@ if __name__ == '__main__':
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_subjects = cfg['n-subjects']
+    num_subjects = cfg['n-subjects']
     all_subjects_list = get_human_connectome_project_subjects(
         data_dir=cfg['data-dir'],
-        first_n_subjects=n_subjects,
+        first_n_subjects=num_subjects,
         as_ints=True
     )
 
@@ -202,7 +226,7 @@ if __name__ == '__main__':
         'morphometricity', subject_measures_subset
     )
 
-    _plot_morphometricity_scores_joint(
+    plot_morphometricity_scores_joint(
         cfg,
         scores_savedir,
         subject_measures_list,

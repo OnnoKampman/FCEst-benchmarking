@@ -67,7 +67,7 @@ def plot_glm_beta_bar(
     """
     sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
-    sns.set_palette('Dark2')
+    sns.set_palette(config_dict['fig-palette-roi-edges'])
 
     fig, ax = plt.subplots(
         figsize=(6, 3),

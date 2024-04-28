@@ -95,7 +95,7 @@ def save_violin_plot(config_dict: dict) -> None:
     logging.info(f"Saved figure '{figure_name:s}' in '{figures_savedir:s}'.")
 
 
-def _plot_raincloud(
+def plot_likelihoods_raincloud(
         config_dict: dict, all_test_likelihoods_df: pd.DataFrame,
         data_split: str = 'LEOO', figures_savedir: str = None
 ) -> None:
@@ -106,11 +106,11 @@ def _plot_raincloud(
     Source:
         https://github.com/RainCloudPlots/RainCloudPlots
     """
-    sns.set(style="whitegrid", font_scale=1.5)
-    plt.rcParams["font.family"] = 'sans-serif'
+    sns.set(style="whitegrid")
+    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
     fig, ax = plt.subplots(
-        figsize=config_dict['plot-likelihoods-figsize']
+        figsize=config_dict['fig-figsize-likelihoods-raincloud'],
     )
     pt.RainCloud(
         data=all_test_likelihoods_df,
@@ -119,12 +119,13 @@ def _plot_raincloud(
         bw=0.2,  # sets the smoothness of the distribution
         width_viol=0.6,
         orient="h",  # "v" if you want a vertical plot
-        move=0.22
+        move=0.22,
     )
 
-    plt.xlim([-13, 1])
+    plt.xlim([-15, 1])
     plt.xlabel('test log likelihood')
     plt.ylabel('TVFC estimator')
+
     # plt.tight_layout()
 
     if figures_savedir is not None:
@@ -177,7 +178,7 @@ if __name__ == '__main__':
     save_bar_plot(config_dict=cfg)
     save_cloud_plot(config_dict=cfg)
     save_violin_plot(config_dict=cfg)
-    _plot_raincloud(
+    plot_likelihoods_raincloud(
         config_dict=cfg,
         all_test_likelihoods_df=all_test_likelihoods_df,
         figures_savedir=figures_savedir

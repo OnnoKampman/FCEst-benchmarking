@@ -13,7 +13,7 @@ from configs.configs import get_config_dict
 from helpers.figures import get_palette
 
 
-def _plot_likelihoods_raincloud(
+def plot_likelihoods_raincloud(
     config_dict: dict,
     test_likelihoods_df: pd.DataFrame,
     noise_type: str,
@@ -30,11 +30,12 @@ def _plot_likelihoods_raincloud(
     Source:
         https://github.com/RainCloudPlots/RainCloudPlots
     """
-    sns.set(style="whitegrid", font_scale=1.5)
-    # plt.rcParams["font.family"] = 'serif'
+    sns.set(style="whitegrid")
+    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
     fig, ax = plt.subplots(
-        figsize=config_dict['plot-likelihoods-figsize']
+        # figsize=config_dict['plot-likelihoods-figsize'],
+        figsize=(8, 4),
     )
     pt.RainCloud(
         data=test_likelihoods_df,
@@ -43,9 +44,9 @@ def _plot_likelihoods_raincloud(
         bw=0.2,  # sets the smoothness of the distribution
         width_viol=0.6,
         orient="h",  # "v" if you want a vertical plot
-        move=0.22
+        move=0.22,
     )
-    plt.xlim([-3.35, -2.05])
+    plt.xlim([-3.30, -2.10])
     plt.xlabel('test log likelihood')
     plt.ylabel('TVFC estimator')
 
@@ -127,7 +128,7 @@ if __name__ == '__main__':
                 likelihoods_df.columns = likelihoods_df.columns.str.replace('periodic_3', 'periodic (fast)')
                 likelihoods_df.columns = likelihoods_df.columns.str.replace('_', ' ')
 
-                _plot_likelihoods_raincloud(
+                plot_likelihoods_raincloud(
                     config_dict=cfg,
                     test_likelihoods_df=likelihoods_df,
                     noise_type=noise_type,
@@ -196,7 +197,7 @@ if __name__ == '__main__':
                 covs_type_df.columns = covs_type_df.columns.str.replace('_bivariate_loop', '-BL')
             covs_type_df.columns = covs_type_df.columns.str.replace('_', ' ')
 
-            _plot_likelihoods_raincloud(
+            plot_likelihoods_raincloud(
                 config_dict=cfg,
                 test_likelihoods_df=covs_type_df,
                 noise_type=noise_type,

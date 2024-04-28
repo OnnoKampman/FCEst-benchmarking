@@ -237,7 +237,7 @@ def _plot_tvfc_estimates(
         ax_to_plot.set_title(
             model_to_plot_name.replace('SVWP_joint', 'WP').replace('_joint', '-J').replace('_cross_validated', '-CV')
         )
-        plt.legend(
+        ax_to_plot_legend.legend(
             bbox_to_anchor=(1.01, 1.0),
             frameon=True,
             title='ROI edge',

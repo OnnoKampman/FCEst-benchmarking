@@ -12,8 +12,10 @@ from helpers.rockland import get_edges_names
 
 
 def _plot_glm_beta_heatmap(
-    config_dict: dict, betas_df: pd.DataFrame, model_name: str, 
-    figures_savedir: str = None
+    config_dict: dict,
+    betas_df: pd.DataFrame,
+    model_name: str,
+    figures_savedir: str = None,
 ) -> None:
     sns.set(style="whitegrid", font_scale=0.6)
     plt.rcParams["font.family"] = 'serif'
@@ -52,26 +54,71 @@ def _plot_glm_beta_heatmap(
         plt.close()
 
 
-def _plot_glm_beta_bar(
-    config_dict: dict, stimulus_betas_df: pd.DataFrame, 
+def plot_glm_beta_bar(
+    config_dict: dict,
+    stimulus_betas_df: pd.DataFrame, 
     figures_savedir: str = None
 ) -> None:
-    sns.set(style="whitegrid", font_scale=1.1)
-    # plt.rcParams["font.family"] = 'serif'
-    sns.set_palette('Set3')
+    """
+    Plot bar graph of GLM beta parameters.
+
+    TODO: add significance stars to bar plot
+
+    """
+    sns.set(style="whitegrid")
+    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
+    sns.set_palette('Dark2')
 
     fig, ax = plt.subplots(
-        figsize=(12, 4)
+        figsize=(6, 3),
         # figsize=set_size(fraction=1.0)
     )
     stimulus_betas_df.plot.bar(
         ax=ax,
         # cmap='Set3',
+        width=0.85,
     )
     plt.xticks(rotation=0)
-    plt.xlabel('TVFC estimator')
-    plt.ylabel('beta parameters from GLM')
-    plt.legend(title='ROI edge', alignment='left')
+    ax.set_xlabel('TVFC estimator')
+    ax.set_ylabel('GLM beta parameters')
+    plt.legend(
+        bbox_to_anchor=(1.01, 1.0),
+        frameon=True,
+        title='ROI edge',
+        alignment='left',
+    )
+
+    # TODO: the asterix labeling can be improved
+    asterixes_list_list = []
+    for model_name in config_dict['plot-stimulus-prediction-models']:
+
+        significance_results = pd.read_csv(
+            os.path.join(
+                config_dict['git-results-basedir'], 'prediction_benchmark',
+                f'betas_pvals_Bonferroni_df_{model_name:s}.csv'
+            ),
+            index_col=0,
+        )
+
+        model_sig_vals = [
+            '***' if sig_val < 0.001 else '**' if sig_val < 0.01 else '*' if sig_val < 0.05 else '' for sig_val in significance_results['stim'].values
+        ]
+
+        asterixes_list_list.append(model_sig_vals)
+
+    asterixes_list = []
+    for i in range(5):
+        asterixes_list.append(asterixes_list_list[0][i])
+        asterixes_list.append(asterixes_list_list[1][i])
+        asterixes_list.append(asterixes_list_list[2][i])
+ 
+    for i_p, p in enumerate(ax.patches):
+        ax.text(
+            p.get_x() + p.get_width() / 2.,
+            p.get_height(),  # height
+            asterixes_list[i_p],
+            ha='center',
+        )
 
     if figures_savedir is not None:
         figure_name = 'GLM_stimulus_beta.pdf'
@@ -150,7 +197,7 @@ if __name__ == "__main__":
     all_glm_betas_df = _clean_up_model_names(all_glm_betas_df)
     print(all_glm_betas_df)
 
-    _plot_glm_beta_bar(
+    plot_glm_beta_bar(
         config_dict=cfg,
         stimulus_betas_df=all_glm_betas_df,
         figures_savedir=os.path.join(

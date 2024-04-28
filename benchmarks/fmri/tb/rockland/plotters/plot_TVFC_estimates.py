@@ -70,13 +70,13 @@ def plot_average_over_subject_tvfc_estimates_joint(
     """
     sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
-    sns.set_palette('Set3')
+    sns.set_palette('Dark2')
 
     for plot_type in ['raw', 'detrended']:
 
         if len(config_dict['plot-stimulus-prediction-models']) == 3:
             fig, axes = plt.subplots(
-                figsize=(6, 3),
+                figsize=(7, 3),
                 nrows=1,
                 ncols=3,
                 sharex=True,
@@ -186,14 +186,12 @@ def _plot_tvfc_estimates(
                 ax_to_plot.plot(
                     xx,
                     edge_average_tvfc_estimates,
-                    # linewidth=2.0,
                     label=label_name,
                 )
             case 'VWP_joint' | 'SVWP_joint' | 'sFC':
                 ax_to_plot.plot(
                     xx,
                     edge_average_tvfc_estimates,
-                    # linewidth=2.0,
                     label=label_name,
                 )
             case _:
@@ -239,14 +237,23 @@ def _plot_tvfc_estimates(
         ax_to_plot.set_title(
             model_to_plot_name.replace('SVWP_joint', 'WP').replace('_joint', '-J').replace('_cross_validated', '-CV')
         )
+        plt.legend(
+            bbox_to_anchor=(1.01, 1.0),
+            frameon=True,
+            title='ROI edge',
+            alignment='left',
+        )
     else:
         ax_to_plot.set_xlabel('time [seconds]')
         ax_to_plot.set_ylabel('TVFC estimate')
 
         bbox_to_anchor = (1.61, 1.0)  # used to put legend outside of plot
         ax_to_plot_legend.legend(
-            loc='upper right', bbox_to_anchor=bbox_to_anchor, frameon=True,
-            title='ROI edge', alignment='left'
+            loc='upper right',
+            bbox_to_anchor=bbox_to_anchor,
+            frameon=True,
+            title='ROI edge',
+            alignment='left',
         )
 
     plt.tight_layout()

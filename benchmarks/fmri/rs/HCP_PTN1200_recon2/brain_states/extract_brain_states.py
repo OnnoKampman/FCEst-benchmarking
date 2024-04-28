@@ -27,19 +27,24 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_subjects = cfg['n-subjects']
+
+    num_subjects = cfg['n-subjects']
     all_subjects_list = get_human_connectome_project_subjects(
-        data_dir=cfg['data-dir'], first_n_subjects=n_subjects, as_ints=True
+        data_dir=cfg['data-dir'],
+        first_n_subjects=num_subjects,
+        as_ints=True,
     )
-    n_brain_states_list = cfg['n-brain-states-list']
+
+    num_brain_states_list = cfg['n-brain-states-list']
     distortions_df = pd.DataFrame(
-        index=n_brain_states_list, columns=cfg['scan-ids']
+        index=num_brain_states_list,
+        columns=cfg['scan-ids'],
     )
     for scan_id in cfg['scan-ids']:
-        n_subjects = len(all_subjects_list)
+        num_subjects = len(all_subjects_list)
         all_subjects_tril_tvfc_per_time_step = []
         for i_subject, subject in enumerate(all_subjects_list):
-            logging.info(f'> SUBJECT {i_subject+1:d} / {n_subjects:d}: {subject:d}')
+            logging.info(f'> SUBJECT {i_subject+1:d} / {num_subjects:d}: {subject:d}')
             tvfc_estimates_savedir = os.path.join(
                 cfg['experiments-basedir'], 'TVFC_estimates', f'scan_{scan_id:d}',
                 data_split, experiment_dimensionality, connectivity_metric, model_name
@@ -60,9 +65,9 @@ if __name__ == "__main__":
         # Aggregates all observed 'states' over time and over subjects.
         all_subjects_tril_tvfc_per_time_step = np.array(all_subjects_tril_tvfc_per_time_step)  # (n_subjects, N, D*(D-1)/2)
         all_subjects_tril_tvfc_per_time_step = all_subjects_tril_tvfc_per_time_step.reshape(-1, all_subjects_tril_tvfc_per_time_step.shape[-1])  # (n_subjects*N, D*(D-1)/2)
-        assert all_subjects_tril_tvfc_per_time_step.shape == (n_subjects * n_time_steps, int(n_time_series * (n_time_series-1) / 2))
+        assert all_subjects_tril_tvfc_per_time_step.shape == (num_subjects * n_time_steps, int(n_time_series * (n_time_series-1) / 2))
 
-        for n_brain_states in n_brain_states_list:
+        for n_brain_states in num_brain_states_list:
             n_brain_states_inertia, _, _ = compute_basis_state(
                 config_dict=cfg,
                 all_subjects_tril_tvfc=all_subjects_tril_tvfc_per_time_step,
@@ -72,10 +77,12 @@ if __name__ == "__main__":
                 n_time_series=n_time_series,
                 n_time_steps=n_time_steps,
             )
-            distortions_df.loc[n_brain_states, scan_id] = n_brain_states_inertia / n_subjects
+            distortions_df.loc[n_brain_states, scan_id] = n_brain_states_inertia / num_subjects
 
-    distortions_df.round(2).to_csv(
-        os.path.join(cfg['git-results-basedir'], 'brain_states', f'{connectivity_metric:s}_inertias_{model_name:s}.csv'),
+    distortions_df.astype(float).round(2).to_csv(
+        os.path.join(
+            cfg['git-results-basedir'], 'brain_states', f'{connectivity_metric:s}_inertias_{model_name:s}.csv'
+        ),
         float_format='%.2f'
     )
     logging.info("Inertias saved.")

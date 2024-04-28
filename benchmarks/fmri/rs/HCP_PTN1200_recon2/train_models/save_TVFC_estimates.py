@@ -24,16 +24,16 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_subjects = cfg['n-subjects']
+    num_subjects = cfg['n-subjects']
     all_subjects_list = get_human_connectome_project_subjects(
         data_dir=cfg['data-dir'],
-        first_n_subjects=n_subjects,
+        first_n_subjects=num_subjects,
         as_ints=True
     )
 
     for i_subject, subject in enumerate(all_subjects_list):
 
-        print(f'\n> SUBJECT {i_subject+1:d} / {n_subjects:d}: {subject:d}\n')
+        print(f'\n> SUBJECT {i_subject+1:d} / {num_subjects:d}: {subject:d}\n')
 
         data_file = os.path.join(cfg['data-dir'], f'{subject:d}.txt')
         for scan_id in cfg['scan-ids']:
@@ -47,7 +47,9 @@ if __name__ == "__main__":
                 os.makedirs(tvfc_estimates_savedir)
 
             x, y = load_human_connectome_project_data(
-                data_file, scan_id=scan_id, verbose=False
+                data_file,
+                scan_id=scan_id,
+                verbose=False,
             )  # (N, 1), (N, D)
             n_time_steps = x.shape[0]
 
@@ -68,7 +70,7 @@ if __name__ == "__main__":
                 metric=metric,
                 scan_id=scan_id,
                 data_split=data_split,
-                experiment_dimensionality=experiment_dimensionality
+                experiment_dimensionality=experiment_dimensionality,
             )
 
             # Convert predictions to 2D array to save it to disk.

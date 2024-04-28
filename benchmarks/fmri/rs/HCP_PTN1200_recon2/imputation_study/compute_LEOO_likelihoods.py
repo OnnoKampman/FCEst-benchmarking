@@ -24,10 +24,10 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_subjects = cfg['n-subjects']
+    num_subjects = cfg['n-subjects']
     all_subjects_filenames_list = get_human_connectome_project_subjects(
         data_dir=cfg['data-dir'],
-        first_n_subjects=n_subjects
+        first_n_subjects=num_subjects,
     )
 
     test_log_likelihoods_df = pd.DataFrame(
@@ -36,7 +36,8 @@ if __name__ == "__main__":
         columns=cfg['scan-ids'],
     )
     for i_subject, subject_filename in enumerate(all_subjects_filenames_list):
-        logging.info(f'> SUBJECT {i_subject+1: 3d} / {n_subjects:d}: {subject_filename:s}')
+
+        logging.info(f'> SUBJECT {i_subject+1: 3d} / {num_subjects:d}: {subject_filename:s}')
 
         data_file = os.path.join(
             cfg['data-dir'], subject_filename
@@ -45,7 +46,7 @@ if __name__ == "__main__":
             x, y = load_human_connectome_project_data(
                 data_file,
                 scan_id=scan_id,
-                verbose=False
+                verbose=False,
             )
             n_time_series = y.shape[1]
             if experiment_dimensionality == 'bivariate':

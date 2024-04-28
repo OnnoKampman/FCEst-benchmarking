@@ -418,6 +418,8 @@ def get_test_location_estimated_covariance_structure(
 
     Parameters
     ----------
+    config_dict: dict
+    model_name: str
     experiment_dimensionality: str
         'multivariate' or 'bivariate'.
     """
@@ -454,12 +456,14 @@ def get_test_location_estimated_covariance_structure(
         case 'HCP_PTN1200_recon2':
             assert scan_id is not None
             assert experiment_dimensionality is not None
+
             wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], 'saved_models', f'scan_{scan_id:d}',
                 data_split, experiment_dimensionality, model_name
             )
             subject = subject.removesuffix('.txt')
             wp_model_filename = f'{subject:s}.json'
+
             tvfc_estimates_filepath = os.path.join(
                 config_dict['experiments-basedir'], 'TVFC_estimates', f'scan_{scan_id:d}',
                 data_split, experiment_dimensionality, connectivity_metric, model_name, f'{subject:s}.csv'
@@ -527,6 +531,6 @@ def get_test_location_estimated_covariance_structure(
             train_locations_predicted_covariance_structure = to_3d_format(tvfc_estimates_df.values)  # (N_train, D, D)
             test_locations_predicted_covariance_structure = interpolate_all_matrices(
                 train_estimated_covs=train_locations_predicted_covariance_structure,
-                n_test_time_steps=len(x_test_locations)
+                n_test_time_steps=len(x_test_locations),
             )  # (N_test, D, D)
     return test_locations_predicted_covariance_structure

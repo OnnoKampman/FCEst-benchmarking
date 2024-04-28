@@ -38,7 +38,7 @@ def _plot_average_over_subject_tvfc_estimates(
         fig, ax = plt.subplots(
             figsize=set_size(fraction=0.47)
         )
-        _plot_estimates(
+        _plot_tvfc_estimates(
             config_dict=config_dict,
             data_split=data_split,
             metric=metric,
@@ -76,7 +76,7 @@ def plot_average_over_subject_tvfc_estimates_joint(
 
         if len(config_dict['plot-stimulus-prediction-models']) == 3:
             fig, axes = plt.subplots(
-                figsize=(12, 4),
+                figsize=(6, 3),
                 nrows=1,
                 ncols=3,
                 sharex=True,
@@ -96,7 +96,7 @@ def plot_average_over_subject_tvfc_estimates_joint(
 
         for i_model_name, model_to_plot_name in enumerate(config_dict['plot-stimulus-prediction-models']):
 
-            _plot_estimates(
+            _plot_tvfc_estimates(
                 config_dict=config_dict,
                 data_split=data_split,
                 metric=metric,
@@ -114,7 +114,7 @@ def plot_average_over_subject_tvfc_estimates_joint(
             )
 
 
-def _plot_estimates(
+def _plot_tvfc_estimates(
     config_dict: dict,
     data_split: str,
     metric: str,
@@ -137,7 +137,7 @@ def _plot_estimates(
     xx = _get_xx(
         config_dict=config_dict,
         all_subjects_list=all_subjects_list,
-        pp_pipeline=preprocessing_pipeline
+        pp_pipeline=preprocessing_pipeline,
     )
     n_time_steps = len(xx)  # N
     n_time_series = len(config_dict['roi-list'])  # D
@@ -150,7 +150,7 @@ def _plot_estimates(
         metric=metric,
         pp_pipeline=preprocessing_pipeline,
         model_name=model_to_plot_name,
-        all_subjects_list=all_subjects_list
+        all_subjects_list=all_subjects_list,
     )
 
     for edge_to_plot_indices in edges_to_plot_indices:
@@ -184,17 +184,17 @@ def _plot_estimates(
         match model_to_plot_name:
             case 'DCC_joint' | 'DCC_bivariate_loop' | 'SW_cross_validated' | 'SW_16' | 'SW_30' | 'SW_60':
                 ax_to_plot.plot(
-                    xx, edge_average_tvfc_estimates,
-                    # 'x-',
-                    linewidth=2.0,
-                    # markersize=2.0,
-                    label=label_name
+                    xx,
+                    edge_average_tvfc_estimates,
+                    # linewidth=2.0,
+                    label=label_name,
                 )
             case 'VWP_joint' | 'SVWP_joint' | 'sFC':
                 ax_to_plot.plot(
-                    xx, edge_average_tvfc_estimates,
-                    linewidth=2.0,
-                    label=label_name
+                    xx,
+                    edge_average_tvfc_estimates,
+                    # linewidth=2.0,
+                    label=label_name,
                 )
             case _:
                 logging.warning(f"Model {model_to_plot_name:s} not recognized.")
@@ -202,18 +202,27 @@ def _plot_estimates(
     # Add stimulus presence.
     for stimuli_start in range(20, 140, 40):
         ax_to_plot.axvspan(
-            stimuli_start, stimuli_start + 20,
-            facecolor='b', alpha=0.1
+            stimuli_start,
+            stimuli_start + 20,
+            facecolor='b',
+            alpha=0.1,
         )
 
     # Add stimulus convolved with HRF.
     if plot_hrf:
         stim_hrf_array = get_convolved_stim_array(config_dict=config_dict)
         plt.plot(
-            xx, stim_hrf_array, color='black', linewidth=3, label='Stimulus HRF'
+            xx,
+            stim_hrf_array,
+            color='black',
+            linewidth=3,
+            label='Stimulus HRF',
         )
 
-    ax_to_plot.grid(linestyle='dashed', linewidth=0.4)
+    # ax_to_plot.grid(
+    #     linestyle='dashed',
+    #     linewidth=0.4,
+    # )
     for axis in ['top', 'bottom', 'left', 'right']:
         ax_to_plot.spines[axis].set_linewidth(0.4)
 
@@ -222,7 +231,7 @@ def _plot_estimates(
     if plot_type == 'raw':
         ax_to_plot.set_ylim([-0.15, 1.05])
     if plot_type == 'detrended':
-        ax_to_plot.set_ylim([-0.36, 0.36])
+        ax_to_plot.set_ylim([-0.34, 0.34])
 
     if models_to_plot is not None:
         ax_to_plot.set_xlabel('time [seconds]')

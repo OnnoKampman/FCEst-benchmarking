@@ -32,9 +32,9 @@ def _plot_average_over_subject_tvfc_estimates(
     """
     sns.set(style="whitegrid", font_scale=0.4)
     # sns.set_palette("colorblind")
+    sns.set_palette('Set3')
 
     for plot_type in ['raw', 'detrended']:
-        sns.set_palette('Set3')
         fig, ax = plt.subplots(
             figsize=set_size(fraction=0.47)
         )
@@ -68,35 +68,34 @@ def plot_average_over_subject_tvfc_estimates_joint(
     Plots TVFC estimates averaged over all subjects jointly for a collection of TVFC
     estimation methods.
     """
-    sns.set(style="whitegrid", font_scale=1.2)
-
-    models_to_plot = [
-        'SVWP_joint',
-        'DCC_joint',
-        'SW_cross_validated',
-        # 'sFC',
-    ]
+    sns.set(style="whitegrid")
+    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
+    sns.set_palette('Set3')
 
     for plot_type in ['raw', 'detrended']:
-        sns.set_palette('Set3')
 
-        if len(models_to_plot) == 3:
+        if len(config_dict['plot-stimulus-prediction-models']) == 3:
             fig, axes = plt.subplots(
                 figsize=(12, 4),
-                nrows=1, ncols=3,
-                sharex=True, sharey=True
+                nrows=1,
+                ncols=3,
+                sharex=True,
+                sharey=True,
             )
             axes[0].set_ylabel('TVFC estimate')
-        elif len(models_to_plot) == 4:
+        elif len(config_dict['plot-stimulus-prediction-models']) == 4:
             fig, axes = plt.subplots(
                 # figsize=set_size()
-                nrows=2, ncols=2,
-                sharex=True, sharey=True
+                nrows=2,
+                ncols=2,
+                sharex=True,
+                sharey=True,
             )
             # axes[0, 0].set_ylabel('TVFC estimate')
             # axes[1, 0].set_ylabel('TVFC estimate')
 
-        for i_model_name, model_to_plot_name in enumerate(models_to_plot):
+        for i_model_name, model_to_plot_name in enumerate(config_dict['plot-stimulus-prediction-models']):
+
             _plot_estimates(
                 config_dict=config_dict,
                 data_split=data_split,
@@ -110,7 +109,7 @@ def plot_average_over_subject_tvfc_estimates_joint(
                 figures_savedir=figures_savedir,
                 fig=fig,
                 axes=axes,
-                models_to_plot=models_to_plot,
+                models_to_plot=config_dict['plot-stimulus-prediction-models'],
                 i_model_name=i_model_name,
             )
 
@@ -373,7 +372,7 @@ def _compute_average_over_subjects_tvfc_estimates(
     )
 
     for i_subject, subject_filename in enumerate(all_subjects_list):
-        print(f'> Subject {i_subject+1:d} / {len(all_subjects_list):d}: {subject_filename:s}')
+        logging.info(f'> Subject {i_subject+1:d} / {len(all_subjects_list):d}: {subject_filename:s}')
         estimated_tvfc_df = pd.read_csv(
             os.path.join(tvfc_estimates_savedir, subject_filename),
             index_col=0

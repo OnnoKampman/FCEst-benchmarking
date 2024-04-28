@@ -11,14 +11,121 @@ import seaborn as sns
 from configs.configs import get_config_dict
 from helpers.data import reorder_ica_components
 
-sns.set(style="whitegrid", font_scale=1.3)
-plt.rcParams["font.family"] = 'serif'
 
-
-def _plot_edgewise_imputation_benchmark_scores(
-        config_dict: dict, edgewise_likelihoods: pd.DataFrame, model_name: str,
-        figure_savedir: str = None
+def plot_edgewise_imputation_benchmark_scores_joint(
+    config_dict: dict,
+    data_split: str = 'LEOO',
+    experiment_dimensionality: str = 'multivariate',
+    data_dimensionality: str = 'd15',
+    figure_savedir: str = None,
 ) -> None:
+    """
+    Plot edgewise imputation benchmark scores.
+
+    Parameters
+    ----------
+    config_dict : dict
+        Configuration dictionary.
+    """
+    sns.set(style="white")
+    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
+
+    vmin, vmax = -4.0, -2.2
+
+    fig, axes = plt.subplots(
+        nrows=2,
+        ncols=2,
+        figsize=(7.2, 6.2),
+        sharex=True,
+        sharey=True,
+    )
+
+    # tuple (left, bottom, width, height)
+    cbar_ax = fig.add_axes(
+        [.91, 0.27, .03, .39]
+    )
+
+    for i_model_name, model_name in enumerate(config_dict['plot-models']):
+
+        test_likelihoods_savedir = os.path.join(config_dict['git-results-basedir'], 'imputation_study')
+        likelihoods_filename = f'{data_split:s}_{experiment_dimensionality:s}_likelihoods_{model_name:s}_edgewise.csv'
+        edgewise_likelihoods = pd.read_csv(
+            os.path.join(test_likelihoods_savedir, likelihoods_filename),
+            index_col=0
+        )  # (D, D)
+
+        n_time_series = edgewise_likelihoods.shape[0]
+        if data_dimensionality == 'd15':
+            edgewise_likelihoods, new_rsn_names = reorder_ica_components(
+                config_dict=config_dict,
+                original_matrix=edgewise_likelihoods.values,
+                n_time_series=n_time_series,
+                # lower_triangular=True
+            )
+        else:
+            # TODO: add RSN names map for d50
+            edgewise_likelihoods = edgewise_likelihoods.values
+            new_rsn_names = np.arange(n_time_series)
+
+        # Define mask for upper triangular values.
+        mask = np.zeros_like(edgewise_likelihoods)
+        mask[np.triu_indices_from(mask)] = True
+
+        sns.heatmap(
+            edgewise_likelihoods,
+            ax=axes[i_model_name // 2, i_model_name % 2],
+            cmap='jet',
+            mask=mask,
+            vmin=vmin,
+            vmax=vmax,
+            xticklabels=new_rsn_names if data_dimensionality == 'd15' else False,
+            yticklabels=new_rsn_names if data_dimensionality == 'd15' else False,
+            square=True,
+            cbar=i_model_name == 0,
+            cbar_ax=cbar_ax,
+            cbar_kws={
+                'label': "test log likelihood",
+                'shrink': 0.6,
+            },
+        )
+
+    fig.subplots_adjust(
+        hspace=0.05,
+        wspace=-0.2,
+    )
+
+    # plt.tight_layout()
+
+    if figure_savedir is not None:
+        figure_name = f'{data_split:s}_{experiment_dimensionality:s}_test_log_likelihoods_edgewise_joint.pdf'
+        if not os.path.exists(figure_savedir):
+            os.makedirs(figure_savedir)
+        plt.savefig(
+            os.path.join(figure_savedir, figure_name),
+            format='pdf',
+            bbox_inches='tight'
+        )
+        logging.info(f"Saved figure '{figure_name:s}' in '{figure_savedir:s}'.")
+        plt.close()
+
+
+def plot_edgewise_imputation_benchmark_scores(
+    config_dict: dict,
+    edgewise_likelihoods: pd.DataFrame,
+    model_name: str,
+    data_split: str = 'LEOO',
+    experiment_dimensionality: str = 'multivariate',
+    data_dimensionality: str = 'd15',
+    figure_savedir: str = None,
+) -> None:
+    """
+    Plot edgewise imputation benchmark scores.
+    """
+    sns.set(style="white")
+    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
+
+    vmin, vmax = -4.0, -2.0
+
     n_time_series = edgewise_likelihoods.shape[0]
     if data_dimensionality == 'd15':
         edgewise_likelihoods, new_rsn_names = reorder_ica_components(
@@ -36,21 +143,28 @@ def _plot_edgewise_imputation_benchmark_scores(
     mask = np.zeros_like(edgewise_likelihoods)
     mask[np.triu_indices_from(mask)] = True
 
+    fig, ax = plt.subplots(
+        figsize=(4, 4),
+    )
+
     sns.heatmap(
         edgewise_likelihoods,
+        ax=ax,
         cmap='jet',
         mask=mask,
-        vmin=-4.0,
-        vmax=-2.0,
+        vmin=vmin,
+        vmax=vmax,
         xticklabels=new_rsn_names if data_dimensionality == 'd15' else False,
         yticklabels=new_rsn_names if data_dimensionality == 'd15' else False,
         square=True,
         cbar_kws={
             'label': "test log likelihood",
-            'shrink': 0.6
-        }
+            'shrink': 0.6,
+        },
     )
+
     # plt.tight_layout()
+
     if figure_savedir is not None:
         figure_name = f'{data_split:s}_{experiment_dimensionality:s}_test_log_likelihoods_edgewise_{model_name:s}.pdf'
         if not os.path.exists(figure_savedir):
@@ -139,7 +253,7 @@ if __name__ == '__main__':
             index_col=0
         )  # (D, D)
         print(likelihoods_df)
-        _plot_edgewise_imputation_benchmark_scores(
+        plot_edgewise_imputation_benchmark_scores(
             config_dict=cfg,
             edgewise_likelihoods=likelihoods_df,
             model_name=model_name,

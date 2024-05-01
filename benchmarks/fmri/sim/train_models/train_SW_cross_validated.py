@@ -57,9 +57,13 @@ if __name__ == "__main__":
         covs_types = cfg['all-covs-types']
 
     for noise_type in noise_types:
+
         optimal_window_length_df = pd.DataFrame()
+
         for covs_type in covs_types:
+
             optimal_window_length_array = []
+
             for i_trial in i_trials:
 
                 print('\n----------')
@@ -82,7 +86,8 @@ if __name__ == "__main__":
                         if not os.path.exists(data_file):
                             logging.warning(f"Data file {data_file:s} not found.")
                             continue
-                    continue
+                    else:
+                        continue
 
                 x, y = load_data(
                     data_file,
@@ -102,7 +107,7 @@ if __name__ == "__main__":
 
                 m = SlidingWindows(
                     x_train_locations=x_train,
-                    y_train_locations=y_train
+                    y_train_locations=y_train,
                 )
                 optimal_window_length = m.compute_cross_validated_optimal_window_length()
 

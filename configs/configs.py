@@ -364,9 +364,9 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
             [None, 2],
             [None, 6],
             # [0.5, None],
-            [1, None],
-            [2, None],
-            [6, None],
+            # [1, None],
+            # [2, None],
+            # [6, None],
         ],
         'plot-covs-types': [  # these will be plotted in this order
             'null',

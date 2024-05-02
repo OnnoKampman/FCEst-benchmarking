@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
         likelihoods_filename = f'{data_split:s}_{noise_type:s}_likelihoods_{model_name:s}.csv'
         test_likelihoods_savedir = os.path.join(
-            cfg['git-results-basedir'], 'imputation_study'
+            cfg['git-results-basedir'], 'imputation_benchmark'
         )
         if not os.path.exists(test_likelihoods_savedir):
             os.makedirs(test_likelihoods_savedir)

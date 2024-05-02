@@ -98,7 +98,7 @@ if __name__ == "__main__":
     print(edgewise_LEOO_likelihoods_df)
     filename = f'{data_split}_{experiment_dimensionality:s}_likelihoods_{model_name:s}_edgewise.csv'
     savedir = os.path.join(
-        cfg['git-results-basedir'], 'imputation_study'
+        cfg['git-results-basedir'], 'imputation_benchmark'
     )
     if not os.path.exists(savedir):
         os.makedirs(savedir)

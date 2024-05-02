@@ -21,10 +21,10 @@ python benchmarks/fmri/rs/HCP_PTN1200_recon2/TVFC_summary_measures/save_TVFC_est
 # Imputation benchmark
 #
 
-python benchmarks/fmri/rs/HCP_PTN1200_recon2/imputation_study/compute_LEOO_likelihoods.py d15 SVWP_joint multivariate
-python benchmarks/fmri/rs/HCP_PTN1200_recon2/imputation_study/compute_LEOO_likelihoods.py d15 DCC_joint multivariate
-python benchmarks/fmri/rs/HCP_PTN1200_recon2/imputation_study/compute_LEOO_likelihoods.py d15 SW_cross_validated multivariate
-python benchmarks/fmri/rs/HCP_PTN1200_recon2/imputation_study/compute_LEOO_likelihoods.py d15 sFC multivariate
+python benchmarks/fmri/rs/HCP_PTN1200_recon2/imputation_benchmark/compute_LEOO_likelihoods.py d15 SVWP_joint multivariate
+python benchmarks/fmri/rs/HCP_PTN1200_recon2/imputation_benchmark/compute_LEOO_likelihoods.py d15 DCC_joint multivariate
+python benchmarks/fmri/rs/HCP_PTN1200_recon2/imputation_benchmark/compute_LEOO_likelihoods.py d15 SW_cross_validated multivariate
+python benchmarks/fmri/rs/HCP_PTN1200_recon2/imputation_benchmark/compute_LEOO_likelihoods.py d15 sFC multivariate
 
 #
 # Test-retest

@@ -47,7 +47,7 @@ def plot_edgewise_imputation_benchmark_scores_joint(
 
     for i_model_name, model_name in enumerate(config_dict['plot-models']):
 
-        test_likelihoods_savedir = os.path.join(config_dict['git-results-basedir'], 'imputation_study')
+        test_likelihoods_savedir = os.path.join(config_dict['git-results-basedir'], 'imputation_benchmark')
         likelihoods_filename = f'{data_split:s}_{experiment_dimensionality:s}_likelihoods_{model_name:s}_edgewise.csv'
         edgewise_likelihoods = pd.read_csv(
             os.path.join(test_likelihoods_savedir, likelihoods_filename),
@@ -245,7 +245,7 @@ if __name__ == '__main__':
     )
 
     all_likelihoods_df = pd.DataFrame()
-    test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
+    test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_benchmark')
     for model_name in cfg['plot-models']:
         likelihoods_filename = f'{data_split:s}_{experiment_dimensionality:s}_likelihoods_{model_name:s}_edgewise.csv'
         likelihoods_df = pd.read_csv(

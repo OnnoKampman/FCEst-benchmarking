@@ -90,7 +90,7 @@ if __name__ == '__main__':
         hostname=socket.gethostname()
     )
     n_trials = int(experiment_data[-4:])
-    test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
+    test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_benchmark')
 
     for noise_type in cfg['noise-types']:
 
@@ -134,7 +134,7 @@ if __name__ == '__main__':
                     noise_type=noise_type,
                     palette=cfg['plot-covs-types-palette'],
                     model_name=model_name,
-                    figures_savedir=os.path.join(cfg['figures-basedir'], 'imputation_study')
+                    figures_savedir=os.path.join(cfg['figures-basedir'], 'imputation_benchmark')
                 )
 
                 likelihoods_mean_df = likelihoods_df.mean(axis=0)
@@ -172,7 +172,7 @@ if __name__ == '__main__':
             )
             for model_name in cfg['plot-models']:
                 likelihoods_filename = f'{data_split:s}_{noise_type:s}_likelihoods_{model_name:s}.csv'
-                test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
+                test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_benchmark')
                 test_likelihoods_savepath = os.path.join(test_likelihoods_savedir, likelihoods_filename)
                 if os.path.exists(test_likelihoods_savepath):
                     likelihoods_df = pd.read_csv(

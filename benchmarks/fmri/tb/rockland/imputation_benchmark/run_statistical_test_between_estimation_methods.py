@@ -21,7 +21,7 @@ if __name__ == "__main__":
         hostname=socket.gethostname()
     )
     models_list = cfg['plot-likelihoods-models']
-    test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
+    test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_benchmark')
     test_likelihoods_ttests_savedir = os.path.join(test_likelihoods_savedir, 'ttests')
 
     all_method_significances_df = pd.DataFrame(

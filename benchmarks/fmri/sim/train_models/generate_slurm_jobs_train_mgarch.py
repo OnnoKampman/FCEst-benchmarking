@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd{%d}s'
     data_split = sys.argv[2]       # 'all', or 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0100'
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,

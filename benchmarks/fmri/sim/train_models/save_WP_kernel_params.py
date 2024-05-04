@@ -16,8 +16,8 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', 'd3s'
     data_split = sys.argv[2]       # 'all', 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0100'
-    model_name = sys.argv[4]       # e.g. SVWP
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
+    model_name = sys.argv[4]       # 'SVWP', 'VWP', 'SVWP_joint', 'VWP_joint'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,

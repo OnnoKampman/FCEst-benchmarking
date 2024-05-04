@@ -256,10 +256,11 @@ def get_tvfc_estimates(
             )
 
             # Fix renaming issue.
-            if not os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
-                logging.warning(f"WP model file {os.path.join(wp_model_savedir, wp_model_filename):s} not found.")
-                if covs_type == 'boxcar':
-                    wp_model_filename = 'checkerboard.json'
+            if model_name in ['SVWP', 'VWP', 'SVWP_joint', 'VWP_joint']:
+                if not os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
+                    logging.warning(f"WP model file {os.path.join(wp_model_savedir, wp_model_filename):s} not found.")
+                    if covs_type == 'boxcar':
+                        wp_model_filename = 'checkerboard.json'
             if not os.path.exists(tvfc_estimates_filepath):
                 if covs_type == 'boxcar':
                     tvfc_estimates_filepath = os.path.join(

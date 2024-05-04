@@ -10,9 +10,19 @@ def get_ground_truth_covariance_structure(
     data_set_name: str,
 ) -> np.array:
     """
+    Return full covariance structure of shape (N, D, D).
+
+    These are the 'synthetic', 'simulated', or 'oracle' covariance structures.
+
     TODO: make this more flexible
 
-    Return full covariance structure of shape (N, D, D).
+    Parameters
+    ----------
+    covs_type: str
+    n_samples: int
+    signal_to_noise_ratio: float
+    data_set_name: str
+    return: np.array
     """
     covariance_structure = get_covariance_time_series(
         covs_type,

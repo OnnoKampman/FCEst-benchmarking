@@ -157,7 +157,7 @@ if __name__ == '__main__':
     all_test_likelihoods_df = pd.DataFrame()
     for model_name in cfg['plot-likelihoods-models']:
         likelihoods_filename = f'{data_split:s}_likelihoods_{model_name:s}.csv'
-        test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
+        test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_benchmark')
         likelihoods_df = pd.read_csv(
             os.path.join(test_likelihoods_savedir, likelihoods_filename),
             index_col=0

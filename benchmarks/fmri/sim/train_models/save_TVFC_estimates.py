@@ -27,6 +27,7 @@ if __name__ == "__main__":
 
     i_trials = range(num_trials)
     for noise_type in cfg['noise-types']:
+
         for i_trial in i_trials:
 
             for covs_type in cfg['all-covs-types']:
@@ -63,8 +64,8 @@ if __name__ == "__main__":
                     data_filepath,
                     verbose=False,
                 )  # (N, 1), (N, D)
-                n_time_steps = x.shape[0]
-                n_time_series = y.shape[1]
+                num_time_steps = x.shape[0]
+                num_time_series = y.shape[1]
 
                 match data_split:
                     case "LEOO":

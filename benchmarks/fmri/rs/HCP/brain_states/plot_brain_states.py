@@ -13,12 +13,17 @@ from helpers.data import reorder_ica_components
 from helpers.hcp import scan_id_to_scan_name
 
 
-def _plot_brain_state_cluster_centroids(
-        config_dict: dict, model_name: str, n_basis_states: int, data_dimensionality: str,
-        connectivity_metric: str = 'correlation', figures_savedir: str = None
+def plot_brain_state_cluster_centroids(
+    config_dict: dict,
+    model_name: str,
+    n_basis_states: int,
+    data_dimensionality: str,
+    connectivity_metric: str = 'correlation',
+    figures_savedir: str = None,
 ) -> None:
     """
     Plot brain states.
+
     TODO: add RSN names labels to brain states in plot?
     TODO: align brain states across scans automatically
 
@@ -31,7 +36,7 @@ def _plot_brain_state_cluster_centroids(
     :param connectivity_metric:
     :param figures_savedir:
     """
-    sns.set(style="whitegrid", font_scale=0.8)
+    sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
     fig, axn = plt.subplots(
@@ -65,7 +70,7 @@ def _plot_brain_state_cluster_centroids(
                 cluster_centroid_array, new_rsn_names = reorder_ica_components(
                     original_matrix=cluster_centroid_df.values,
                     n_time_series=n_time_series,
-                    config_dict=config_dict
+                    config_dict=config_dict,
                 )
             else:
                 cluster_centroid_array = cluster_centroid_df.values
@@ -82,10 +87,6 @@ def _plot_brain_state_cluster_centroids(
                 xticklabels=False,
                 yticklabels=False,
             )
-            # plt.xticks(fontsize=12)
-            # plt.yticks(rotation=0, fontsize=12)
-            # plt.xlabel("ICA component", fontsize=12)
-            # plt.ylabel("ICA component", fontsize=12)
 
             if scan_id == 0:
                 plt.title(f"Brain state {brain_state:d}")
@@ -93,7 +94,10 @@ def _plot_brain_state_cluster_centroids(
                 scan_name = scan_id_to_scan_name(scan_id)
                 plt.ylabel(f"Scan {scan_name:s}")
 
-    fig.subplots_adjust(hspace=-0.1, wspace=-0.7)
+    fig.subplots_adjust(
+        hspace=-0.1,
+        wspace=-0.7,
+    )
 
     # fig.tight_layout(rect=[0, 0, .9, 1])
     fig.tight_layout()
@@ -129,10 +133,10 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_brain_states_list = cfg['n-brain-states-list']
+    num_brain_states_list = cfg['n-brain-states-list']
 
-    for n_brain_states in n_brain_states_list:
-        _plot_brain_state_cluster_centroids(
+    for n_brain_states in num_brain_states_list:
+        plot_brain_state_cluster_centroids(
             config_dict=cfg,
             model_name=model_name,
             n_basis_states=n_brain_states,

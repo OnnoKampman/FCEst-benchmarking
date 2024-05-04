@@ -218,7 +218,7 @@ if __name__ == '__main__':
     all_likelihoods_df = pd.DataFrame()
     for model_name in cfg['plot-models']:
         likelihoods_filename = f'LEOO_{experiment_dimensionality:s}_likelihoods_{model_name:s}.csv'
-        test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_study')
+        test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_benchmark')
         test_likelihoods_filepath = os.path.join(test_likelihoods_savedir, likelihoods_filename)
         if os.path.exists(test_likelihoods_filepath):
             likelihoods_df = pd.read_csv(

@@ -14,15 +14,24 @@ from helpers.hcp import get_human_connectome_project_subjects, rename_variables_
 from helpers.figures import get_palette, set_size
 
 
-def _plot_out_of_sample_prediction_scores_joint(
-        config_dict: dict, scores_savedir: str, subject_measures_list: list[str],
-        tvfc_estimation_methods: list[str],
-        connectivity_metric: str = 'correlation', performance_metric: str = 'r2_scores',
-        figures_savedir: str = None
+def plot_out_of_sample_prediction_scores_joint(
+    config_dict: dict,
+    scores_savedir: str,
+    subject_measures_list: list[str],
+    tvfc_estimation_methods: list[str],
+    connectivity_metric: str = 'correlation',
+    performance_metric: str = 'r2_scores',
+    figures_savedir: str = None,
 ) -> None:
     """
     Plot all TVFC summary measures jointly in a single figure.
-    :param performance_metric: 'r2_scores', 'variance_explained', or 'prediction_accuracy'.
+
+    Parameters
+    ----------
+    :param config_dict:
+        Configuration dictionary.
+    :param performance_metric:
+        'r2_scores', 'variance_explained', or 'prediction_accuracy'.
     """
     sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
@@ -31,12 +40,12 @@ def _plot_out_of_sample_prediction_scores_joint(
         # figsize=set_size(subplots=(3, 1)),
         figsize=(9.6, 8),
         # figsize=config_dict['plot-subject-measures-figsize'],
-        nrows=len(config_dict['TVFC-summary-measures']),
+        nrows=len(config_dict['plot-TVFC-summary-measures']),
         ncols=1,
         sharex=True,
     )
 
-    for i_tvfc_summary_measure, tvfc_summary_measure in enumerate(config_dict['TVFC-summary-measures']):
+    for i_tvfc_summary_measure, tvfc_summary_measure in enumerate(config_dict['plot-TVFC-summary-measures']):
 
         # Gather results.
         all_results = pd.DataFrame()
@@ -118,7 +127,7 @@ def _plot_out_of_sample_prediction_scores_joint(
         if performance_metric == 'prediction_accuracy':
             axes[i_tvfc_summary_measure].set_ylim([-0.3, 0.7])
 
-        if not i_tvfc_summary_measure + 1 == len(config_dict['TVFC-summary-measures']):
+        if not i_tvfc_summary_measure + 1 == len(config_dict['plot-TVFC-summary-measures']):
             axes[i_tvfc_summary_measure].set_xticklabels([])
 
         # Leave the legend only in the first subplot.
@@ -132,7 +141,11 @@ def _plot_out_of_sample_prediction_scores_joint(
     #     bbox_to_anchor=(1.01, 1.0), frameon=True,
     #     title='TVFC\nestimator', alignment='left'
     # )
-    plt.xticks(rotation=35, ha="right")
+    plt.xticks(
+        rotation=35,
+        ha="right",
+    )
+
     plt.tight_layout()
 
     if figures_savedir is not None:
@@ -148,10 +161,11 @@ def _plot_out_of_sample_prediction_scores_joint(
         plt.close()
 
 
-def _plot_out_of_sample_prediction_scores(
-        config_dict: dict,
-        out_of_sample_prediction_results_df: pd.DataFrame,
-        tvfc_summary_measure: str, figures_savedir: str = None
+def plot_out_of_sample_prediction_scores(
+    config_dict: dict,
+    out_of_sample_prediction_results_df: pd.DataFrame,
+    tvfc_summary_measure: str,
+    figures_savedir: str = None,
 ) -> None:
     """
     Plot morphometricity results for single TVFC summary measure.
@@ -177,7 +191,11 @@ def _plot_out_of_sample_prediction_scores(
         gridsize=100,
     )
     ax.set_xticks(ax.get_xticks())
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=35, ha="right")
+    ax.set_xticklabels(
+        ax.get_xticklabels(),
+        rotation=35,
+        ha="right",
+    )
     ax.set_ylabel('Prediction accuracy')
 
     # ax.legend(
@@ -245,7 +263,7 @@ if __name__ == '__main__':
         'out_of_sample_prediction', subject_measures_subset
     )
 
-    _plot_out_of_sample_prediction_scores_joint(
+    plot_out_of_sample_prediction_scores_joint(
         cfg,
         scores_savedir,
         subject_measures_list,
@@ -270,7 +288,7 @@ if __name__ == '__main__':
         out_of_sample_prediction_results_df = rename_variables_for_plots(out_of_sample_prediction_results_df)
         out_of_sample_prediction_results_df = _rename_models_for_plots(cfg, out_of_sample_prediction_results_df)
 
-        _plot_out_of_sample_prediction_scores(
+        plot_out_of_sample_prediction_scores(
             cfg, out_of_sample_prediction_results_df,
             tvfc_summary_measure=tvfc_summary_measure,
             figures_savedir=os.path.join(

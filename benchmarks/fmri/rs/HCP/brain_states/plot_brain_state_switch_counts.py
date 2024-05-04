@@ -55,7 +55,7 @@ def plot_brain_state_switch_count(
 
     fig, ax = plt.subplots(
         # figsize=config_dict['plot-brain-state-switch-count-figsize']
-        figsize=(6.9, 3.5)
+        figsize=(6.4, 3.5)
     )
     pt.RainCloud(
         data=all_brain_state_switch_counts_df,
@@ -67,9 +67,12 @@ def plot_brain_state_switch_count(
         move=0.22,
         box_fliersize=2,
         box_linewidth=0.5,
+        box_whiskerprops={
+            'linewidth': 0.5,
+        },
         point_linewidth=0.5,
         linewidth=0.5,
-        point_size=1.5,
+        point_size=1.5,  # size of (colored) raindrops
     )
     plt.xlim([-1, 51])
     plt.xlabel('number of brain state switches')

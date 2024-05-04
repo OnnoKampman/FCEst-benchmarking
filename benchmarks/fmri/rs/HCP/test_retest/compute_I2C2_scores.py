@@ -28,12 +28,14 @@ if __name__ == "__main__":
 
     i2c2_scores_df = pd.DataFrame(
         index=[model_name], 
-        columns=cfg['TVFC-summary-measures']
+        columns=cfg['TVFC-summary-measures'],
     )
     for tvfc_summary_measure in cfg['TVFC-summary-measures']:
+
         if model_name == 'sFC' and tvfc_summary_measure != 'mean':
             i2c2_scores_df.loc[model_name, tvfc_summary_measure] = np.nan
             continue
+
         i2c2_scores_df.loc[model_name, tvfc_summary_measure] = compute_tvfc_summary_measure_test_retest_scores(
             config_dict=cfg,
             test_retest_metric='I2C2',
@@ -45,13 +47,14 @@ if __name__ == "__main__":
             connectivity_metric=metric
         )
 
-    i2c2_scores_savedir = os.path.join(cfg['git-results-basedir'], 'test_retest', metric)
+    i2c2_scores_savedir = os.path.join(
+        cfg['git-results-basedir'], 'test_retest', metric, 'I2C2'
+    )
     if not os.path.exists(i2c2_scores_savedir):
         os.makedirs(i2c2_scores_savedir)
-    i2c2_scores_filename = f'I2C2_{model_name:s}_scores.csv'
-    i2c2_scores_df = i2c2_scores_df.astype(float).round(3)
-    i2c2_scores_df.to_csv(
+    i2c2_scores_filename = f'{model_name:s}_scores.csv'
+    i2c2_scores_df.astype(float).to_csv(
         os.path.join(i2c2_scores_savedir, i2c2_scores_filename),
-        float_format='%.3f'
+        float_format='%.3f',
     )
     logging.info(f"Saved I2C2 scores table '{i2c2_scores_filename:s}' to '{i2c2_scores_savedir:s}'.")

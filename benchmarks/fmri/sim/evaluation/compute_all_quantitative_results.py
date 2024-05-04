@@ -17,10 +17,10 @@ from helpers.synthetic_covariance_structures import get_ground_truth_covariance_
 
 
 def _get_performance_metric(
-        performance_metric: str,
-        predicted_covariance_structure_test_locations: np.array,
-        ground_truth_covariance_structure_test_locations: np.array,
-        y_test_locations: np.array
+    performance_metric: str,
+    predicted_covariance_structure_test_locations: np.array,
+    ground_truth_covariance_structure_test_locations: np.array,
+    y_test_locations: np.array,
 ) -> float:
     """
     Computes performance metric.
@@ -82,7 +82,7 @@ if __name__ == "__main__":
         hostname=hostname
     )
     models_list = cfg['all-quantitative-results-models']
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
 
     if hostname == 'hivemind':
         if len(sys.argv) == 5:
@@ -90,11 +90,11 @@ if __name__ == "__main__":
             i_trials = [int(os.environ['SLURM_ARRAY_TASK_ID']) - 1]  # to make zero-index
         else:
             noise_types = cfg['noise-types']
-            i_trials = range(n_trials)
+            i_trials = range(num_trials)
     else:
         print('Running locally...')
         noise_types = cfg['noise-types']
-        i_trials = range(n_trials)
+        i_trials = range(num_trials)
 
     for noise_type in noise_types:
         if noise_type != 'no_noise':
@@ -106,24 +106,42 @@ if __name__ == "__main__":
             for perform_metric in cfg['performance-metrics']:
                 performance_df = pd.DataFrame(
                     index=models_list,
-                    columns=cfg['all-covs-types']
+                    columns=cfg['all-covs-types'],
                 )
                 for covs_type in cfg['all-covs-types']:
+
                     data_file = os.path.join(
-                        cfg['data-dir'], noise_type, f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
+                        cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                        f'{covs_type:s}_covariance.csv'
                     )
                     if not os.path.exists(data_file):
                         logging.warning(f"Data file '{data_file:s}' not found.")
-                        performance_df.loc[:, covs_type] = np.nan
-                        continue
-                    x, y = load_data(data_file, verbose=False)  # (N, 1), (N, D)
+
+                        # Fix renaming issue.
+                        if covs_type == 'boxcar':
+                            data_file = os.path.join(
+                                cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
+                                'checkerboard_covariance.csv'
+                            )
+                            if not os.path.exists(data_file):
+                                logging.warning(f"Data file '{data_file:s}' not found.")
+                                performance_df.loc[:, covs_type] = np.nan
+                                continue
+                        else:
+                            performance_df.loc[:, covs_type] = np.nan
+                            continue
+
+                    x, y = load_data(
+                        data_file,
+                        verbose=False,
+                    )  # (N, 1), (N, D)
                     n_time_series = y.shape[1]  # D
 
                     gt_covariance_structure = get_ground_truth_covariance_structure(
                         covs_type=covs_type,
                         n_samples=len(x),
                         signal_to_noise_ratio=SNR,
-                        data_set_name=data_set_name
+                        data_set_name=data_set_name,
                     )
 
                     # Select train and test data through a leave-every-other-out (LEOO) split.
@@ -146,7 +164,7 @@ if __name__ == "__main__":
                             i_trial=i_trial,
                             covs_type=covs_type,
                             data_split=data_split,
-                            metric='covariance'
+                            metric='covariance',
                         )  # (N_test, D, D)
                         if estimated_cov_structure_test is None:
                             logging.warning(f"Estimates for '{tvfc_estimation_method:s}' not found.")

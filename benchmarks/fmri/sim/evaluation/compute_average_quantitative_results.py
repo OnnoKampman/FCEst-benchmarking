@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd3s'
     data_split = sys.argv[2]       # 'all', or 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0100'
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,
@@ -28,7 +28,7 @@ if __name__ == "__main__":
         hostname=hostname
     )
     models_list = cfg['all-quantitative-results-models']
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
 
     for noise_type in cfg['noise-types']:
 
@@ -44,24 +44,24 @@ if __name__ == "__main__":
             print(f"> Performance metric: {performance_metric:s}")
 
             all_trials_results = []
-            for i_trial in range(n_trials):
+            for i_trial in range(num_trials):
                 quantitative_results_savepath = os.path.join(
                     cfg['experiments-basedir'], noise_type, data_split,
                     f'trial_{i_trial:03d}', f'{performance_metric:s}.csv'
                 )
-                
+
                 single_trial_results_df = pd.read_csv(
                     quantitative_results_savepath,
-                    index_col=0
-                )  # (n_models, n_covs_types) - can contain NaNs!
+                    index_col=0,
+                )  # (num_models, num_covs_types) - can contain NaNs!
                 assert single_trial_results_df.shape == (len(models_list), len(cfg['all-covs-types']))
 
                 # missing_cov_types = pd.isnull(single_trial_results_df).all().nonzero()[0]
                 # missing_models = pd.isnull(single_trial_results_df).all().nonzero()[0]
-                
+
                 all_trials_results.append(single_trial_results_df.values)
 
-            all_trials_results = np.array(all_trials_results)  # (n_trials, n_models, n_covs_types)
+            all_trials_results = np.array(all_trials_results)  # (num_trials, num_models, num_covs_types)
             print('all_results:', all_trials_results.shape)
 
             # Run statistical significance tests between all estimation methods.
@@ -73,7 +73,7 @@ if __name__ == "__main__":
                 all_results_cov_type_df = pd.DataFrame(
                     all_trials_results[:, :, i_all_cov_type],
                     columns=models_list
-                )  # (n_trials, n_models)
+                )  # (num_trials, n_models)
 
                 all_method_t_values_df = pd.DataFrame(
                     np.nan,

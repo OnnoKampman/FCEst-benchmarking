@@ -12,7 +12,9 @@ from helpers.synthetic_covariance_structures import get_covariance_time_series
 
 
 def _plot_synthetic_covariance_structures(
-        config_dict: dict, n_time_steps: int = 400, figures_save_basedir: str = None
+    config_dict: dict,
+    n_time_steps: int = 400,
+    figures_save_basedir: str = None,
 ) -> None:
     """
     Saves overview of all synthetic covariance structures used in the simulations benchmark.
@@ -83,8 +85,6 @@ def _convert_title(covariance_structure_type: str) -> str:
         covariance_structure_type = 'periodic (fast)'
     if covariance_structure_type == 'state_transition':
         covariance_structure_type = 'state transition'
-    if covariance_structure_type == 'checkerboard':
-        covariance_structure_type = 'boxcar'
     return covariance_structure_type
 
 

@@ -1,4 +1,4 @@
-,null,constant,periodic_1,periodic_2,periodic_3,checkerboard,stepwise,state_transition
+,null,constant,periodic_1,periodic_2,periodic_3,boxcar,stepwise,state_transition
 0,53,171,33,29,25,29,29,109
 1,81,179,23,31,21,25,25,31
 2,173,53,37,39,23,53,21,31

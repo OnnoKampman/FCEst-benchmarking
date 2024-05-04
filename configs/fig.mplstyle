@@ -1,10 +1,29 @@
+# https://github.com/matplotlib/matplotlib/blob/v3.8.4/lib/matplotlib/mpl-data/matplotlibrc
+
 text.usetex: False
+
 font.family: sans-serif
 font.size: 10
 font.sans-serif: Arial, DejaVu Sans, Lucida Grande, Verdana, Geneva, Lucid, Arial, Helvetica, Avant Garde, sans-serif
 
-axes.labelsize: 10
-legend.fontsize: 8
+axes.titlesize : 11  # size of figure title
 
-xtick.labelsize: 8
-ytick.labelsize: 8
+axes.labelsize: 10  # size of both axis labels (always text)
+
+axes.linewidth: 0.8
+
+# GRID
+
+grid.linestyle: dashed
+grid.linewidth: 0.8
+
+# LEGEND
+legend.markerscale: 1.0      # the relative size of legend markers vs. original
+legend.fontsize: 9
+legend.title_fontsize: 10
+
+xtick.labelsize: 9  # size of xtick labels, typically numbers of names
+ytick.labelsize: 9  # size of ytick labels, typically numbers
+
+# lines.linewidth : 3
+# lines.markersize : 10

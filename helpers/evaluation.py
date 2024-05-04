@@ -210,10 +210,18 @@ def _interpolate_matrices(matrix_i: np.array, matrix_j: np.array) -> np.array:
 
 
 def get_tvfc_estimates(
-        config_dict: dict, model_name: str, data_split: str,
-        x_train: np.array, y_train: np.array, metric: str,
-        scan_id: int = None, experiment_dimensionality: str = None, subject=None, parcellation: str = None,
-        noise_type: str = None, i_trial: int = None, covs_type: str = None
+    config_dict: dict,
+    model_name: str,
+    data_split: str,
+    x_train: np.array,
+    y_train: np.array,
+    metric: str,
+    scan_id: int = None,
+    experiment_dimensionality: str = None,
+    subject=None,
+    noise_type: str = None,
+    i_trial: int = None,
+    covs_type: str = None,
 ) -> np.array:
     """
     Estimates train locations covariance structure.
@@ -230,12 +238,15 @@ def get_tvfc_estimates(
             assert noise_type is not None
             assert i_trial is not None
             assert covs_type is not None
-            wp_joint_model_savedir = os.path.join(
+
+            repetition_time = None
+
+            wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], noise_type, data_split,
                 f'trial_{i_trial:03d}', model_name
             )
-            wp_joint_model_filename = f'{covs_type:s}.json'
-            repetition_time = None
+            wp_model_filename = f'{covs_type:s}.json'
+
             tvfc_estimates_savedir = os.path.join(
                 config_dict['experiments-basedir'], noise_type, f'trial_{i_trial:03d}',
                 'TVFC_estimates', data_split, metric, model_name
@@ -243,15 +254,29 @@ def get_tvfc_estimates(
             tvfc_estimates_filepath = os.path.join(
                 tvfc_estimates_savedir, f'{covs_type:s}.csv'
             )
+
+            # Fix renaming issue.
+            if model_name in ['SVWP', 'VWP', 'SVWP_joint', 'VWP_joint']:
+                if not os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
+                    logging.warning(f"WP model file {os.path.join(wp_model_savedir, wp_model_filename):s} not found.")
+                    if covs_type == 'boxcar':
+                        wp_model_filename = 'checkerboard.json'
+            if not os.path.exists(tvfc_estimates_filepath):
+                if covs_type == 'boxcar':
+                    tvfc_estimates_filepath = os.path.join(
+                        tvfc_estimates_savedir, 'checkerboard.csv'
+                    )
+
         case 'HCP_PTN1200_recon2':
             assert experiment_dimensionality is not None
             assert scan_id is not None
             assert subject is not None
-            wp_joint_model_savedir = os.path.join(
+
+            wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], 'saved_models', f'scan_{scan_id:d}',
                 data_split, experiment_dimensionality, model_name
             )
-            wp_joint_model_filename = f'{subject:d}.json'
+            wp_model_filename = f'{subject:d}.json'
             repetition_time = config_dict['repetition-time']
             # tvfc_estimates_filepath = os.path.join(
             #     config_dict['experiments-basedir'], 'TVFC_estimates', f'scan_{scan_id:d}',
@@ -260,10 +285,10 @@ def get_tvfc_estimates(
         case 'rockland':
             pp_pipeline = 'custom_fsl_pipeline'
             assert subject is not None
-            wp_joint_model_savedir = os.path.join(
+            wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], pp_pipeline, 'saved_models', data_split, model_name
             )
-            wp_joint_model_filename = f"{subject.removesuffix('.csv'):s}.json"
+            wp_model_filename = f"{subject.removesuffix('.csv'):s}.json"
             repetition_time = config_dict['repetition-time']
         case _:
             logging.error(f"Dataset '{data_set_name:s}' not recognized.")
@@ -271,14 +296,17 @@ def get_tvfc_estimates(
 
     match model_name:
         case 'VWP' | 'VWP_joint':
-            if os.path.exists(os.path.join(wp_joint_model_savedir, wp_joint_model_filename)):
+            if os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
                 k = gpflow.kernels.Matern52()
                 m = VariationalWishartProcess(
                     x_train, y_train,
                     nu=n_time_series,
                     kernel=k
                 )
-                m.load_from_params_dict(savedir=wp_joint_model_savedir, model_name=wp_joint_model_filename)
+                m.load_from_params_dict(
+                    savedir=wp_model_savedir,
+                    model_name=wp_model_filename,
+                )
                 if metric == 'correlation':
                     all_covs_means, _ = m.predict_corr(x_train)  # Tensor of shape (N, D, D), _
                 else:
@@ -286,10 +314,10 @@ def get_tvfc_estimates(
                 estimated_tvfc = all_covs_means.numpy()  # (N, D, D)
                 del m
             else:
-                logging.warning(f"VWP model not found in '{wp_joint_model_savedir:s}'.")
+                logging.warning(f"VWP model not found in '{wp_model_savedir:s}'.")
                 return
         case 'SVWP' | 'SVWP_joint':
-            if os.path.exists(os.path.join(wp_joint_model_savedir, wp_joint_model_filename)):
+            if os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
                 k = gpflow.kernels.Matern52()
                 m = SparseVariationalWishartProcess(
                     D=n_time_series,
@@ -298,7 +326,10 @@ def get_tvfc_estimates(
                     kernel=k,
                     verbose=False
                 )
-                m.load_from_params_dict(savedir=wp_joint_model_savedir, model_name=wp_joint_model_filename)
+                m.load_from_params_dict(
+                    savedir=wp_model_savedir,
+                    model_name=wp_model_filename,
+                )
                 if metric == 'correlation':
                     all_covs_means, _ = m.predict_corr(x_train)  # Tensor of shape (N, D, D), _
                 else:
@@ -306,11 +337,14 @@ def get_tvfc_estimates(
                 estimated_tvfc = all_covs_means.numpy()  # (N, D, D)
                 del m
             else:
-                logging.warning(f"SVWP model not found in '{wp_joint_model_savedir:s}'.")
+                logging.warning(f"SVWP model not found in '{wp_model_savedir:s}'.")
                 return
         case 'DCC' | 'DCC_joint' | 'DCC_bivariate_loop' | 'GO' | 'GO_joint' | 'GO_bivariate_loop':
             if os.path.exists(tvfc_estimates_filepath):
-                mgarch_df = pd.read_csv(tvfc_estimates_filepath, index_col=0)  # (D*D, N_train)
+                mgarch_df = pd.read_csv(
+                    tvfc_estimates_filepath,
+                    index_col=0,
+                )  # (D*D, N_train)
                 estimated_tvfc = to_3d_format(mgarch_df.values)  # (N_train, D, D)
                 logging.info(f"Loaded {model_name:s} estimates '{tvfc_estimates_filepath:s}'.")
                 if data_split == 'LEOO':
@@ -342,7 +376,7 @@ def get_tvfc_estimates(
             sw = SlidingWindows(
                 x_train_locations=x_train,
                 y_train_locations=y_train,
-                repetition_time=repetition_time
+                repetition_time=repetition_time,
             )
             estimated_tvfc = sw.overlapping_windowed_cov_estimation(
                 window_length=window_length,
@@ -365,52 +399,86 @@ def get_tvfc_estimates(
 
 
 def get_test_location_estimated_covariance_structure(
-        config_dict: dict, model_name: str, n_time_series: int,
-        x_train_locations: np.array, x_test_locations: np.array,
-        subject: str, data_split: str,
-        y_train_locations: np.array = None,
-        scan_id: int = None, experiment_dimensionality: str = None,
-        noise_type: str = None, i_trial: int = None, covs_type: str = None, parcellation: str = None,
-        connectivity_metric: str = 'covariance'
-):
+    config_dict: dict,
+    model_name: str,
+    n_time_series: int,
+    x_train_locations: np.array,
+    x_test_locations: np.array,
+    subject: str,
+    data_split: str,
+    y_train_locations: np.array = None,
+    scan_id: int = None,
+    experiment_dimensionality: str = None,
+    noise_type: str = None,
+    i_trial: int = None,
+    covs_type: str = None,
+    connectivity_metric: str = 'covariance',
+) -> np.array:
     """
     Estimates test location covariance structure.
     For all methods except the Wishart process models, we load the pre-saved train locations predictions.
+
+    Parameters
+    ----------
+    config_dict: dict
+    model_name: str
+    experiment_dimensionality: str
+        'multivariate' or 'bivariate'.
     """
     data_set_name = config_dict['data-set-name']
     match data_set_name:
         case 'd2' | 'd3d' | 'd3s' | 'd4s' | 'd6s' | 'd9s' | 'd15s':  # TODO: generalize this
-            model_savedir = os.path.join(
+
+            wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], noise_type, data_split,
                 f'trial_{i_trial:03d}', model_name
             )
-            model_filename = f'{covs_type:s}.json'
-            tvfc_estimates_filepath = os.path.join(
+            wp_model_filename = f'{covs_type:s}.json'
+
+            tvfc_estimates_savedir = os.path.join(
                 config_dict['experiments-basedir'], noise_type, f'trial_{i_trial:03d}', 'TVFC_estimates',
-                data_split, connectivity_metric, model_name, f'{covs_type:s}.csv'
+                data_split, connectivity_metric, model_name
             )
+            tvfc_estimates_filepath = os.path.join(
+                tvfc_estimates_savedir, f'{covs_type:s}.csv'
+            )
+
+            # Fix renaming issue.
+            if model_name in ['SVWP', 'VWP', 'SVWP_joint', 'VWP_joint']:
+                if not os.path.exists(os.path.join(wp_model_savedir, wp_model_filename)):
+                    logging.warning(f"WP model file {os.path.join(wp_model_savedir, wp_model_filename):s} not found.")
+                    if covs_type == 'boxcar':
+                        wp_model_filename = 'checkerboard.json'
+            if not os.path.exists(tvfc_estimates_filepath):
+                if covs_type == 'boxcar':
+                    tvfc_estimates_filepath = os.path.join(
+                        tvfc_estimates_savedir, 'checkerboard.csv'
+                    )
+
         case 'HCP_PTN1200_recon2':
             assert scan_id is not None
             assert experiment_dimensionality is not None
-            model_savedir = os.path.join(
+
+            wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], 'saved_models', f'scan_{scan_id:d}',
                 data_split, experiment_dimensionality, model_name
             )
             subject = subject.removesuffix('.txt')
-            model_filename = f'{subject:s}.json'
+            wp_model_filename = f'{subject:s}.json'
+
             tvfc_estimates_filepath = os.path.join(
                 config_dict['experiments-basedir'], 'TVFC_estimates', f'scan_{scan_id:d}',
                 data_split, experiment_dimensionality, connectivity_metric, model_name, f'{subject:s}.csv'
             )
         case 'rockland':
             pp_pipeline = 'custom_fsl_pipeline'
-            model_savedir = os.path.join(
+            wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], pp_pipeline, 'saved_models', data_split, model_name
             )
-            model_filename = f"{subject.removesuffix('.csv'):s}.json"
+            wp_model_filename = f"{subject.removesuffix('.csv'):s}.json"
             tvfc_estimates_filepath = os.path.join(
-                config_dict['experiments-basedir'], pp_pipeline, 'TVFC_estimates', data_split, connectivity_metric, model_name,
-                subject
+                config_dict['experiments-basedir'], pp_pipeline, 'TVFC_estimates',
+                data_split, connectivity_metric, model_name, subject
             )
         case _:
             logging.error(f"Dataset '{data_set_name:s}' not recognized.")
@@ -418,9 +486,9 @@ def get_test_location_estimated_covariance_structure(
 
     match model_name:
         case 'VWP' | 'VWP_joint':  # we do not have to interpolate linearly here
-            wp_model_filepath = os.path.join(model_savedir, model_filename)
+            wp_model_filepath = os.path.join(wp_model_savedir, wp_model_filename)
             if not os.path.exists(wp_model_filepath):
-                raise FileNotFoundError(f"Could not load model '{wp_model_filepath:s}'.")
+                raise FileNotFoundError(f"Could not load WP model '{wp_model_filepath:s}'.")
             k = gpflow.kernels.Matern52()
             m = VariationalWishartProcess(
                 x_observed=x_train_locations,
@@ -428,7 +496,7 @@ def get_test_location_estimated_covariance_structure(
                 nu=n_time_series,
                 kernel=k
             )
-            m.load_from_params_dict(model_savedir, model_filename)
+            m.load_from_params_dict(wp_model_savedir, wp_model_filename)
             if connectivity_metric == 'correlation':
                 all_covs_means, _ = m.predict_corr(x_test_locations)  # Tensor of shape (N, D, D), _
             else:
@@ -436,9 +504,9 @@ def get_test_location_estimated_covariance_structure(
             test_locations_predicted_covariance_structure = all_covs_means.numpy()  # (N, D, D)
             del m
         case 'SVWP' | 'SVWP_joint':  # we do not have to interpolate linearly here
-            wp_model_filepath = os.path.join(model_savedir, model_filename)
+            wp_model_filepath = os.path.join(wp_model_savedir, wp_model_filename)
             if not os.path.exists(wp_model_filepath):
-                raise FileNotFoundError(f"Could not load model '{wp_model_filepath:s}'.")
+                raise FileNotFoundError(f"Could not load WP model '{wp_model_filepath:s}'.")
             k = gpflow.kernels.Matern52()
             m = SparseVariationalWishartProcess(
                 D=n_time_series,
@@ -447,7 +515,10 @@ def get_test_location_estimated_covariance_structure(
                 kernel=k,
                 verbose=False
             )
-            m.load_from_params_dict(savedir=model_savedir, model_name=model_filename)
+            m.load_from_params_dict(
+                savedir=wp_model_savedir,
+                model_name=wp_model_filename,
+            )
             test_locations_predicted_covariance_structure, _ = m.predict_cov(x_new=x_test_locations)  # Tensor of shape (N_test, D, D)
             test_locations_predicted_covariance_structure = test_locations_predicted_covariance_structure.numpy()  # (N_test, D, D)
         case _:
@@ -455,10 +526,13 @@ def get_test_location_estimated_covariance_structure(
                 logging.warning(f"Could not load TVFC estimates '{tvfc_estimates_filepath:s}'.")
                 return
             # TODO: the Rockland load did not have an index_col=0 before!
-            tvfc_estimates_df = pd.read_csv(tvfc_estimates_filepath, index_col=0)  # (D*D, N_train)
+            tvfc_estimates_df = pd.read_csv(
+                tvfc_estimates_filepath,
+                index_col=0,
+            )  # (D*D, N_train)
             train_locations_predicted_covariance_structure = to_3d_format(tvfc_estimates_df.values)  # (N_train, D, D)
             test_locations_predicted_covariance_structure = interpolate_all_matrices(
                 train_estimated_covs=train_locations_predicted_covariance_structure,
-                n_test_time_steps=len(x_test_locations)
+                n_test_time_steps=len(x_test_locations),
             )  # (N_test, D, D)
     return test_locations_predicted_covariance_structure

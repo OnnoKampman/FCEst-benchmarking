@@ -1,0 +1,6 @@
+,SVWP_joint,DCC_joint,DCC_bivariate_loop,SW_cross_validated,sFC
+SVWP_joint,,0.081,0.095,1.228,0.043
+DCC_joint,0.081,,0.013,1.146,0.121
+DCC_bivariate_loop,0.095,0.013,,1.138,0.135
+SW_cross_validated,1.228,1.146,1.138,,1.251
+sFC,0.043,0.121,0.135,1.251,

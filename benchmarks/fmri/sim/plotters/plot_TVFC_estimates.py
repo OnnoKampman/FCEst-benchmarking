@@ -12,37 +12,47 @@ from helpers.data import load_data
 from helpers.evaluation import leave_every_other_out_split
 from helpers.figures import get_palette
 from helpers.plotters import plot_method_tvfc_estimates
-from helpers.synthetic_covariance_structures import get_ground_truth_covariance_structure, get_ylim
+from helpers.synthetic_covariance_structures import get_ground_truth_covariance_structure, get_ylim, to_human_readable
 
 
-def _plot_d2_all_covariance_structures(
-        config_dict: dict, signal_to_noise_ratio: float,
-        connectivity_metric: str, time_series_noise_type: str, data_split: str,
-        i_trial: int,
-        figures_savedir: str = None
+def plot_d2_all_covariance_structures(
+    config_dict: dict,
+    signal_to_noise_ratio: float,
+    connectivity_metric: str,
+    time_series_noise_type: str,
+    data_split: str,
+    i_trial: int,
+    figsize: tuple[float] = (5.2, 10.8),
+    ground_truth_linewidth: float = 1.5,
+    figures_savedir: str = None,
 ) -> None:
     """
     Plots bivariate correlation edge for all synthetic covariance structures considered.
+
+    Note that .eps files do not render transparency plots.
 
     Parameters
     ----------
     :param config_dict:
     :param signal_to_noise_ratio:
-    :param figure_filename: note that .eps files do not render transparency plots.
     :param connectivity_metric:
     :param time_series_noise_type:
     :param data_split:
     :param i_trial:
+    :param figsize:
+    :param ground_truth_linewidth:
     :param figures_savedir:
     """
-    sns.set(style="whitegrid", font_scale=1.5)
+    sns.set(style="whitegrid")
+    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
-    n_covs_types = len(config_dict['plot-covs-types'])
+    num_covs_types = len(config_dict['plot-covs-types'])
 
     fig, ax = plt.subplots(
-        nrows=n_covs_types, ncols=1,
+        nrows=num_covs_types,
+        ncols=1,
         sharex=True,
-        figsize=(8, 14)
+        figsize=figsize,
     )
     for i_covs_type, covs_type in enumerate(config_dict['plot-covs-types']):
 
@@ -52,23 +62,47 @@ def _plot_d2_all_covariance_structures(
             config_dict['data-dir'], time_series_noise_type,
             f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
         )
-        x, y = load_data(data_file, verbose=False)  # (N, 1), (N, D)
+        if not os.path.exists(data_file):
+            logging.warning(f"Data file '{data_file:s}' not found.")
+            if covs_type == 'boxcar':
+                data_file = os.path.join(
+                    config_dict['data-dir'], time_series_noise_type,
+                    f'trial_{i_trial:03d}', 'checkerboard_covariance.csv'
+                )
+                if not os.path.exists(data_file):
+                    logging.warning(f"Data file '{data_file:s}' not found.")
+                    continue
+            else:
+                continue
+
+        x, y = load_data(
+            data_file,
+            verbose=False,
+        )  # (N, 1), (N, D)
         ground_truth_covariance_structure = get_ground_truth_covariance_structure(
             covs_type=covs_type,
             n_samples=len(x),
             signal_to_noise_ratio=signal_to_noise_ratio,
-            data_set_name=config_dict['data-set-name']
+            data_set_name=config_dict['data-set-name'],
         )
 
-        # Plot ground truth.
         ax[i_covs_type].plot(
             x, [step[0, 1] for step in ground_truth_covariance_structure],
+            # color='dimgray',
             color='black',
-            linewidth=3.0,
-            label='Ground\nTruth'
+            # linestyle='dashed',
+            linewidth=ground_truth_linewidth,
+            alpha=0.8,
+            label='Ground\nTruth',
         )
-        for i_model_name, model_name in enumerate(config_dict['plot-models']):
-            plot_color = get_palette(config_dict['plot-models'])[i_model_name]
+
+        models_list = config_dict['plot-models']
+        for i_model_name, model_name in enumerate(models_list[:-1]):  # the sFC estimate is not really informative here
+
+            plot_color = get_palette(
+                config_dict['plot-models']
+            )[i_model_name]
+
             plot_method_tvfc_estimates(
                 config_dict=config_dict,
                 model_name=model_name,
@@ -82,23 +116,33 @@ def _plot_d2_all_covariance_structures(
                 i_time_series=0,
                 j_time_series=1,
                 plot_color=plot_color,
-                ax=ax[i_covs_type]
+                ax=ax[i_covs_type],
             )
 
         ax[i_covs_type].set_xlim(config_dict['plot-data-xlim'])
-        ax[i_covs_type].set_ylim(get_ylim(covs_type=covs_type))
-        # ax[i_covs_type].set_ylabel(covs_type, rotation=0)
+        ax[i_covs_type].set_ylim(
+            get_ylim(covs_type=covs_type)
+        )
+        ax[i_covs_type].set_ylabel(
+            to_human_readable(covs_type),
+            rotation='horizontal',
+            horizontalalignment='right',
+            verticalalignment='center',
+        )
 
         if i_covs_type == 0:
             ax[i_covs_type].legend(
-                bbox_to_anchor=(1.01, 1.0), frameon=True,
-                title='TVFC\nestimator', alignment='left'
+                bbox_to_anchor=(1.01, 1.0),
+                frameon=True,
+                title='TVFC\nestimator',
+                alignment='left',
             )
 
-    # plt.legend(frameon=True, title='cohort')
-
     ax[-1].set_xlabel('time [a.u.]')
-    plt.subplots_adjust(hspace=0.08, wspace=0)
+    plt.subplots_adjust(
+        hspace=0.12,
+        wspace=0,
+    )
 
     if figures_savedir is not None:
         figure_filename = f'all_covs_types_{connectivity_metric:s}s.pdf'
@@ -114,10 +158,20 @@ def _plot_d2_all_covariance_structures(
 
 
 def _plot_d2_tvfc_estimates_single_covariance_structure(
-        config_dict: dict,
-        x_train_locations: np.array, y_train_locations: np.array, ground_truth_covariance_structure: np.array,
-        figure_filename: str, connectivity_metric: str, time_series_noise_type, data_split: str, i_trial: int, covs_type,
-        markersize=3.6, bbox_to_anchor=(1.19, 1.0), legend_fontsize=12, figure_savedir: str = None
+    config_dict: dict,
+    x_train_locations: np.array,
+    y_train_locations: np.array,
+    ground_truth_covariance_structure: np.array,
+    figure_filename: str,
+    connectivity_metric: str,
+    time_series_noise_type,
+    data_split: str,
+    i_trial: int,
+    covs_type,
+    markersize=3.6,
+    bbox_to_anchor=(1.19, 1.0),
+    legend_fontsize=12,
+    figure_savedir: str = None,
 ) -> None:
     """
     Plots bivariate pair of time series and the predicted covariance structure in one figure.
@@ -304,11 +358,19 @@ def _plot_d3_tvfc_estimates(
 
 
 def _plot_d4_tvfc_estimates(
-        config_dict: dict,
-        x_train_locations: np.array, y_train_locations: np.array, ground_truth_covariance_structure: np.array,
-        connectivity_metric: str, time_series_noise_type: str, data_split: str, i_trial: int, covs_type: str,
-        markersize=3.6, bbox_to_anchor=(1.2, 1.0),
-        figure_filename: str = None, figure_savedir: str = None
+    config_dict: dict,
+    x_train_locations: np.array,
+    y_train_locations: np.array,
+    ground_truth_covariance_structure: np.array,
+    connectivity_metric: str,
+    time_series_noise_type: str,
+    data_split: str,
+    i_trial: int,
+    covs_type: str,
+    markersize=3.6,
+    bbox_to_anchor=(1.2, 1.0),
+    figure_filename: str = None,
+    figure_savedir: str = None,
 ) -> None:
     """
     Parameters
@@ -336,7 +398,7 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd{%d}s'
     data_split = sys.argv[2]       # 'all', or 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0100'
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
     metric = sys.argv[4]           # 'correlation', or 'covariance'
 
     cfg = get_config_dict(
@@ -353,7 +415,7 @@ if __name__ == "__main__":
 
         # Plot figure for all (bivariate) synthetic covariance structures jointly.
         if data_set_name == 'd2':  # TODO: also plot this for any sparse case
-            _plot_d2_all_covariance_structures(
+            plot_d2_all_covariance_structures(
                 config_dict=cfg,
                 signal_to_noise_ratio=SNR,
                 connectivity_metric=metric,
@@ -367,76 +429,79 @@ if __name__ == "__main__":
             )
 
         # Plot individual figures for each synthetic covariance structure.
-        for covs_type in cfg['all-covs-types']:
-            data_file = os.path.join(
-                cfg['data-dir'], noise_type, f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
-            )
-            if not os.path.exists(data_file):
-                logging.warning(f"Data file '{data_file:s}' not found.")
-                continue
-            x, y = load_data(data_file, verbose=False)  # (N, 1), (N, D)
-            gt_cov_structure = get_ground_truth_covariance_structure(
-                covs_type=covs_type,
-                n_samples=len(x),
-                signal_to_noise_ratio=SNR,
-                data_set_name=data_set_name
-            )
+        # for covs_type in cfg['all-covs-types']:
+        #     data_file = os.path.join(
+        #         cfg['data-dir'], noise_type, f'trial_{i_trial:03d}', f'{covs_type:s}_covariance.csv'
+        #     )
+        #     if not os.path.exists(data_file):
+        #         logging.warning(f"Data file '{data_file:s}' not found.")
+        #         continue
+        #     x, y = load_data(
+        #         data_file,
+        #         verbose=False,
+        #     )  # (N, 1), (N, D)
+        #     gt_cov_structure = get_ground_truth_covariance_structure(
+        #         covs_type=covs_type,
+        #         n_samples=len(x),
+        #         signal_to_noise_ratio=SNR,
+        #         data_set_name=data_set_name,
+        #     )
 
-            figure_name = f'{covs_type:s}_{metric:s}s.pdf'
+        #     figure_name = f'{covs_type:s}_{metric:s}s.pdf'
 
-            if data_split == 'LEOO':
-                x_train, x_test = leave_every_other_out_split(x)
-                y_train, y_test = leave_every_other_out_split(y)
-                gt_cov_structure_train, covs_test = leave_every_other_out_split(gt_cov_structure)
-                figure_name = '%s_train_locations.png' % figure_name[:-4]
-            else:
-                x_train = x
-                y_train = y
-                gt_cov_structure_train = gt_cov_structure
+        #     if data_split == 'LEOO':
+        #         x_train, x_test = leave_every_other_out_split(x)
+        #         y_train, y_test = leave_every_other_out_split(y)
+        #         gt_cov_structure_train, covs_test = leave_every_other_out_split(gt_cov_structure)
+        #         figure_name = '%s_train_locations.png' % figure_name[:-4]
+        #     else:
+        #         x_train = x
+        #         y_train = y
+        #         gt_cov_structure_train = gt_cov_structure
 
-            match data_set_name:
-                case 'd2':
-                    _plot_d2_tvfc_estimates_single_covariance_structure(
-                        config_dict=cfg,
-                        x_train_locations=x_train,
-                        y_train_locations=y_train,
-                        ground_truth_covariance_structure=gt_cov_structure,
-                        figure_filename=figure_name,
-                        connectivity_metric=metric,
-                        time_series_noise_type=noise_type,
-                        data_split=data_split,
-                        covs_type=covs_type,
-                        i_trial=i_trial,
-                        figure_savedir=os.path.join(cfg['figures-basedir'], noise_type, data_split, "TVFC_estimates", f'trial_{i_trial:03d}')
-                    )
-                case 'd3d' | 'd3s':
-                    _plot_d3_tvfc_estimates(
-                        config_dict=cfg,
-                        x_train_locations=x_train,
-                        y_train_locations=y_train,
-                        ground_truth_covariance_structure=gt_cov_structure,
-                        connectivity_metric=metric,
-                        covs_type=covs_type,
-                        time_series_noise_type=noise_type,
-                        i_trial=i_trial,
-                        data_split=data_split,
-                        figure_filename=figure_name,
-                        figure_savedir=os.path.join(
-                            cfg['figures-basedir'], noise_type, data_split,
-                            'TVFC_estimates', f'trial_{i_trial:03d}'
-                        )
-                    )
-                case 'd4s':
-                    _plot_d4_tvfc_estimates(
-                        config_dict=cfg,
-                        x_train_locations=x_train,
-                        y_train_locations=y_train,
-                        ground_truth_covariance_structure=gt_cov_structure,
-                        connectivity_metric=metric,
-                        covs_type=covs_type,
-                        time_series_noise_type=noise_type,
-                        i_trial=i_trial,
-                        data_split=data_split,
-                    )
-                case _:
-                    raise NotImplementedError
+        #     match data_set_name:
+        #         case 'd2':
+        #             _plot_d2_tvfc_estimates_single_covariance_structure(
+        #                 config_dict=cfg,
+        #                 x_train_locations=x_train,
+        #                 y_train_locations=y_train,
+        #                 ground_truth_covariance_structure=gt_cov_structure,
+        #                 figure_filename=figure_name,
+        #                 connectivity_metric=metric,
+        #                 time_series_noise_type=noise_type,
+        #                 data_split=data_split,
+        #                 covs_type=covs_type,
+        #                 i_trial=i_trial,
+        #                 figure_savedir=os.path.join(cfg['figures-basedir'], noise_type, data_split, "TVFC_estimates", f'trial_{i_trial:03d}')
+        #             )
+        #         case 'd3d' | 'd3s':
+        #             _plot_d3_tvfc_estimates(
+        #                 config_dict=cfg,
+        #                 x_train_locations=x_train,
+        #                 y_train_locations=y_train,
+        #                 ground_truth_covariance_structure=gt_cov_structure,
+        #                 connectivity_metric=metric,
+        #                 covs_type=covs_type,
+        #                 time_series_noise_type=noise_type,
+        #                 i_trial=i_trial,
+        #                 data_split=data_split,
+        #                 figure_filename=figure_name,
+        #                 figure_savedir=os.path.join(
+        #                     cfg['figures-basedir'], noise_type, data_split,
+        #                     'TVFC_estimates', f'trial_{i_trial:03d}'
+        #                 )
+        #             )
+        #         case 'd4s':
+        #             _plot_d4_tvfc_estimates(
+        #                 config_dict=cfg,
+        #                 x_train_locations=x_train,
+        #                 y_train_locations=y_train,
+        #                 ground_truth_covariance_structure=gt_cov_structure,
+        #                 connectivity_metric=metric,
+        #                 covs_type=covs_type,
+        #                 time_series_noise_type=noise_type,
+        #                 i_trial=i_trial,
+        #                 data_split=data_split,
+        #             )
+        #         case _:
+        #             raise NotImplementedError

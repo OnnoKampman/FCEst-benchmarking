@@ -19,7 +19,13 @@ from helpers.synthetic_covariance_structures import get_d3d_covariance_structure
 np.random.seed(2021)  # so full data set can be replicated
 
 
-def _define_noise_type_name(white_noise_snr: float, hcp_noise_snr: float) -> str:
+def _define_noise_type_name(
+    white_noise_snr: float,
+    hcp_noise_snr: float,
+) -> str:
+    """
+    Define the name of the noise routine.
+    """
     if white_noise_snr is None and hcp_noise_snr is None:
         noise_type_name = 'no_noise'
     elif white_noise_snr is not None and hcp_noise_snr is not None:
@@ -38,11 +44,11 @@ if __name__ == "__main__":
     # sys.argv[0] is the script name
     data_set_name = sys.argv[1]  # 'd2', 'd3d', or 'd{%d}s'
     N = int(sys.argv[2])         # number of time steps
-    n_trials = int(sys.argv[3])  # number of trials
+    num_trials = int(sys.argv[3])  # number of trials
 
     print(f'N = {N:d}')
-    print(f'T = {n_trials:d}')
-    experiment_data = f'N{N:04d}_T{n_trials:04d}'
+    print(f'T = {num_trials:d}')
+    experiment_data = f'N{N:04d}_T{num_trials:04d}'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,
@@ -50,6 +56,7 @@ if __name__ == "__main__":
         hostname=socket.gethostname()
     )
     if os.path.exists(cfg['data-dir']):
+        print(f"Data set '{cfg['data-dir']:s}' already exists!")
         raise FileExistsError('Data set already exists!')
 
     match [data_set_name[0], data_set_name[1:-1], data_set_name[-1]]:
@@ -66,9 +73,16 @@ if __name__ == "__main__":
             raise NotImplementedError(f"Data set name '{data_set_name:s}' not recognized.")
 
     for (white_noise_snr, hcp_noise_snr) in cfg['noise-routines']:
-        noise_type = _define_noise_type_name(white_noise_snr, hcp_noise_snr)
-        for i_trial in range(n_trials):
-            data_dir = os.path.join(cfg['data-dir'], noise_type, f'trial_{i_trial:03d}')
+
+        noise_type = _define_noise_type_name(
+            white_noise_snr, hcp_noise_snr
+        )
+
+        for i_trial in range(num_trials):
+
+            data_dir = os.path.join(
+                cfg['data-dir'], noise_type, f'trial_{i_trial:03d}'
+            )
 
             # Null data set.
             save_synthetic_dataset(

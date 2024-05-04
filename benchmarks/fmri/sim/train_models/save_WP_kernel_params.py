@@ -16,21 +16,21 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', 'd3s'
     data_split = sys.argv[2]       # 'all', 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0100'
-    model_name = sys.argv[4]       # e.g. SVWP
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
+    model_name = sys.argv[4]       # 'SVWP', 'VWP', 'SVWP_joint', 'VWP_joint'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,
         experiment_data=experiment_data,
         hostname=hostname
     )
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
 
     kernel_params_savedir = os.path.join(cfg['git-results-basedir'], 'kernel_analysis')
     if not os.path.exists(kernel_params_savedir):
         os.makedirs(kernel_params_savedir)
 
-    i_trials = range(n_trials)
+    i_trials = range(num_trials)
     noise_types = cfg['noise-types']
     covs_types = cfg['all-covs-types']
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
         for noise_type in noise_types:
 
-            kernel_params_df = pd.DataFrame()  # (n_trials, n_covs_types)
+            kernel_params_df = pd.DataFrame()  # (num_trials, num_covs_types)
             for covs_type in covs_types:
 
                 kernel_params_array = []

@@ -11,9 +11,13 @@ from configs.configs import get_config_dict
 from helpers.rockland import get_rockland_subjects, load_rockland_data
 
 
-def _plot_static_functional_connectivity_estimate(
-        config_dict: dict, correlation_matrix: np.array, brain_regions_of_interest: list[str],
-        subject_filename: str = None, mean_estimate: bool = False, figures_savedir: str = None
+def plot_static_functional_connectivity_estimate(
+    config_dict: dict,
+    correlation_matrix: np.array,
+    brain_regions_of_interest: list[str],
+    subject_filename: str = None,
+    mean_estimate: bool = False,
+    figures_savedir: str = None,
 ) -> None:
     """
     Plots average TVFC estimates over all subjects for a single TVFC estimation method.
@@ -28,7 +32,7 @@ def _plot_static_functional_connectivity_estimate(
         figure_name_correlation_matrix = f"{subject_filename:s}_sFC_correlation_matrix.pdf"
 
     fig, ax = plt.subplots(
-        figsize=(4, 4)
+        figsize=(3.2, 3.2),
     )
     sns.heatmap(
         correlation_matrix,
@@ -38,16 +42,19 @@ def _plot_static_functional_connectivity_estimate(
         square=True,
         vmin=0.0,
         vmax=1.0,
-        ax=ax
+        cbar_kws={
+            'label': 'sFC estimate',
+            'shrink': 0.6,
+        },
+        ax=ax,
     )
     plt.yticks(rotation=0)
+
     plt.tight_layout()
 
     if figures_savedir is not None:
-
         if not os.path.exists(figures_savedir):
             os.makedirs(figures_savedir)
-
         plt.savefig(
             os.path.join(
                 figures_savedir, figure_name_correlation_matrix
@@ -74,7 +81,6 @@ if __name__ == "__main__":
     )
     all_subjects_list = get_rockland_subjects(config_dict=cfg)
     brain_regions_of_interest = cfg['roi-list']
-    edges_to_plot_indices = cfg['roi-edges-list']
     n_time_series = len(brain_regions_of_interest)
     figures_base_savedir = os.path.join(
         cfg['figures-basedir'], pp_pipeline, 'sFC_estimates', cfg['roi-list-name'], data_split
@@ -101,7 +107,7 @@ if __name__ == "__main__":
 
     mean_sfc_estimate /= len(all_subjects_list)
 
-    _plot_static_functional_connectivity_estimate(
+    plot_static_functional_connectivity_estimate(
         config_dict=cfg,
         correlation_matrix=mean_sfc_estimate,
         brain_regions_of_interest=brain_regions_of_interest,

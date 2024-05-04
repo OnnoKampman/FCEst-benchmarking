@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd{%d}s'
     data_split = sys.argv[2]       # 'all', or 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0100'
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,
@@ -24,8 +24,8 @@ if __name__ == "__main__":
         hostname=hostname
     )
     benchmark_basedir = cfg['experiments-basedir']
-    max_number_of_cpus = cfg['max-n-cpus']
-    n_trials = int(experiment_data[-4:])
+    max_num_cpus = cfg['max-n-cpus']
+    num_trials = int(experiment_data[-4:])
 
     dependency_line = ""
     for noise_type in cfg['noise-types']:
@@ -46,7 +46,7 @@ if __name__ == "__main__":
                              "#! How many many cores will be allocated per task? (for single core jobs always leave this at 1)\n"
                              "#SBATCH --cpus-per-task=1\n"
                              "#SBATCH --time=23:59:00\n"
-                             f"#SBATCH --array=1-{n_trials:d}%{max_number_of_cpus:d}\n"
+                             f"#SBATCH --array=1-{num_trials:d}%{max_num_cpus:d}\n"
                              f"{dependency_line:s}"
                              ". /home/opk20/miniconda3/bin/activate\n"
                              "conda activate fcest-env\n"
@@ -67,12 +67,16 @@ if __name__ == "__main__":
             print('\n', slurm_job_str, '\n')
 
             # Create SLURM directory where logs will be saved (SLURM does not create these automatically).
-            slurm_log_dir = os.path.join(cfg['experiments-basedir'], 'slurm_logs', noise_type, covs_type, data_split, model_name)
+            slurm_log_dir = os.path.join(
+                cfg['experiments-basedir'], 'slurm_logs', noise_type, covs_type, data_split, model_name
+            )
             if not os.path.exists(slurm_log_dir):
                 os.makedirs(slurm_log_dir)
 
             # Save SLURM job to file.
-            slurm_job_dir = os.path.join(cfg['experiments-basedir'], 'slurm_jobs', data_split, model_name)
+            slurm_job_dir = os.path.join(
+                cfg['experiments-basedir'], 'slurm_jobs', data_split, model_name
+            )
             if not os.path.exists(slurm_job_dir):
                 os.makedirs(slurm_job_dir)
             slurm_job_filepath = os.path.join(slurm_job_dir, f'{noise_type:s}_{covs_type:s}')

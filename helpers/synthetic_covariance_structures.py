@@ -4,12 +4,25 @@ import numpy as np
 
 
 def get_ground_truth_covariance_structure(
-        covs_type: str, n_samples: int, signal_to_noise_ratio, data_set_name: str
+    covs_type: str,
+    n_samples: int,
+    signal_to_noise_ratio,
+    data_set_name: str,
 ) -> np.array:
     """
+    Return full covariance structure of shape (N, D, D).
+
+    These are the 'synthetic', 'simulated', or 'oracle' covariance structures.
+
     TODO: make this more flexible
 
-    Return full covariance structure of shape (N, D, D).
+    Parameters
+    ----------
+    covs_type: str
+    n_samples: int
+    signal_to_noise_ratio: float
+    data_set_name: str
+    return: np.array
     """
     covariance_structure = get_covariance_time_series(
         covs_type,
@@ -33,7 +46,9 @@ def get_ground_truth_covariance_structure(
 
 
 def get_covariance_time_series(
-    cov_type: str, n_samples: int, signal_to_noise_ratio=None
+    cov_type: str,
+    n_samples: int,
+    signal_to_noise_ratio=None,
 ) -> np.array:
     """
     This function is only called from the plotting and quantitative results scripts.
@@ -174,6 +189,9 @@ def get_boxcar_covariances(n_samples: int) -> np.array:
     The final segment can be of variable length to make sure the total number of samples is correct.
     The signal is also convolved with a hemodynamic response function.
 
+    Parameters
+    ----------
+    n_samples: int
     :return:
         array of shape (N, ).
     """
@@ -289,13 +307,28 @@ def get_sparse_covariance_structure(covariance_time_series: np.array, n_time_ser
     return np.array(covariance_structure)
 
 
-def get_ylim(covs_type: str):
+def get_ylim(covs_type: str) -> list[float]:
     match covs_type:
-        case 'null':
-            return [-0.45, 0.45]
         case 'constant':
-            return [0.0, 1.1]
+            return [0.0, 1.0]
+        case 'null':
+            return [-0.35, 0.35]
         case 'state_transition':
-            return [-0.1, 1.1]
+            return [0.0, 1.0]
         case _:
-            return [-1.1, 1.1]
+            return [-1.0, 1.0]
+
+
+def to_human_readable(covs_type: str) -> str:
+    """
+    Convert covs_type to human readable format used in figures.
+    """
+    match covs_type:
+        case 'periodic_1':
+            return 'periodic (slow)'
+        case 'periodic_3':
+            return 'periodic (fast)'
+        case 'checkerboard':
+            return 'boxcar'
+        case _:
+            return covs_type.replace('_', ' ')

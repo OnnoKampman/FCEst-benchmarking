@@ -13,11 +13,11 @@ logging.basicConfig(
 
 
 def get_config_dict(
-        data_set_name: str,
-        subset: str = None,
-        subset_dimensionality: str = None,
-        experiment_data: str = None,
-        hostname: str = 'local'
+    data_set_name: str,
+    subset: str = None,
+    subset_dimensionality: str = None,
+    experiment_data: str = None,
+    hostname: str = 'local',
 ) -> dict:
     """
     Load benchmark-specific configurations.
@@ -30,15 +30,36 @@ def get_config_dict(
         task data: 'rockland'
     :param subset:
     :param subset_dimensionality:
-    :param experiment_data: 
+    :param experiment_data:
         Expected in format 'Nxxx_Txxx'
     :param hostname:
     :return:
     """
+    # Get filepaths.
+    # filepaths_dict = _load_filepaths()
+    # try:
+        # filepaths_dict = filepaths_dict[hostname]
+        # git_basedir = filepaths_dict['git-basedir']
+        # project_basedir = filepaths_dict['project-basedir']
+    # except KeyError:
+        # logging.warning(f"Unexpected hostname '{hostname:s}' found.")
+        # git_basedir = ''
+        # project_basedir = ''
+
+    # if 'login-' in hostname:  # TODO: this changes for each login
+    #     git_basedir = ''
+    #     project_basedir = ''
+
     # Define general configs, shared across experiments.
     shared_config_dict = dict()
     shared_config_dict['data-set-name'] = data_set_name
+    # shared_config_dict['git-basedir'] = git_basedir
+    # shared_config_dict['project-basedir'] = project_basedir
     match hostname:
+        case 'hivemind':
+            logging.info(f"Running on '{hostname:s}'.")
+            git_basedir = '/home/opk20/git_repos/FCEst-benchmarking'
+            project_basedir = '/mnt/Data/neuro-dynamic-covariance'
         case _:
             logging.warning(f"Unexpected hostname '{hostname:s}' found.")
     if 'login-' in hostname:  # TODO: this changes for each login
@@ -60,6 +81,7 @@ def get_config_dict(
 
     # General figures configs.
     shared_config_dict['figure-dpi-imputation'] = 250
+    shared_config_dict['fig-figsize-likelihoods-raincloud'] = (5, 3)
     shared_config_dict['plot-likelihoods-figsize'] = (12, 6)
     shared_config_dict['plot-brain-state-switch-count-figsize'] = (12, 8)
     shared_config_dict['plot-time-series-dpi'] = 200
@@ -126,11 +148,11 @@ def _get_human_connectome_project_config_dict(
     return {
         'data-dir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-            'fmri', 'rs', shared_config_dict['data-set-name'], 'node_timeseries', subset
+            'resting_state', shared_config_dict['data-set-name'], 'node_timeseries', subset
         ),
         'data-dir-subject-measures': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-            'fmri', 'rs', 'hcp-openaccess'
+            'resting_state', 'hcp-openaccess'
         ),
         'experiments-basedir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'experiments',
@@ -287,7 +309,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
     """
     simulated_data_dirpath = os.path.join(
         shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-        'fmri', 'sim', shared_config_dict['data-set-name']
+        'simulations', shared_config_dict['data-set-name']
     )
     if os.path.exists(simulated_data_dirpath):
         logging.info("Existing data sets found:")
@@ -301,7 +323,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
             'periodic_3',
             'periodic_4',
             'periodic_5',
-            'checkerboard',
+            'boxcar',
             'stepwise',
             'state_transition',
             'change_point',
@@ -309,7 +331,7 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
         'constant-covariance': 0.8,
         'data-dir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'datasets',
-            'fmri', 'sim', shared_config_dict['data-set-name'], benchmark_dimensions
+            'simulations', shared_config_dict['data-set-name'], benchmark_dimensions
         ),
         'experiments-basedir': os.path.join(
             shared_config_dict['project-basedir'], 'opk20_hivemind_paper_1', 'benchmarks',
@@ -342,9 +364,9 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
             [None, 2],
             [None, 6],
             # [0.5, None],
-            [1, None],
-            [2, None],
-            [6, None],
+            # [1, None],
+            # [2, None],
+            # [6, None],
         ],
         'plot-covs-types': [  # these will be plotted in this order
             'null',
@@ -353,11 +375,11 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
             'periodic_3',
             'stepwise',
             'state_transition',
-            'checkerboard',
+            'boxcar',
         ],
         'plot-covs-types-palette': 'Set2',
         'plot-lengthscales-window-lengths': (12, 10),
-        'plot-data-xlim': [-0.01, 1.01],
+        'plot-data-xlim': [-0.00, 1.00],
         'repetition-time': 1,  # synthetic TR is one second for simplicity
         'window-lengths': [
             15,
@@ -519,7 +541,7 @@ def _get_sparse_config_dict(
             'SW_30',
             'SW_60',
             'SW_120',
-            'sFC'
+            'sFC',
         ],
         'figure-model-estimates-figsize': (12, 13),
         'mgarch-models': [
@@ -566,7 +588,9 @@ def _get_sparse_config_dict(
 
 
 def _get_rockland_config_dict(
-        shared_config_dict: dict, repetition_time: str, roi_list_name: str = 'final'
+    shared_config_dict: dict,
+    repetition_time: str,
+    roi_list_name: str = 'final',
 ) -> dict:
     """
     Rockland tb-fMRI specific configurations.
@@ -598,6 +622,7 @@ def _get_rockland_config_dict(
             shared_config_dict['git-basedir'],
             'results', 'fmri', 'tb', shared_config_dict['data-set-name'], subset
         ),
+        'fig-palette-roi-edges': 'Dark2',
         'log-interval': 100,
         'max-n-cpus': 10,
         'mgarch-models': [

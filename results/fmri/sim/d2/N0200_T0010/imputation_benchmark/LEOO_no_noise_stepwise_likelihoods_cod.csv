@@ -1,0 +1,5 @@
+,SVWP,DCC_joint,SW_cross_validated,sFC
+SVWP,,0.516,0.310,3.880
+DCC_joint,0.516,,0.239,2.519
+SW_cross_validated,0.310,0.239,,3.427
+sFC,3.880,2.519,3.427,

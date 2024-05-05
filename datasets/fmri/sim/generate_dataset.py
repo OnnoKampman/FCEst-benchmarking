@@ -62,13 +62,13 @@ if __name__ == "__main__":
     match [data_set_name[0], data_set_name[1:-1], data_set_name[-1]]:
         case ['d', '2', 's' | 'd'] | ['d', '', '2']:  # 'd2', 'd2d', or 'd2s'
             get_covariance_structure = get_d2_covariance_structure
-            n_time_series = 2
+            num_time_series = 2
         case ['d', '3', 'd']:  # 'd3d'
             get_covariance_structure = get_d3d_covariance_structure
-            n_time_series = 3
-        case ['d', n_time_series, 's']:  # seq of 3 elems: 'd', anything, 's', e.g. 'd3s'
+            num_time_series = 3
+        case ['d', num_time_series, 's']:  # seq of 3 elems: 'd', anything, 's', e.g. 'd3s'
             get_covariance_structure = get_sparse_covariance_structure
-            n_time_series = int(n_time_series)
+            num_time_series = int(num_time_series)
         case _:
             raise NotImplementedError(f"Data set name '{data_set_name:s}' not recognized.")
 
@@ -88,39 +88,39 @@ if __name__ == "__main__":
             save_synthetic_dataset(
                 config_dict=cfg,
                 covariance_structure=get_covariance_structure(
-                    get_constant_covariances(n_samples=N, covariance=0),
-                    n_time_series=n_time_series
+                    get_constant_covariances(num_samples=N, covariance=0),
+                    num_time_series=num_time_series
                 ),
                 white_noise_snr=white_noise_snr,
                 hcp_noise_snr=hcp_noise_snr,
                 dataset_name='null_covariance.csv',
-                synthetic_data_dir=data_dir
+                synthetic_data_dir=data_dir,
             )
 
             # Constant data set.
             save_synthetic_dataset(
                 config_dict=cfg,
                 covariance_structure=get_covariance_structure(
-                    get_constant_covariances(n_samples=N, covariance=cfg['constant-covariance']),
-                    n_time_series=n_time_series
+                    get_constant_covariances(num_samples=N, covariance=cfg['constant-covariance']),
+                    num_time_series=num_time_series
                 ),
                 white_noise_snr=white_noise_snr,
                 hcp_noise_snr=hcp_noise_snr,
                 dataset_name='constant_covariance.csv',
-                synthetic_data_dir=data_dir
+                synthetic_data_dir=data_dir,
             )
 
             # Periodic data sets.
-            for n_periods in [1, 2, 3, 4, 5]:
+            for num_periods in [1, 2, 3, 4, 5]:
                 save_synthetic_dataset(
                     config_dict=cfg,
                     covariance_structure=get_covariance_structure(
-                        get_periodic_covariances(n_samples=N, n_periods=n_periods),
-                        n_time_series=n_time_series
+                        get_periodic_covariances(num_samples=N, num_periods=num_periods),
+                        num_time_series=num_time_series
                     ),
                     white_noise_snr=white_noise_snr,
                     hcp_noise_snr=hcp_noise_snr,
-                    dataset_name=f'periodic_{n_periods:d}_covariance.csv',
+                    dataset_name=f'periodic_{num_periods:d}_covariance.csv',
                     synthetic_data_dir=data_dir
                 )
 
@@ -128,8 +128,8 @@ if __name__ == "__main__":
             save_synthetic_dataset(
                 config_dict=cfg,
                 covariance_structure=get_covariance_structure(
-                    get_stepwise_covariances(n_samples=N),
-                    n_time_series=n_time_series
+                    get_stepwise_covariances(num_samples=N),
+                    num_time_series=num_time_series
                 ),
                 white_noise_snr=white_noise_snr,
                 hcp_noise_snr=hcp_noise_snr,
@@ -141,8 +141,8 @@ if __name__ == "__main__":
             save_synthetic_dataset(
                 config_dict=cfg,
                 covariance_structure=get_covariance_structure(
-                    get_state_transition_covariances(n_samples=N),
-                    n_time_series=n_time_series
+                    get_state_transition_covariances(num_samples=N),
+                    num_time_series=num_time_series
                 ),
                 white_noise_snr=white_noise_snr,
                 hcp_noise_snr=hcp_noise_snr,
@@ -154,8 +154,8 @@ if __name__ == "__main__":
             save_synthetic_dataset(
                 config_dict=cfg,
                 covariance_structure=get_covariance_structure(
-                    get_boxcar_covariances(n_samples=N),
-                    n_time_series=n_time_series
+                    get_boxcar_covariances(num_samples=N),
+                    num_time_series=num_time_series
                 ),
                 white_noise_snr=white_noise_snr,
                 hcp_noise_snr=hcp_noise_snr,
@@ -167,8 +167,8 @@ if __name__ == "__main__":
             save_synthetic_dataset(
                 config_dict=cfg,
                 covariance_structure=get_covariance_structure(
-                    get_change_point_covariances(n_samples=N),
-                    n_time_series=n_time_series
+                    get_change_point_covariances(num_samples=N),
+                    num_time_series=num_time_series
                 ),
                 white_noise_snr=white_noise_snr,
                 hcp_noise_snr=hcp_noise_snr,

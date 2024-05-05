@@ -227,6 +227,9 @@ def get_tvfc_estimates(
     Estimates train locations covariance structure.
     Note that there is no reason for WP to predict at the same locations, we could also predict at more locations.
 
+    Parameters
+    ----------
+    config_dict: dict
     :return:
         estimated TVFC, array of shape (N, D, D).
     """
@@ -234,7 +237,7 @@ def get_tvfc_estimates(
 
     data_set_name = config_dict['data-set-name']
     match data_set_name:
-        case 'd2' | 'd3d' | 'd3s' | 'd4s' | 'd6s' | 'd9s' | 'd15s':
+        case 'd2' | 'd3d' | 'd3s' | 'd4s' | 'd6s' | 'd9s' | 'd15s' | 'd50s':
             assert noise_type is not None
             assert i_trial is not None
             assert covs_type is not None
@@ -427,7 +430,7 @@ def get_test_location_estimated_covariance_structure(
     """
     data_set_name = config_dict['data-set-name']
     match data_set_name:
-        case 'd2' | 'd3d' | 'd3s' | 'd4s' | 'd6s' | 'd9s' | 'd15s':  # TODO: generalize this
+        case 'd2' | 'd3d' | 'd3s' | 'd4s' | 'd6s' | 'd9s' | 'd15s' | 'd50s':
 
             wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], noise_type, data_split,

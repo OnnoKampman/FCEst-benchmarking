@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
                     gt_covariance_structure = get_ground_truth_covariance_structure(
                         covs_type=covs_type,
-                        n_samples=len(x),
+                        num_samples=len(x),
                         signal_to_noise_ratio=SNR,
                         data_set_name=data_set_name,
                     )

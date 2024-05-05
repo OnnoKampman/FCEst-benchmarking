@@ -5,7 +5,7 @@ import numpy as np
 
 def get_ground_truth_covariance_structure(
     covs_type: str,
-    n_samples: int,
+    num_samples: int,
     signal_to_noise_ratio,
     data_set_name: str,
 ) -> np.array:
@@ -26,7 +26,7 @@ def get_ground_truth_covariance_structure(
     """
     covariance_structure = get_covariance_time_series(
         covs_type,
-        n_samples=n_samples,
+        n_samples=num_samples,
         signal_to_noise_ratio=signal_to_noise_ratio
     )  # (N, )
     match [data_set_name[0], data_set_name[1:-1], data_set_name[-1]]:
@@ -37,7 +37,7 @@ def get_ground_truth_covariance_structure(
         case ['d', n_time_series, 's']:
             covariance_structure = get_sparse_covariance_structure(
                 covariance_structure,
-                n_time_series=int(n_time_series)
+                num_time_series=int(n_time_series)
             )  # (N, D, D)
         case _:
             logging.warning(f"Data set name '{data_set_name:s}' not recognized.")
@@ -250,7 +250,7 @@ def get_d2_covariance_structure(
     :return:
         array of shape (N, D, D), i.e. (N, 2, 2) in this case.
     """
-    return get_sparse_covariance_structure(covariance_time_series, n_time_series=2)
+    return get_sparse_covariance_structure(covariance_time_series, num_time_series=2)
 
 
 def get_d3d_covariance_structure(covariance_time_series: np.array, n_time_series: int = 3) -> np.array:
@@ -283,13 +283,19 @@ def get_d3d_covariance_structure(covariance_time_series: np.array, n_time_series
     return np.array(covariance_structure)
 
 
-def get_sparse_covariance_structure(covariance_time_series: np.array, n_time_series: int) -> np.array:
+def get_sparse_covariance_structure(
+    covariance_time_series: np.array,
+    num_time_series: int,
+) -> np.array:
     """
     Returns the full covariance structure (a series of covariance matrices).
     The first two time series are correlated, but the others are uncorrelated with both of these.
 
-    :param covariance_time_series: time series of varying covariance term of shape (N, ).
-    :param n_time_series:
+    Parameters
+    ----------
+    :param covariance_time_series:
+        Time series of varying covariance term of shape (N, ).
+    :param num_time_series:
     :return:
         covariance structure array of shape (N, D, D).
     """
@@ -301,7 +307,7 @@ def get_sparse_covariance_structure(covariance_time_series: np.array, n_time_ser
 
     covariance_structure = []
     for sample_step in range(n_time_steps):
-        time_step_covariance_matrix = np.eye(n_time_series)
+        time_step_covariance_matrix = np.eye(num_time_series)
         time_step_covariance_matrix[0, 1] = time_step_covariance_matrix[1, 0] = covariance_time_series[sample_step]
         covariance_structure.append(time_step_covariance_matrix)
     return np.array(covariance_structure)

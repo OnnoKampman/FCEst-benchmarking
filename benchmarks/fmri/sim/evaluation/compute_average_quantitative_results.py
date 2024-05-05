@@ -123,7 +123,7 @@ if __name__ == "__main__":
                 all_method_significances_df.to_csv(
                     os.path.join(ttest_results_savedir, pvals_filename),
                     index=True,
-                    float_format='%.4f'
+                    float_format='%.4e',
                 )
                 all_method_effect_sizes_df.to_csv(
                     os.path.join(ttest_results_savedir, effect_sizes_filename),

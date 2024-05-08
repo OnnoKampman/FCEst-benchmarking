@@ -1,5 +1,5 @@
 ,SVWP,DCC_joint,SW_cross_validated,sFC
-SVWP,,0.711,0.023,0.716
-DCC_joint,0.711,,0.011,1.000
-SW_cross_validated,0.023,0.011,,0.012
-sFC,0.716,1.000,0.012,
+SVWP,,7.1114e-01,2.3260e-02,7.1619e-01
+DCC_joint,7.1114e-01,,1.1034e-02,1.0000e+00
+SW_cross_validated,2.3260e-02,1.1034e-02,,1.2075e-02
+sFC,7.1619e-01,1.0000e+00,1.2075e-02,

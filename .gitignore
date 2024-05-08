@@ -6,6 +6,13 @@ __pycache__
 # Data.
 opk20_hivemind_paper_1/
 
+**.tar.gz
+
+datasets/fmri/rs/hcp-openaccess/
+# HCP_PTN1200_recon2/
+
+# Results.
+
 results/fmri/rs/HCP/HCP_PTN1200_recon2/3T_HCP1200_MSMAll_d15_ts2/brain_states/k01/
 results/fmri/rs/HCP/HCP_PTN1200_recon2/3T_HCP1200_MSMAll_d15_ts2/brain_states/k02/
 results/fmri/rs/HCP/HCP_PTN1200_recon2/3T_HCP1200_MSMAll_d15_ts2/brain_states/k04/
@@ -32,22 +39,3 @@ results/fmri/rs/HCP/HCP_PTN1200_recon2/3T_HCP1200_MSMAll_d50_ts2/brain_states/k1
 results/fmri/rs/HCP/HCP_PTN1200_recon2/3T_HCP1200_MSMAll_d50_ts2/brain_states/k15/
 results/fmri/rs/HCP/HCP_PTN1200_recon2/3T_HCP1200_MSMAll_d50_ts2/brain_states/k18/
 results/fmri/rs/HCP/HCP_PTN1200_recon2/3T_HCP1200_MSMAll_d50_ts2/brain_states/k21/
-
-# Ignore simulation benchmarks where N is not 400.
-results/fmri/sim/d2/N0120_T0200/
-results/fmri/sim/d2/N0200_T0200/
-results/fmri/sim/d2/N1200_T0200/
-
-results/fmri/sim/d3d/N0120_T0200/
-results/fmri/sim/d3d/N0200_T0200/
-
-results/fmri/sim/d3s/N0120_T0200/
-results/fmri/sim/d3s/N0200_T0200/
-
-results/fmri/sim/d4s/N0200_T0010/
-
-results/fmri/sim/d6s/N0200_T0010/
-
-results/fmri/sim/d9s/N0200_T0010/
-
-results/fmri/sim/d15s/N0200_T0010/

@@ -54,7 +54,7 @@ if __name__ == "__main__":
                     data_filepath,
                     verbose=False,
                 )  # (N, 1), (N, D)
-                n_time_series = y.shape[1]  # D
+                num_time_series = y.shape[1]  # D
 
                 x_train, x_test = leave_every_other_out_split(x)  # (N/2, 1), (N/2, 1)
                 y_train, y_test = leave_every_other_out_split(y)  # (N/2, D), (N/2, D)
@@ -62,7 +62,7 @@ if __name__ == "__main__":
                 test_locations_predicted_covariance_structure = get_test_location_estimated_covariance_structure(
                     config_dict=cfg,
                     model_name=model_name,
-                    n_time_series=n_time_series,
+                    num_time_series=num_time_series,
                     x_train_locations=x_train,
                     y_train_locations=y_train,  # only used for VWP models
                     x_test_locations=x_test,

@@ -48,14 +48,7 @@ if __name__ == "__main__":
                 scan_id=scan_id,
                 verbose=False,
             )
-            n_time_series = y.shape[1]
-            if experiment_dimensionality == 'bivariate':
-                chosen_indices = [0, 1]
-                # chosen_indices_df = cfg['chosen-indices']
-                # chosen_indices = chosen_indices_df.loc[subject, scan_id]
-                y = y[:, chosen_indices]
-                n_time_series = y.shape[1]
-                print('y', y.shape)
+            num_time_series = y.shape[1]
 
             x_train, x_test = leave_every_other_out_split(x)  # (N/2, 1), (N/2, 1)
             y_train, y_test = leave_every_other_out_split(y)  # (N/2, D), (N/2, D)
@@ -64,7 +57,7 @@ if __name__ == "__main__":
             test_locations_predicted_covariance_structure = get_test_location_estimated_covariance_structure(
                 config_dict=cfg,
                 model_name=model_name,
-                n_time_series=n_time_series,
+                num_time_series=num_time_series,
                 x_train_locations=x_train,
                 x_test_locations=x_test,
                 scan_id=scan_id,

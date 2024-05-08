@@ -18,14 +18,14 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', 'd{%d}s'
     data_split = sys.argv[2]       # 'all', 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0001'
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,
         experiment_data=experiment_data,
         hostname=hostname
     )
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
 
     # Allow for local and CPU cluster training.
     # When running on the Hivemind with SLURM, only one model is trained here.
@@ -44,12 +44,12 @@ if __name__ == "__main__":
             noise_types = [noise_type]
             covs_types = [covs_type]
         except KeyError:
-            i_trials = range(n_trials)
+            i_trials = range(num_trials)
             noise_types = cfg['noise-types']
             covs_types = cfg['all-covs-types']
     else:
         print('Running locally...')
-        i_trials = range(n_trials)
+        i_trials = range(num_trials)
         noise_types = cfg['noise-types']
         covs_types = cfg['all-covs-types']
 
@@ -83,7 +83,6 @@ if __name__ == "__main__":
                     data_file,
                     verbose=False
                 )  # (N, 1), (N, D)
-                n_time_series = y.shape[1]
 
                 match data_split:
                     case "LEOO":

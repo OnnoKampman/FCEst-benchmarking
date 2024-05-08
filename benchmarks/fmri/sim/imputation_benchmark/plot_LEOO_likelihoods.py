@@ -89,7 +89,7 @@ if __name__ == '__main__':
         experiment_data=experiment_data,
         hostname=socket.gethostname()
     )
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
     test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_benchmark')
 
     for noise_type in cfg['noise-types']:
@@ -168,7 +168,7 @@ if __name__ == '__main__':
         for covs_type in cfg['plot-covs-types']:
             covs_type_df = pd.DataFrame(
                 np.nan,
-                index=np.arange(n_trials), columns=cfg['plot-models']
+                index=np.arange(num_trials), columns=cfg['plot-models']
             )
             for model_name in cfg['plot-models']:
                 likelihoods_filename = f'{data_split:s}_{noise_type:s}_likelihoods_{model_name:s}.csv'
@@ -178,7 +178,7 @@ if __name__ == '__main__':
                     likelihoods_df = pd.read_csv(
                         test_likelihoods_savepath, index_col=0
                     )  # (n_trials, n_train_covs_types)
-                    if not likelihoods_df.shape == (n_trials, len(cfg['all-covs-types'])):
+                    if not likelihoods_df.shape == (num_trials, len(cfg['all-covs-types'])):
                         logging.warning("Unexpected number of covariance structures found.")
                         print(likelihoods_df.round(3))
                     likelihoods_df = likelihoods_df.loc[:, cfg['plot-covs-types']]

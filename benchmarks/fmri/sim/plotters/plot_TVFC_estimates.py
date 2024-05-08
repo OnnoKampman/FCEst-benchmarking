@@ -81,7 +81,7 @@ def plot_d2_all_covariance_structures(
         )  # (N, 1), (N, D)
         ground_truth_covariance_structure = get_ground_truth_covariance_structure(
             covs_type=covs_type,
-            n_samples=len(x),
+            num_samples=len(x),
             signal_to_noise_ratio=signal_to_noise_ratio,
             data_set_name=config_dict['data-set-name'],
         )

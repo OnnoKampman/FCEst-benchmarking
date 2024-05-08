@@ -118,7 +118,7 @@ if __name__ == "__main__":
                 all_method_t_values_df.to_csv(
                     os.path.join(ttest_results_savedir, tvals_filename),
                     index=True,
-                    float_format='%.2f'
+                    float_format='%.2f',
                 )
                 all_method_significances_df.to_csv(
                     os.path.join(ttest_results_savedir, pvals_filename),
@@ -128,7 +128,7 @@ if __name__ == "__main__":
                 all_method_effect_sizes_df.to_csv(
                     os.path.join(ttest_results_savedir, effect_sizes_filename),
                     index=True,
-                    float_format='%.2f'
+                    float_format='%.2f',
                 )
                 logging.info(f"Saved {data_split:s} t-test results '{tvals_filename:s}', '{pvals_filename:s}', and '{effect_sizes_filename:s}' in '{ttest_results_savedir:s}'.")
 
@@ -144,7 +144,7 @@ if __name__ == "__main__":
                 pairwise_ttest_results_pingouin_df.to_csv(
                     os.path.join(ttest_results_savedir, ptests_results_filename),
                     index=True,
-                    float_format='%.4f'
+                    float_format='%.4f',
                 )
                 logging.info(f"Saved {data_split:s} t-test ptests results '{ptests_results_filename:s}' in '{ttest_results_savedir:s}'.")
 

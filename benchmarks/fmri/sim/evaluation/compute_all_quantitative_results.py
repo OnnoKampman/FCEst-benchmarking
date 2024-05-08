@@ -28,20 +28,22 @@ def _get_performance_metric(
     Parameters
     ----------
     :param performance_metric:
-    :param predicted_covariance_structure_test_locations: np.array,
+    :param predicted_covariance_structure_test_locations: np.array
     :param ground_truth_covariance_structure_test_locations:
     :param y_test_locations:
     :return:
     """
     match performance_metric:
-        case 'covariance_RMSE':
-            return get_d2_covariance_term_rmse(
+        case 'correlation_matrix_RMSE':
+            return get_corr_matrices_rmse(
                 predicted_covariance_structure_test_locations, ground_truth_covariance_structure_test_locations
             )
         case 'correlation_RMSE':
             return get_d2_correlation_term_rmse(
                 predicted_covariance_structure_test_locations, ground_truth_covariance_structure_test_locations
             )
+        case 'correlation_tril_matrix_elements_RMSE':
+            raise NotImplementedError
         case 'covariance_correlation':
             return get_d2_covariance_term_correlation(
                 predicted_covariance_structure_test_locations, ground_truth_covariance_structure_test_locations
@@ -50,20 +52,18 @@ def _get_performance_metric(
             return get_cov_matrices_rmse(
                 predicted_covariance_structure_test_locations, ground_truth_covariance_structure_test_locations
             )
-        case 'correlation_matrix_RMSE':
-            return get_corr_matrices_rmse(
+        case 'covariance_RMSE':
+            return get_d2_covariance_term_rmse(
                 predicted_covariance_structure_test_locations, ground_truth_covariance_structure_test_locations
             )
-        case 'correlation_tril_matrix_elements_RMSE':
-            raise NotImplementedError
         case 'covariance_tril_matrix_elements_RMSE':
             raise NotImplementedError
+        case 'test_log_likelihood':
+            return get_test_log_likelihood(predicted_covariance_structure_test_locations, y_test_locations)
         case 'tril_correlation':
             return get_corr_matrices_tril_spearman_correlation(
                 predicted_covariance_structure_test_locations, ground_truth_covariance_structure_test_locations
             )
-        case 'test_log_likelihood':
-            return get_test_log_likelihood(predicted_covariance_structure_test_locations, y_test_locations)
         case _:
             logging.error(f"Performance metric '{performance_metric:s}' not recognized.")
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd{%d}s'
     data_split = sys.argv[2]       # 'all', or 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0200'
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,
@@ -135,7 +135,6 @@ if __name__ == "__main__":
                         data_file,
                         verbose=False,
                     )  # (N, 1), (N, D)
-                    n_time_series = y.shape[1]  # D
 
                     gt_covariance_structure = get_ground_truth_covariance_structure(
                         covs_type=covs_type,
@@ -190,6 +189,7 @@ if __name__ == "__main__":
                 )
                 performance_df.to_csv(
                     quantitative_results_savepath,
-                    index=True
+                    index=True,
+                    float_format='%.4f',
                 )
                 logging.info(f"Saved quantitative results in '{quantitative_results_savedir:s}'.")

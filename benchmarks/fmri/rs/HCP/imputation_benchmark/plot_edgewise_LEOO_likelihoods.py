@@ -54,18 +54,18 @@ def plot_edgewise_imputation_benchmark_scores_joint(
             index_col=0
         )  # (D, D)
 
-        n_time_series = edgewise_likelihoods.shape[0]
+        num_time_series = edgewise_likelihoods.shape[0]
         if data_dimensionality == 'd15':
             edgewise_likelihoods, new_rsn_names = reorder_ica_components(
                 config_dict=config_dict,
                 original_matrix=edgewise_likelihoods.values,
-                n_time_series=n_time_series,
+                n_time_series=num_time_series,
                 # lower_triangular=True
             )
         else:
             # TODO: add RSN names map for d50
             edgewise_likelihoods = edgewise_likelihoods.values
-            new_rsn_names = np.arange(n_time_series)
+            new_rsn_names = np.arange(num_time_series)
 
         # Define mask for upper triangular values.
         mask = np.zeros_like(edgewise_likelihoods)
@@ -126,18 +126,18 @@ def plot_edgewise_imputation_benchmark_scores(
 
     vmin, vmax = -4.0, -2.0
 
-    n_time_series = edgewise_likelihoods.shape[0]
+    num_time_series = edgewise_likelihoods.shape[0]
     if data_dimensionality == 'd15':
         edgewise_likelihoods, new_rsn_names = reorder_ica_components(
             config_dict=config_dict,
             original_matrix=edgewise_likelihoods.values,
-            n_time_series=n_time_series,
+            n_time_series=num_time_series,
             # lower_triangular=True
         )
     else:
         # TODO: add RSN names map for d50
         edgewise_likelihoods = edgewise_likelihoods.values
-        new_rsn_names = np.arange(n_time_series)
+        new_rsn_names = np.arange(num_time_series)
 
     # Define mask for upper triangular values.
     mask = np.zeros_like(edgewise_likelihoods)

@@ -18,7 +18,6 @@ if __name__ == "__main__":
         data_set_name='HCP_PTN1200_recon2',
         subset_dimensionality=data_dimensionality
     )
-    n_time_series = int(data_dimensionality[1:])
 
     # The kernel parameters were saved with the experiments in the git repo.
     kernel_params_savedir = os.path.join(cfg['git-results-basedir'], 'kernel_analysis')

@@ -45,7 +45,7 @@ if __name__ == "__main__":
             y_train_locations=y_train,
             data_split=data_split,
             subject=subject_filename,
-            n_time_series=n_time_series
+            num_time_series=n_time_series
         )
 
         # Get likelihood of observed data at test locations under predicted covariance matrices.

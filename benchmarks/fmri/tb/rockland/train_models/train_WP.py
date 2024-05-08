@@ -28,7 +28,7 @@ if __name__ == "__main__":
     )
 
     all_subjects_list = get_rockland_subjects(config_dict=cfg)
-    n_subjects = len(all_subjects_list)
+    num_subjects = len(all_subjects_list)
 
     # Allow for local and CPU cluster training.
     if socket.gethostname() == 'hivemind':
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         subjects = all_subjects_list
 
     for i_subject, subject_filename in enumerate(subjects):
-        print(f'\n> SUBJECT {i_subject+1:d} / {n_subjects:d}: {subject_filename:s}\n')
+        print(f'\n> SUBJECT {i_subject+1:d} / {num_subjects:d}: {subject_filename:s}\n')
 
         # TODO: Check if model exists already.
         model_savedir = os.path.join(
@@ -62,14 +62,14 @@ if __name__ == "__main__":
         else:
             x_train = x  # (N, 1)
             y_train = y  # (N, D)
-        n_time_series = y_train.shape[1]
+        num_time_series = y_train.shape[1]
 
         k = gpflow.kernels.Matern52()
         match model_name:
             case 'VWP_joint':
                 m = VariationalWishartProcess(
                     x_train, y_train,
-                    nu=n_time_series,
+                    nu=num_time_series,
                     kernel=k
                 )
                 maxiter = ci_niter(cfg['n-iterations'])
@@ -83,9 +83,9 @@ if __name__ == "__main__":
                 )
             case 'SVWP_joint':
                 m = SparseVariationalWishartProcess(
-                    D=n_time_series,
+                    D=num_time_series,
                     Z=x[:cfg['n-inducing-points']],
-                    nu=n_time_series,
+                    nu=num_time_series,
                     kernel=k
                 )
                 maxiter = ci_niter(cfg['n-iterations-svwp'])

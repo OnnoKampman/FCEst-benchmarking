@@ -66,7 +66,7 @@ if __name__ == "__main__":
                 edgewise_tvfc_summary_per_trial_df = pd.DataFrame(
                     edgewise_tvfc_summary_per_trial_df,
                     index=range(num_trials)
-                )  # (n_trials, D*(D-1)/2)
+                )  # (num_trials, D*(D-1)/2)
                 print(edgewise_tvfc_summary_per_trial_df)
 
                 tvfc_estimates_summaries_savedir = os.path.join(

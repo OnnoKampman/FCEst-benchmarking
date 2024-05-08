@@ -404,7 +404,7 @@ def get_tvfc_estimates(
 def get_test_location_estimated_covariance_structure(
     config_dict: dict,
     model_name: str,
-    n_time_series: int,
+    num_time_series: int,
     x_train_locations: np.array,
     x_test_locations: np.array,
     subject: str,
@@ -425,8 +425,20 @@ def get_test_location_estimated_covariance_structure(
     ----------
     config_dict: dict
     model_name: str
+    num_time_series: int
+    x_train_locations: np.array
+    x_test_locations: np.array
+    subject: str
+    data_split: str
+    y_train_locations: np.array
+    scan_id: int
     experiment_dimensionality: str
         'multivariate' or 'bivariate'.
+    noise_type: str
+    i_trial: int
+    covs_type: str
+    connectivity_metric: str
+        'covariance' or 'correlation'
     """
     data_set_name = config_dict['data-set-name']
     match data_set_name:
@@ -496,7 +508,7 @@ def get_test_location_estimated_covariance_structure(
             m = VariationalWishartProcess(
                 x_observed=x_train_locations,
                 y_observed=y_train_locations,
-                nu=n_time_series,
+                nu=num_time_series,
                 kernel=k
             )
             m.load_from_params_dict(wp_model_savedir, wp_model_filename)
@@ -512,9 +524,9 @@ def get_test_location_estimated_covariance_structure(
                 raise FileNotFoundError(f"Could not load WP model '{wp_model_filepath:s}'.")
             k = gpflow.kernels.Matern52()
             m = SparseVariationalWishartProcess(
-                D=n_time_series,
+                D=num_time_series,
                 Z=np.linspace(x_train_locations[0], x_train_locations[-1], config_dict['n-inducing-points']),  # these will be overwritten by saved model
-                nu=n_time_series,
+                nu=num_time_series,
                 kernel=k,
                 verbose=False
             )

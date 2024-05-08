@@ -59,25 +59,25 @@ if __name__ == "__main__":
             )  # (N, D*(D-1)/2)
             all_subjects_tril_tvfc_per_time_step.append(subject_tril_tvfc_per_time_step)
 
-        n_time_steps = single_subject_tvfc_estimates.shape[0]
-        n_time_series = single_subject_tvfc_estimates.shape[1]
+        num_time_steps = single_subject_tvfc_estimates.shape[0]
+        num_time_series = single_subject_tvfc_estimates.shape[1]
 
         # Aggregates all observed 'states' over time and over subjects.
         all_subjects_tril_tvfc_per_time_step = np.array(all_subjects_tril_tvfc_per_time_step)  # (n_subjects, N, D*(D-1)/2)
         all_subjects_tril_tvfc_per_time_step = all_subjects_tril_tvfc_per_time_step.reshape(-1, all_subjects_tril_tvfc_per_time_step.shape[-1])  # (n_subjects*N, D*(D-1)/2)
-        assert all_subjects_tril_tvfc_per_time_step.shape == (num_subjects * n_time_steps, int(n_time_series * (n_time_series-1) / 2))
+        assert all_subjects_tril_tvfc_per_time_step.shape == (num_subjects * num_time_steps, int(num_time_series * (num_time_series-1) / 2))
 
-        for n_brain_states in num_brain_states_list:
-            n_brain_states_inertia, _, _ = compute_basis_state(
+        for num_brain_states in num_brain_states_list:
+            num_brain_states_inertia, _, _ = compute_basis_state(
                 config_dict=cfg,
                 all_subjects_tril_tvfc=all_subjects_tril_tvfc_per_time_step,
                 scan_session_id=scan_id,
                 model_name=model_name,
-                n_basis_states=n_brain_states,
-                n_time_series=n_time_series,
-                n_time_steps=n_time_steps,
+                n_basis_states=num_brain_states,
+                n_time_series=num_time_series,
+                n_time_steps=num_time_steps,
             )
-            distortions_df.loc[n_brain_states, scan_id] = n_brain_states_inertia / num_subjects
+            distortions_df.loc[num_brain_states, scan_id] = num_brain_states_inertia / num_subjects
 
     distortions_df.astype(float).round(2).to_csv(
         os.path.join(

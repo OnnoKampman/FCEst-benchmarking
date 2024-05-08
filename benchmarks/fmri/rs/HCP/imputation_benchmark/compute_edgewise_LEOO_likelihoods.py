@@ -58,7 +58,7 @@ if __name__ == "__main__":
             test_locations_predicted_covariance_structure = get_test_location_estimated_covariance_structure(
                 config_dict=cfg,
                 model_name=model_name,
-                n_time_series=num_time_series,
+                num_time_series=num_time_series,
                 x_train_locations=x_train,
                 x_test_locations=x_test,
                 scan_id=scan_id,

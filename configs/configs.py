@@ -381,6 +381,12 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
         'plot-lengthscales-window-lengths': (12, 10),
         'plot-data-xlim': [-0.00, 1.00],
         'repetition-time': 1,  # synthetic TR is one second for simplicity
+        'TVFC-summary-measures': [
+            'ar1',
+            'mean',
+            'variance',
+            'rate_of_change',
+        ],
         'window-lengths': [
             15,
             30,

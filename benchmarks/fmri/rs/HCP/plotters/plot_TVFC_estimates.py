@@ -3,24 +3,18 @@ import os
 import socket
 import sys
 
-from fcest.helpers.data import to_3d_format
-from fcest.models.wishart_process import SparseVariationalWishartProcess
-import gpflow
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import seaborn as sns
 
 from configs.configs import get_config_dict
 from helpers.evaluation import leave_every_other_out_split
 from helpers.hcp import load_human_connectome_project_data
 from helpers.plotters import convert_to_minutes
-from helpers.plotters import plot_windowed_covariances, plot_sliding_windows_estimated_covariance_structure, plot_mgarch_estimated_covariance_structure
-from helpers.plotters import plot_cross_validated_sliding_windows_estimated_covariance_structure
-from helpers.plotters import plot_wishart_process_covariances_pairwise
+from helpers.plotters import plot_method_tvfc_estimates
 
 
-def plot_tvfc_estimates(
+def plot_hcp_tvfc_estimates(
     config_dict: dict,
     x_train_locations: np.array,
     y_train_locations: np.array,
@@ -35,6 +29,8 @@ def plot_tvfc_estimates(
 ) -> None:
     """
     Plots estimated TVFC for a specified or random selection of edges.
+
+    TODO: can we make lines less opaque so that orange and green are both visible?
 
     Parameters
     ----------
@@ -100,7 +96,7 @@ def plot_tvfc_estimates(
 
         for tvfc_estimation_method in config_dict['plot-model-estimates-methods'][:-1]:  # remove sFC plot
 
-            _plot_method_tvfc_estimates(
+            plot_method_tvfc_estimates(
                 config_dict=config_dict,
                 model_name=tvfc_estimation_method,
                 i_time_series=i_time_series,
@@ -166,139 +162,6 @@ def plot_tvfc_estimates(
         plt.close()
 
 
-def _plot_method_tvfc_estimates(
-    config_dict: dict,
-    model_name: str,
-    i_time_series: int,
-    j_time_series: int,
-    x_train_locations: np.array,
-    y_train_locations: np.array,
-    data_split: str,
-    scan_id: int,
-    experiment_dimensionality: str,
-    subject: int,
-    metric: str,
-) -> None:
-    """
-    Plot TVFC estimates for a single estimation method.
-    """
-    n_time_series = y_train_locations.shape[1]
-
-    sns.set(style="whitegrid")
-    plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
-
-    match model_name:
-        case 'SVWP_joint':
-            model_savedir = os.path.join(
-                config_dict['experiments-basedir'], 'saved_models', f'scan_{scan_id:d}',
-                data_split, experiment_dimensionality, model_name
-            )
-            if os.path.exists(model_savedir):
-                k = gpflow.kernels.Matern52()
-                m = SparseVariationalWishartProcess(
-                    D=n_time_series,
-                    Z=x_train_locations[:config_dict['n-inducing-points']],
-                    nu=n_time_series,
-                    kernel=k,
-                    verbose=False
-                )
-                m.load_from_params_dict(
-                    savedir=model_savedir,
-                    model_name=f'{subject:d}.json',
-                )
-                x_predict = np.linspace(
-                    0., 1., config_dict['wp-n-predict-samples']
-                ).reshape(-1, 1)
-                plot_wishart_process_covariances_pairwise(
-                    x_predict,
-                    m,
-                    i=i_time_series,
-                    j=j_time_series,
-                    rescale_x_axis='minutes',
-                    connectivity_metric=metric,
-                    repetition_time=config_dict['repetition-time'],
-                    data_length=x_train_locations.shape[0],
-                    label='WP',  # SVWP-J for specific implementation
-                )
-                del m
-            else:
-                logging.warning(f"SVWP model not found in '{model_savedir:s}'.")
-        case 'DCC_joint' | 'DCC_bivariate_loop':
-            model_estimates_dir = os.path.join(
-                config_dict['experiments-basedir'], 'TVFC_estimates', f'scan_{scan_id:d}',
-                data_split, experiment_dimensionality, metric, model_name
-            )
-            estimates_path = os.path.join(model_estimates_dir, f"{subject:d}.csv")
-            if os.path.exists(estimates_path):
-                covariance_structure_df = pd.read_csv(
-                    estimates_path,
-                    index_col=0,
-                    )  # (D*D, N)
-                covariance_structure = to_3d_format(covariance_structure_df.values)  # (N, D, D)
-                plot_mgarch_estimated_covariance_structure(
-                    estimated_tvfc_array=covariance_structure,
-                    xx=x_train_locations,
-                    model_name=model_name,
-                    i=i_time_series,
-                    j=j_time_series,
-                    connectivity_metric=metric,
-                    markersize=0
-                )
-            else:
-                logging.warning('MGARCH model not found.')
-        case 'SW_cross_validated':
-            model_estimates_dir = os.path.join(
-                config_dict['experiments-basedir'], 'TVFC_estimates', f'scan_{scan_id:d}',
-                data_split, experiment_dimensionality, metric, model_name
-            )
-            estimates_path = os.path.join(model_estimates_dir, f"{subject:d}.csv")
-            if os.path.exists(estimates_path):
-                covariance_structure_df = pd.read_csv(
-                    estimates_path,
-                    index_col=0,
-                )  # (D*D, N)
-                covariance_structure = to_3d_format(covariance_structure_df.values)  # (N, D, D)
-                plot_cross_validated_sliding_windows_estimated_covariance_structure(
-                    estimated_tvfc_array=covariance_structure,
-                    xx=x_train_locations,
-                    model_name=model_name,
-                    i=i_time_series,
-                    j=j_time_series,
-                    connectivity_metric=metric,
-                    markersize=0
-                )
-            else:
-                logging.warning(f"SW-CV TVFC estimates in '{model_estimates_dir:s}' not found.")
-        case 'SW_30' | 'SW_60':
-            window_length = int(model_name.removeprefix("SW_"))  # in seconds
-            window_length = int(np.floor(window_length / config_dict['repetition-time']))  # TODO: check this
-            if data_split == 'LEOO':
-                window_length = int(window_length / 2)
-            plot_sliding_windows_estimated_covariance_structure(
-                xx=x_train_locations,
-                y=y_train_locations,
-                window_length=window_length,
-                repetition_time=config_dict['repetition-time'],
-                i=i_time_series,
-                j=j_time_series,
-                label=model_name,
-                connectivity_metric=metric,
-                markersize=0,
-            )
-        case 'sFC':
-            plot_windowed_covariances(
-                xx=x_train_locations,
-                y=y_train_locations,
-                n_windows_list=[1],
-                i=i_time_series,
-                j=j_time_series,
-                repetition_time=config_dict['repetition-time'],
-                connectivity_metric=metric,
-            )
-        case _:
-            logging.error(f"Model name '{model_name:s}' not recognized.")
-
-
 if __name__ == "__main__":
 
     data_split = 'all'
@@ -360,7 +223,7 @@ if __name__ == "__main__":
                 repetition_time=cfg['repetition-time'],
                 data_length=n_time_steps
             )
-            plot_tvfc_estimates(
+            plot_hcp_tvfc_estimates(
                 config_dict=cfg,
                 x_train_locations=xx,
                 y_train_locations=y_train,
@@ -372,7 +235,7 @@ if __name__ == "__main__":
                 random_edges=False,
                 figures_savedir=figures_savedir,
             )
-            plot_tvfc_estimates(
+            plot_hcp_tvfc_estimates(
                 config_dict=cfg,
                 x_train_locations=xx,
                 y_train_locations=y_train,

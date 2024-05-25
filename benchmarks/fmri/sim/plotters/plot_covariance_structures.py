@@ -40,7 +40,7 @@ def _plot_synthetic_covariance_structures(
     for i_covs_type, covs_type in enumerate(config_dict['plot-covs-types']):
         ground_truth_covariance_structure = get_covariance_time_series(
             covs_type,
-            n_samples=n_time_steps,
+            num_samples=n_time_steps,
             signal_to_noise_ratio=None
         )  # (N, )
 

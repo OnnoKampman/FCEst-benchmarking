@@ -16,11 +16,11 @@ if __name__ == "__main__":
     hostname = socket.gethostname()
     print('\nHostname:', hostname)
 
+    experiment_dimensionality = 'multivariate'  # 'multivariate' or 'bivariate'
     model_name = 'SW_cross_validated'
 
     data_dimensionality = sys.argv[1]        # 'd15' or 'd50'
     data_split = sys.argv[2]                 # 'all' or 'LEOO'
-    experiment_dimensionality = sys.argv[3]  # 'multivariate' or 'bivariate'
 
     cfg = get_config_dict(
         data_set_name='HCP_PTN1200_recon2',
@@ -99,7 +99,8 @@ if __name__ == "__main__":
     savedir = os.path.join(cfg['git-results-basedir'], 'optimal_window_lengths', data_split)
     if not os.path.exists(savedir):
         os.makedirs(savedir)
-    optimal_window_lengths_df.to_csv(
-        os.path.join(savedir, 'optimal_window_lengths.csv')
+    optimal_window_lengths_df.astype(float).to_csv(
+        os.path.join(savedir, 'optimal_window_lengths.csv'),
+        float_format='%.0f',
     )
     logging.info(f"Saved {data_split:s} optimal window lengths in git repository.")

@@ -34,12 +34,12 @@ if __name__ == "__main__":
             all_method_significances_df = pd.DataFrame(
                 np.nan,
                 index=models_list,
-                columns=models_list
+                columns=models_list,
             )
             all_method_cod_df = pd.DataFrame(
                 np.nan,
                 index=models_list,
-                columns=models_list
+                columns=models_list,
             )
             for (i_model, j_model) in get_all_lower_triangular_indices_tuples(len(models_list)):
                 print(i_model, j_model)
@@ -54,10 +54,11 @@ if __name__ == "__main__":
                         logging.warning(
                             f"Test likelihoods not found: '{test_likelihoods_savepath:s}'"
                         )
+                        all_methods_test_likelihoods.append(np.full([num_trials], np.nan))
                         continue
                     test_likelihoods_df = pd.read_csv(
                         test_likelihoods_savepath,
-                        index_col=0
+                        index_col=0,
                     )
                     print(test_likelihoods_df)
                     logging.info(
@@ -81,7 +82,7 @@ if __name__ == "__main__":
             all_method_significances_df.to_csv(
                 os.path.join(test_likelihoods_savedir, likelihoods_pvals_filename),
                 index=True,
-                float_format='%.3f',
+                float_format='%.4e',
             )
             logging.info(f"Saved {data_split:s} likelihoods p-values '{likelihoods_pvals_filename:s}' in '{test_likelihoods_savedir:s}'.")
 
@@ -89,6 +90,6 @@ if __name__ == "__main__":
             all_method_cod_df.to_csv(
                 os.path.join(test_likelihoods_savedir, likelihoods_cod_filename),
                 index=True,
-                float_format='%.3f'
+                float_format='%.3f',
             )
             logging.info(f"Saved {data_split:s} likelihoods Cohen's D '{likelihoods_cod_filename:s}' in '{test_likelihoods_savedir:s}'.")

@@ -14,7 +14,7 @@ from helpers.figures import get_palette
 
 def plot_brain_state_switch_count(
     config_dict: dict,
-    n_basis_states: int,
+    num_basis_states: int,
     connectivity_metric: str = 'correlation',
     figure_savedir: str = None,
 ) -> None:
@@ -24,7 +24,7 @@ def plot_brain_state_switch_count(
     Parameters
     ----------
     :param config_dict:
-    :param n_basis_states:
+    :param num_basis_states:
     :param connectivity_metric:
         'correlation', 'covariance'
     :param figure_savedir:
@@ -32,17 +32,17 @@ def plot_brain_state_switch_count(
     sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
-    n_brain_state_switches_savedir = os.path.join(
-        config_dict['git-results-basedir'], 'brain_states', f'k{n_basis_states:02d}'
+    num_brain_state_switches_savedir = os.path.join(
+        config_dict['git-results-basedir'], 'brain_states', f'k{num_basis_states:02d}'
     )
 
     all_brain_state_switch_counts_df = pd.DataFrame()
     for model_name in config_dict['models-brain-state-analysis']:
-        n_brain_state_switches_filename = f'number_of_brain_state_switches_{model_name:s}.csv'
+        num_brain_state_switches_filename = f'number_of_brain_state_switches_{model_name:s}.csv'
         brain_state_switch_counts_df = pd.read_csv(
-            os.path.join(n_brain_state_switches_savedir, n_brain_state_switches_filename),
+            os.path.join(num_brain_state_switches_savedir, num_brain_state_switches_filename),
             index_col=0
-        )  # (n_subjects, n_scans)
+        )  # (num_subjects, num_scans)
 
         # Shorten model names for plot.
         model_name = model_name.replace('SVWP_joint', 'WP')
@@ -101,12 +101,12 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_brain_states_list = cfg['n-brain-states-list']
+    num_brain_states_list = cfg['n-brain-states-list']
 
-    for n_brain_states in n_brain_states_list:
+    for n_brain_states in num_brain_states_list:
         plot_brain_state_switch_count(
             config_dict=cfg,
-            n_basis_states=n_brain_states,
+            num_basis_states=n_brain_states,
             figure_savedir=os.path.join(
                 cfg['figures-basedir'], 'brain_states', f'k{n_brain_states:02d}'
             )

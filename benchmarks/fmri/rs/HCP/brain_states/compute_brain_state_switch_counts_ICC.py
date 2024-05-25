@@ -11,7 +11,7 @@ from helpers.icc import compute_icc_scores_pingouin
 
 def _compute_brain_state_switch_count_icc(
     config_dict: dict,
-    n_basis_states: int,
+    num_basis_states: int,
     connectivity_metric: str = 'correlation',
 ) -> None:
     """
@@ -20,7 +20,7 @@ def _compute_brain_state_switch_count_icc(
     Parameters
     ----------
     :param config_dict:
-    :param n_basis_states:
+    :param num_basis_states:
     :param connectivity_metric:
         'correlation', 'covariance'
     :return:
@@ -28,14 +28,14 @@ def _compute_brain_state_switch_count_icc(
     all_brain_state_switch_counts_iccs_df = pd.DataFrame()
     for model_name in config_dict['models-brain-state-analysis']:
         # Load number of switches in brain state file.
-        n_brain_state_switches_savedir = os.path.join(
-            config_dict['git-results-basedir'], 'brain_states', f'k{n_basis_states:02d}'
+        num_brain_state_switches_savedir = os.path.join(
+            config_dict['git-results-basedir'], 'brain_states', f'k{num_basis_states:02d}'
         )
-        n_brain_state_switches_filename = f'number_of_brain_state_switches_{model_name:s}.csv'
+        num_brain_state_switches_filename = f'number_of_brain_state_switches_{model_name:s}.csv'
         brain_state_switch_counts_df = pd.read_csv(
-            os.path.join(n_brain_state_switches_savedir, n_brain_state_switches_filename),
+            os.path.join(num_brain_state_switches_savedir, num_brain_state_switches_filename),
             index_col=0
-        )  # (n_subjects, n_scans)
+        )  # (num_subjects, num_scans)
 
         brain_state_switch_counts_icc = compute_icc_scores_pingouin(
             brain_state_switch_counts_df.values,
@@ -51,10 +51,10 @@ def _compute_brain_state_switch_count_icc(
         all_brain_state_switch_counts_iccs_df.loc[model_name, 'ICC'] = brain_state_switch_counts_icc
 
     all_brain_state_switch_counts_iccs_df.to_csv(
-        os.path.join(n_brain_state_switches_savedir, 'number_of_brain_state_switches_ICC.csv'),
+        os.path.join(num_brain_state_switches_savedir, 'number_of_brain_state_switches_ICC.csv'),
         float_format="%.2f"
     )
-    logging.info(f"Saved ICC scores in '{n_brain_state_switches_savedir:s}'.")
+    logging.info(f"Saved ICC scores in '{num_brain_state_switches_savedir:s}'.")
 
 
 if __name__ == "__main__":
@@ -66,10 +66,10 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_brain_states_list = cfg['n-brain-states-list']
+    num_brain_states_list = cfg['n-brain-states-list']
 
-    for n_brain_states in n_brain_states_list:
+    for n_brain_states in num_brain_states_list:
         _compute_brain_state_switch_count_icc(
             config_dict=cfg,
-            n_basis_states=n_brain_states
+            num_basis_states=n_brain_states
         )

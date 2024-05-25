@@ -13,9 +13,11 @@ from helpers.hcp import load_human_connectome_project_data, get_human_connectome
 
 
 def _plot_static_functional_connectivity_estimate(
-        config_dict: dict, correlation_matrix: np.array,
-        subject: str = None, mean_estimate: bool = False,
-        figures_savedir: str = None
+    config_dict: dict,
+    correlation_matrix: np.array,
+    subject: str = None,
+    mean_estimate: bool = False,
+    figures_savedir: str = None,
 ) -> None:
     """
     Plot static functional connectivity, i.e. just a correlation matrix.
@@ -28,13 +30,13 @@ def _plot_static_functional_connectivity_estimate(
     else:
         figure_name_correlation_matrix = f"{subject:s}_sFC_correlation_matrix.pdf"
 
-    n_time_series = correlation_matrix.shape[0]
+    num_time_series = correlation_matrix.shape[0]
 
     # Re-order ICA components.
     re_ordered_correlation_matrix, new_rsn_names = reorder_ica_components(
         config_dict=config_dict,
         original_matrix=correlation_matrix,
-        n_time_series=n_time_series,
+        n_time_series=num_time_series,
     )
 
     plt.figure()

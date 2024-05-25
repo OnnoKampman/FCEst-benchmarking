@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     for cov_structure_type in cfg['all-covs-types']:
         cov_structure = get_d2_covariance_structure(
-            get_covariance_structure(cov_type=cov_structure_type, n_samples=N)
+            get_covariance_structure(cov_type=cov_structure_type, num_samples=N)
         )
         y = simulate_time_series(cov_structure)
         x = np.linspace(0, 1, N).reshape(-1, 1)

@@ -25,7 +25,7 @@ def get_config_dict(
     Parameters
     ----------
     :param data_set_name:
-        simulations: 'sim', 'd2', 'd3d', 'd3s', 'd4s', 'd6s', 'd9s', 'd15s'
+        simulations: 'sim', 'd2', 'd3d', 'd3s', 'd4s', 'd6s', 'd9s', 'd15s', 'd50s'
         resting state data: 'HCP_PTN1200_recon2'
         task data: 'rockland'
     :param subset:
@@ -106,7 +106,7 @@ def get_config_dict(
                 shared_config_dict=shared_config_dict,
                 benchmark_dimensions=experiment_data
             )
-        case 'd3s' | 'd4s' | 'd5s' | 'd6s' | 'd9s' | 'd15s':
+        case 'd3s' | 'd4s' | 'd5s' | 'd6s' | 'd9s' | 'd15s' | 'd50s':
             config_dict = _get_sparse_config_dict(
                 shared_config_dict=shared_config_dict,
                 benchmark_dimensions=experiment_data
@@ -177,7 +177,7 @@ def _get_human_connectome_project_config_dict(
         ],
         'mgarch-training-types': [
             'bivariate_loop',
-            'joint'
+            'joint',
         ],
         'models-brain-state-analysis': [
             'SVWP_joint',
@@ -666,7 +666,7 @@ def _get_rockland_config_dict(
             [0, 2],
             [0, 3],
             [0, 4],
-            [0, 5]
+            [0, 5],
         ]),
         'stimulus-prediction-models': [
             'VWP_joint',

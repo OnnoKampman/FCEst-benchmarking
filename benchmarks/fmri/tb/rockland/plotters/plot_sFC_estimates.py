@@ -81,14 +81,14 @@ if __name__ == "__main__":
     )
     all_subjects_list = get_rockland_subjects(config_dict=cfg)
     brain_regions_of_interest = cfg['roi-list']
-    n_time_series = len(brain_regions_of_interest)
+    num_time_series = len(brain_regions_of_interest)
     figures_base_savedir = os.path.join(
         cfg['figures-basedir'], pp_pipeline, 'sFC_estimates', cfg['roi-list-name'], data_split
     )
     if not os.path.exists(figures_base_savedir):
         os.makedirs(figures_base_savedir)
 
-    mean_sfc_estimate = np.zeros((n_time_series, n_time_series))
+    mean_sfc_estimate = np.zeros((num_time_series, num_time_series))
     for i_subject, subject_filename in enumerate(all_subjects_list):
         
         print(f'\n> Subject {i_subject+1:d} / {len(all_subjects_list):d}: {subject_filename:s}\n')

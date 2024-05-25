@@ -79,7 +79,7 @@ if __name__ == "__main__":
     for model_name in ['VWP', 'SVWP']:
         for noise_type in cfg['noise-types']:
             kernel_lengthscales_df_filepath = os.path.join(
-                cfg['git-results-basedir'], noise_type, data_split, f'{model_name:s}_{kernel_param:s}_kernel_params.csv'
+                cfg['git-results-basedir'], noise_type, data_split, 'kernel_params', f'{model_name:s}_{kernel_param:s}_kernel_params.csv'
             )
             if not os.path.exists(kernel_lengthscales_df_filepath):
                 continue

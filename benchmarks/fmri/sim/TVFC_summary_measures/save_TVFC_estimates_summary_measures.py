@@ -87,12 +87,12 @@ if __name__ == "__main__":
                     reconstruct_symmetric_summary_measure_matrix_from_tril(
                         mean_over_trials_edgewise_summarized_tvfc_df.values,
                         tvfc_summary_measure=tvfc_summary_measure,
-                        n_time_series=num_time_series,
+                        num_time_series=num_time_series,
                     )
                 )  # (D, D)
 
                 tvfc_estimates_git_savedir = os.path.join(
-                    cfg['git-results-basedir'], 'TVFC_estimates_summary_measures', noise_type, f'trial_{i_trial:03d}',
+                    cfg['git-results-basedir'], noise_type, data_split, 'TVFC_estimates_summary_measures', f'trial_{i_trial:03d}',
                     data_split, metric
                 )
                 if not os.path.exists(tvfc_estimates_git_savedir):

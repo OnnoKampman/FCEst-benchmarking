@@ -98,7 +98,7 @@ if __name__ == "__main__":
                 reconstruct_symmetric_summary_measure_matrix_from_tril(
                     mean_over_subjects_edgewise_summarized_tvfc_df.values,
                     tvfc_summary_measure=tvfc_summary_measure,
-                    n_time_series=n_time_series
+                    num_time_series=n_time_series
                 )
             )  # (D, D)
 

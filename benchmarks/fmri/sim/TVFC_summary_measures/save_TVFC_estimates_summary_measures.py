@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
         for noise_type in cfg['noise-types']:
 
-            for covs_type in cfg['covs-types']:
+            for covs_type in cfg['all-covs-types']:
 
                 for i_trial in range(num_trials):
 

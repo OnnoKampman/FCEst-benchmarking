@@ -59,7 +59,7 @@ def plot_edgewise_imputation_benchmark_scores_joint(
             edgewise_likelihoods, new_rsn_names = reorder_ica_components(
                 config_dict=config_dict,
                 original_matrix=edgewise_likelihoods.values,
-                n_time_series=num_time_series,
+                num_time_series=num_time_series,
                 # lower_triangular=True
             )
         else:
@@ -131,7 +131,7 @@ def plot_edgewise_imputation_benchmark_scores(
         edgewise_likelihoods, new_rsn_names = reorder_ica_components(
             config_dict=config_dict,
             original_matrix=edgewise_likelihoods.values,
-            n_time_series=num_time_series,
+            num_time_series=num_time_series,
             # lower_triangular=True
         )
     else:
@@ -184,13 +184,13 @@ def _plot_performance_difference(config_dict: dict, edgewise_likelihoods: (pd.Da
     """
     edgewise_likelihoods_first_method, new_rsn_names = reorder_ica_components(
         original_matrix=edgewise_likelihoods[0].values,
-        n_time_series=edgewise_likelihoods[0].shape[0],
+        num_time_series=edgewise_likelihoods[0].shape[0],
         config_dict=config_dict,
         # lower_triangular=True
     )
     edgewise_likelihoods_second_method, new_rsn_names = reorder_ica_components(
         original_matrix=edgewise_likelihoods[1].values,
-        n_time_series=edgewise_likelihoods[1].shape[0],
+        num_time_series=edgewise_likelihoods[1].shape[0],
         config_dict=config_dict,
         # lower_triangular=True
     )

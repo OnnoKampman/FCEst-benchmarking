@@ -10,13 +10,15 @@ from helpers.brain_states import extract_number_of_brain_state_switches
 
 
 def _save_number_of_brain_state_switches(
-        config_dict: dict, n_basis_states: int, connectivity_metric: str = 'correlation'
+    config_dict: dict,
+    num_basis_states: int,
+    connectivity_metric: str = 'correlation',
 ) -> None:
     for model_name in config_dict['models-brain-state-analysis']:
         model_number_of_switches_df = pd.DataFrame()
         for scan_id in config_dict['scan-ids']:
             brain_states_savedir = os.path.join(
-                config_dict['git-results-basedir'], 'brain_states', f'k{n_basis_states:02d}', f'scan_{scan_id:d}'
+                config_dict['git-results-basedir'], 'brain_states', f'k{num_basis_states:02d}', f'scan_{scan_id:d}'
             )
 
             # Load brain state assignment file.
@@ -32,7 +34,7 @@ def _save_number_of_brain_state_switches(
 
         # Save number of brain state switches for this model.
         n_brain_state_switches_savedir = os.path.join(
-            config_dict['git-results-basedir'], 'brain_states', f'k{n_basis_states:02d}'
+            config_dict['git-results-basedir'], 'brain_states', f'k{num_basis_states:02d}'
         )
         n_brain_state_switches_filename = f'number_of_brain_state_switches_{model_name:s}.csv'
         model_number_of_switches_df.to_csv(
@@ -54,5 +56,5 @@ if __name__ == "__main__":
     for n_brain_states in n_brain_states_list:
         _save_number_of_brain_state_switches(
             config_dict=cfg,
-            n_basis_states=n_brain_states
+            num_basis_states=n_brain_states
         )

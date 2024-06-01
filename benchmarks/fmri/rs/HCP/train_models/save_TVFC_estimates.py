@@ -51,7 +51,6 @@ if __name__ == "__main__":
                 scan_id=scan_id,
                 verbose=False,
             )  # (N, 1), (N, D)
-            n_time_steps = x.shape[0]
 
             match data_split:
                 case 'LEOO':

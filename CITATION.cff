@@ -9,6 +9,15 @@ authors:
 - family-names: "Ziminski"
   given-names: "Joe"
   orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "Afyouni"
+  given-names: "Soroosh"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "van der Wilk"
+  given-names: "Mark"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "Kourtzi"
+  given-names: "Zoe"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
 title: "FCEst-benchmarking"
 version: 0.0.1
 doi: 10.5281/zenodo.1234
@@ -23,11 +32,20 @@ preferred-citation:
   - family-names: "Ziminski"
     given-names: "Joe"
     orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "Afyouni"
+    given-names: "Soroosh"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "van der Wilk"
+    given-names: "Mark"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "Kourtzi"
+    given-names: "Zoe"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
   doi: "10.1162/imag_a_00184"
   journal: "Imaging Neuroscience"
   month: 5
   start: 1 # First page number
-  end: 10 # Last page number
+  end: 28 # Last page number
   title: "Time-varying functional connectivity as Wishart processes"
   issue: 1
   volume: 2

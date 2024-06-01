@@ -46,8 +46,8 @@ if __name__ == '__main__':
     if subject_measures_subset == 'cognitive':
         subject_measures_list = cfg['subject-measures-nuisance-variables'] + subject_measures_list
 
-    n_tvfc_summary_measures = len(cfg['TVFC-summary-measures'])
-    n_subject_measures = len(subject_measures_list)
+    num_tvfc_summary_measures = len(cfg['TVFC-summary-measures'])
+    num_subject_measures = len(subject_measures_list)
 
     # Linear ridge model out-of-sample prediction task, following Dhamala et al. (2021).
 
@@ -106,27 +106,27 @@ if __name__ == '__main__':
 
         #create arrays to store variables
         #r^2 - coefficient of determination
-        r2 = np.zeros([n_permutations, n_subject_measures])
+        r2 = np.zeros([n_permutations, num_subject_measures])
         #explained variance
-        var = np.zeros([n_permutations, n_subject_measures])
+        var = np.zeros([n_permutations, num_subject_measures])
         #correlation between true and predicted (aka prediction accuracy)
-        corr = np.zeros([n_permutations, n_subject_measures])
+        corr = np.zeros([n_permutations, num_subject_measures])
 
         #optimised alpha (hyperparameter)
-        opt_alpha = np.zeros([n_permutations, n_subject_measures])
+        opt_alpha = np.zeros([n_permutations, num_subject_measures])
         #predictions made by the model
         preds = np.zeros(
-            [n_permutations, n_subject_measures, int(np.ceil(X.shape[0]*test_ratio))]
+            [n_permutations, num_subject_measures, int(np.ceil(X.shape[0]*test_ratio))]
         )
         #true test values for cognition
         # cogtest = np.zeros(
         #     [n_permutations, n_subject_measures, int(np.ceil(X.shape[0]*test_ratio))]
         # )
-        feature_importances = np.zeros([n_permutations, n_features, n_subject_measures])
+        feature_importances = np.zeros([n_permutations, n_features, num_subject_measures])
 
         for i_subject_measure, subject_measure in enumerate(subject_measures_list):
 
-            logging.info(f"> Subject measure {i_subject_measure+1:02d}/{n_subject_measures:d}: '{subject_measure:s}'")
+            logging.info(f"> Subject measure {i_subject_measure+1:02d}/{num_subject_measures:d}: '{subject_measure:s}'")
 
             # This is the subject measure we want to predict.
             y = get_phenotype_array(

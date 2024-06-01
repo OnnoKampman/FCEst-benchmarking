@@ -132,7 +132,8 @@ def get_config_dict(
 
 
 def _get_human_connectome_project_config_dict(
-        shared_config_dict: dict, data_dimensionality: str
+    shared_config_dict: dict,
+    data_dimensionality: str,
 ) -> dict:
     """
     Get configs dictionary for Human Connectome Project (HCP) data.
@@ -400,6 +401,8 @@ def _get_d2_config_dict(
     shared_config_dict: dict, benchmark_dimensions: str
 ) -> dict:
     """
+    Get configuration dictionary for D=2 (bivariate) simulations.
+
     Parameters
     ----------
     :param shared_config_dict:

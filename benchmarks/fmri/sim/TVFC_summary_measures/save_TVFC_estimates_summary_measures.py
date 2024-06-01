@@ -63,6 +63,7 @@ if __name__ == "__main__":
                         )  # (D, D)
                         tvfc_estimates_array = connectome.sym_matrix_to_vec(tvfc_estimates_summary, discard_diagonal=True)  # (D*(D-1)/2, )
                     edgewise_tvfc_summary_per_trial_df.append(tvfc_estimates_array)
+
                 edgewise_tvfc_summary_per_trial_df = pd.DataFrame(
                     edgewise_tvfc_summary_per_trial_df,
                     index=range(num_trials)
@@ -92,7 +93,7 @@ if __name__ == "__main__":
                 )  # (D, D)
 
                 tvfc_estimates_git_savedir = os.path.join(
-                    cfg['git-results-basedir'], noise_type, data_split, 'TVFC_estimates_summary_measures', f'trial_{i_trial:03d}', metric
+                    cfg['git-results-basedir'], noise_type, data_split, 'TVFC_estimates_summary_measures', f'trial_{i_trial:03d}', metric, covs_type
                 )
                 if not os.path.exists(tvfc_estimates_git_savedir):
                     os.makedirs(tvfc_estimates_git_savedir)

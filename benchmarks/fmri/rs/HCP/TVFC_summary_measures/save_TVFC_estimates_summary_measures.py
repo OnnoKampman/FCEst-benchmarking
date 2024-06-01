@@ -28,10 +28,10 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_subjects = cfg['n-subjects']
-    n_time_series = int(data_dimensionality[1:])
+    num_subjects = cfg['n-subjects']
+    num_time_series = int(data_dimensionality[1:])
     all_subjects_list = get_human_connectome_project_subjects(
-        data_dir=cfg['data-dir'], first_n_subjects=n_subjects
+        data_dir=cfg['data-dir'], first_n_subjects=num_subjects
     )
 
     for tvfc_summary_measure in cfg['TVFC-summary-measures']:
@@ -55,7 +55,7 @@ if __name__ == "__main__":
                 logging.info(f'> SUMMARY MEASURE: {tvfc_summary_measure:s}')
                 logging.info(f'> MODEL NAME:      {model_name:s}')
                 logging.info(f'> SCAN ID:         {scan_id:d}')
-                logging.info(f'> SUBJECT {i_subject+1: 3d} / {n_subjects:d}: {subject_filename:s}')
+                logging.info(f'> SUBJECT {i_subject+1: 3d} / {num_subjects:d}: {subject_filename:s}')
 
                 # Load TVFC estimates - some may be missing.
                 tvfc_estimates_filepath = os.path.join(
@@ -63,7 +63,7 @@ if __name__ == "__main__":
                 )
                 if not os.path.exists(tvfc_estimates_filepath):
                     logging.warning(f"Could not find TVFC estimates '{tvfc_estimates_filepath:s}'.")
-                    tvfc_estimates_array = np.empty((int(n_time_series * (n_time_series - 1) / 2), ))
+                    tvfc_estimates_array = np.empty((int(num_time_series * (num_time_series - 1) / 2), ))
                     tvfc_estimates_array[:] = np.nan
                 else:
                     tvfc_estimates_df = pd.read_csv(tvfc_estimates_filepath, index_col=0)  # (D*D, N)
@@ -98,7 +98,7 @@ if __name__ == "__main__":
                 reconstruct_symmetric_summary_measure_matrix_from_tril(
                     mean_over_subjects_edgewise_summarized_tvfc_df.values,
                     tvfc_summary_measure=tvfc_summary_measure,
-                    num_time_series=n_time_series
+                    num_time_series=num_time_series
                 )
             )  # (D, D)
 

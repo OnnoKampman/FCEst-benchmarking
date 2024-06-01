@@ -29,11 +29,11 @@ def _plot_time_series(
     """
     figure_name_time_series = 'time_series.pdf'
 
-    n_time_series = y_locations.shape[1]
+    num_time_series = y_locations.shape[1]
 
     plt.figure(figsize=config_dict['plot-time-series-figsize'])
-    for i_time_series in range(n_time_series):
-        plt.subplot(n_time_series, 1, i_time_series+1)
+    for i_time_series in range(num_time_series):
+        plt.subplot(num_time_series, 1, i_time_series+1)
         plt.plot(
             x_plot, y_locations[:, i_time_series], 'x-',
             markersize=0, label=f'TS_{(i_time_series+1):d}'
@@ -92,11 +92,11 @@ if __name__ == "__main__":
                     x_train = x
                     y_train = y
 
-            n_time_steps = x_train.shape[0]
+            num_time_steps = x_train.shape[0]
             xx = convert_to_minutes(
                 x_train,
                 repetition_time=cfg['repetition-time'],
-                data_length=n_time_steps
+                data_length=num_time_steps
             )
             _plot_time_series(
                 config_dict=cfg,

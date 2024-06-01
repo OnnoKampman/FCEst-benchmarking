@@ -3,15 +3,16 @@
 .ipynb_checkpoints/
 __pycache__
 
-# Data.
+# Data
 opk20_hivemind_paper_1/
 
+**.nii.gz
 **.tar.gz
 
 datasets/fmri/rs/HCP/hcp-openaccess/
-# HCP_PTN1200_recon2/
+datasets/fmri/rs/HCP/HCP_PTN1200_recon2/
 
-# Results.
+# Results
 
 results/fmri/rs/HCP/HCP_PTN1200_recon2/3T_HCP1200_MSMAll_d15_ts2/brain_states/k01/
 results/fmri/rs/HCP/HCP_PTN1200_recon2/3T_HCP1200_MSMAll_d15_ts2/brain_states/k02/

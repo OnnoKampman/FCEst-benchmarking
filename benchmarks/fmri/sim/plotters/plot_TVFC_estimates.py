@@ -197,8 +197,8 @@ def _plot_d2_tvfc_estimates_single_covariance_structure(
 
     plt.figure(figsize=config_dict['figure-model-estimates-figsize'])
 
-    n_time_series = y_train_locations.shape[1]
-    for i_time_series in range(n_time_series):
+    num_time_series = y_train_locations.shape[1]
+    for i_time_series in range(num_time_series):
         plt.subplot(4, 1, i_time_series + 1)
         plt.plot(
             x_train_locations, y_train_locations[:, i_time_series],

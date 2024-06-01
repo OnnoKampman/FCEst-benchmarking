@@ -16,18 +16,18 @@ from helpers.evaluation import leave_every_other_out_split, get_test_log_likelih
 if __name__ == "__main__":
 
     data_split = 'LEOO'  # leave-every-other-out
+    experiment_dimensionality = 'multivariate'  # TODO: take all edges from the jointly/multivariately trained model
 
     data_dimensionality = sys.argv[1]  # 'd15', 'd50'
     model_name = sys.argv[2]           # 'SVWP_joint', 'DCC_joint', 'GO_joint', 'SW_cross_validated', 'SW_30', 'SW_60', 'sFC'
 
-    num_time_series = int(data_dimensionality[1:])
-    experiment_dimensionality = 'multivariate'  # TODO: take all edges from the jointly/multivariately trained model
     cfg = get_config_dict(
         data_set_name='HCP_PTN1200_recon2',
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
     num_subjects = cfg['n-subjects']
+    num_time_series = int(data_dimensionality[1:])
     all_subjects_list = get_human_connectome_project_subjects(
         data_dir=cfg['data-dir'], first_n_subjects=num_subjects
     )

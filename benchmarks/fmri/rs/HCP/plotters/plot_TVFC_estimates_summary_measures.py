@@ -71,17 +71,17 @@ def plot_tvfc_summary_measures_mean_over_subjects_all_edges_joint(
             )  # (D, D)
 
             # Re-order ICA components.
-            n_time_series = summarized_tvfc_df.shape[0]
+            num_time_series = summarized_tvfc_df.shape[0]
             if data_dimensionality == 'd15':
                 summarized_tvfc_array, new_rsn_names = reorder_ica_components(
                     config_dict=config_dict,
                     original_matrix=summarized_tvfc_df.values,
-                    n_time_series=n_time_series,
+                    num_time_series=num_time_series,
                 )
             else:
                 # TODO: add RSN names map for d50
                 summarized_tvfc_array = summarized_tvfc_df.values
-                new_rsn_names = np.arange(n_time_series)
+                new_rsn_names = np.arange(num_time_series)
 
             # Define mask for diagonal and upper triangular values.
             mask = np.zeros_like(summarized_tvfc_array)
@@ -160,17 +160,17 @@ def plot_tvfc_summary_measures_mean_over_subjects_all_edges(
     vmin, vmax = _set_colorbar_min_max(summary_measure)
 
     # Re-order ICA components.
-    n_time_series = summarized_tvfc_df.shape[0]
+    num_time_series = summarized_tvfc_df.shape[0]
     if data_dimensionality == 'd15':
         summarized_tvfc_array, new_rsn_names = reorder_ica_components(
             config_dict=config_dict,
             original_matrix=summarized_tvfc_df.values,
-            n_time_series=n_time_series,
+            num_time_series=num_time_series,
         )
     else:
         # TODO: add RSN names map for d50
         summarized_tvfc_array = summarized_tvfc_df.values
-        new_rsn_names = np.arange(n_time_series)
+        new_rsn_names = np.arange(num_time_series)
 
     # Define mask for diagonal and upper triangular values.
     mask = np.zeros_like(summarized_tvfc_array)

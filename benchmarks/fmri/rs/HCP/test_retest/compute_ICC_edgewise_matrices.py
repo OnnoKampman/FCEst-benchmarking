@@ -21,7 +21,7 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_time_series = int(data_dimensionality[1:])
+    num_time_series = int(data_dimensionality[1:])
 
     icc_edgewise_savedir = os.path.join(cfg['git-results-basedir'], 'test_retest', metric)
     if not os.path.exists(icc_edgewise_savedir):
@@ -35,7 +35,7 @@ if __name__ == "__main__":
             test_retest_metric='ICC',
             model_name=model_name,
             tvfc_summary_measure=tvfc_summary_measure,
-            n_time_series=n_time_series,
+            num_time_series=num_time_series,
             experiment_dimensionality=experiment_dimensionality,
             data_split=data_split,
             connectivity_metric=metric,

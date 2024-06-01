@@ -37,14 +37,14 @@ if __name__ == '__main__':
     if subject_measures_subset == 'cognitive':
         subject_measures_list = cfg['subject-measures-nuisance-variables'] + subject_measures_list
 
-    n_tvfc_summary_measures = len(cfg['TVFC-summary-measures'])
-    n_subject_measures = len(subject_measures_list)
+    num_tvfc_summary_measures = len(cfg['TVFC-summary-measures'])
+    num_subject_measures = len(subject_measures_list)
 
     morphometricity_results_df = pd.DataFrame()
     morphometricity_results_standard_error_df = pd.DataFrame()
     for i_subject_measure, subject_measure in enumerate(subject_measures_list):
 
-        logging.info(f"> Subject measure {i_subject_measure+1:02d}/{n_subject_measures:d}: '{subject_measure:s}'")
+        logging.info(f"> Subject measure {i_subject_measure+1:02d}/{num_subject_measures:d}: '{subject_measure:s}'")
 
         y = get_phenotype_array(
             phenotype_df=subject_phenotypes_df,
@@ -56,7 +56,7 @@ if __name__ == '__main__':
             subjects_subset_list=all_subjects_list,
             nuisance_variables=cfg['subject-measures-nuisance-variables'].copy(),  # do not edit original list
             morphometricity_subject_measure=subject_measure
-        )  # (n_subjects, n_covariates)
+        )  # (num_subjects, num_covariates)
         K = get_kernel_lengthscale_similarity_matrix(
             config_dict=cfg
         )  # (n_subjects, n_subjects)

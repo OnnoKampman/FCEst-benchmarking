@@ -12,11 +12,11 @@ if __name__ == "__main__":
     hostname = socket.gethostname()
     assert hostname == 'hivemind'
 
+    experiment_dimensionality = 'multivariate'  # or 'bivariate'
     model_name = 'SVWP_joint'
 
     data_dimensionality = sys.argv[1]        # 'd15' or 'd50'
     data_split = sys.argv[2]                 # 'all' or 'LEOO'
-    experiment_dimensionality = sys.argv[3]  # 'multivariate' or 'bivariate'
 
     cfg = get_config_dict(
         data_set_name='HCP_PTN1200_recon2',
@@ -58,7 +58,7 @@ if __name__ == "__main__":
                      "echo \"SLURM_NTASKS: $SLURM_NTASKS\"\n"
                      "echo \"SLURM_CPUS_PER_TASK: $SLURM_CPUS_PER_TASK\"\n"
                      "echo \"SLURM_JOB_CPUS_PER_NODE: $SLURM_JOB_CPUS_PER_NODE\"\n"
-                     f"srun --cpu_bind=threads --distribution=block:block python ./benchmarks/fmri/rs/{data_set_name:s}/train_models/train_SVWP.py {data_dimensionality:s} {data_split:s} {experiment_dimensionality:s}")
+                     f"srun --cpu_bind=threads --distribution=block:block python ./benchmarks/fmri/rs/{data_set_name:s}/train_models/train_SVWP.py {data_dimensionality:s} {data_split:s}")
     print('\n', slurm_job_str, '\n')
 
     # Create SLURM directory where logs will be saved (SLURM does not create these automatically).

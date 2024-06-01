@@ -47,7 +47,7 @@ if __name__ == '__main__':
     if subject_measures_subset == 'cognitive':
         subject_measures_list = cfg['subject-measures-nuisance-variables'] + subject_measures_list
 
-    n_tvfc_summary_measures = len(cfg['TVFC-summary-measures'])
+    num_tvfc_summary_measures = len(cfg['TVFC-summary-measures'])
     n_subject_measures = len(subject_measures_list)
 
     # Linear ridge model out-of-sample prediction task, following Dhamala et al. (2021).

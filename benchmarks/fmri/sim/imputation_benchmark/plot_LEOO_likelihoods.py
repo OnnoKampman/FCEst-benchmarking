@@ -69,7 +69,9 @@ def plot_likelihoods_raincloud(
 
 
 def _plot_all_covs_structures_bar(
-        config_dict: dict, test_likelihoods_mean_df: pd.DataFrame, test_likelihoods_sem_df: pd.DataFrame
+    config_dict: dict,
+    test_likelihoods_mean_df: pd.DataFrame,
+    test_likelihoods_sem_df: pd.DataFrame,
 ) -> None:
     """
     Plot joint test likelihoods for all methods for all covariance structures.
@@ -82,7 +84,7 @@ if __name__ == '__main__':
     data_split = 'LEOO'  # leave-every-other-out
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd3s'
-    experiment_data = sys.argv[2]  # e.g. 'N0200_T0003'
+    experiment_data = sys.argv[2]  # 'Nxxxx_Txxxx'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,
@@ -90,9 +92,12 @@ if __name__ == '__main__':
         hostname=socket.gethostname()
     )
     num_trials = int(experiment_data[-4:])
-    test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_benchmark')
 
     for noise_type in cfg['noise-types']:
+
+        test_likelihoods_savedir = os.path.join(
+            cfg['git-results-basedir'], noise_type, data_split, 'imputation_benchmark'
+        )
 
         all_covs_models_test_likelihoods_mean_df = pd.DataFrame(
             np.nan,
@@ -120,8 +125,8 @@ if __name__ == '__main__':
                 likelihoods_df = pd.read_csv(
                     test_likelihoods_savepath,
                     index_col=0,
-                )  # (n_trials, n_all_covs_types)
-                likelihoods_df = likelihoods_df.loc[:, cfg['plot-covs-types']]  # (n_trials, n_covs_types)
+                )  # (num_trials, num_all_covs_types)
+                likelihoods_df = likelihoods_df.loc[:, cfg['plot-covs-types']]  # (num_trials, num_covs_types)
 
                 # Update covs types labels for plots.
                 likelihoods_df.columns = likelihoods_df.columns.str.replace('periodic_1', 'periodic (slow)')
@@ -172,12 +177,11 @@ if __name__ == '__main__':
             )
             for model_name in cfg['plot-models']:
                 likelihoods_filename = f'{data_split:s}_{noise_type:s}_likelihoods_{model_name:s}.csv'
-                test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_benchmark')
                 test_likelihoods_savepath = os.path.join(test_likelihoods_savedir, likelihoods_filename)
                 if os.path.exists(test_likelihoods_savepath):
                     likelihoods_df = pd.read_csv(
                         test_likelihoods_savepath, index_col=0
-                    )  # (n_trials, n_train_covs_types)
+                    )  # (num_trials, num_train_covs_types)
                     if not likelihoods_df.shape == (num_trials, len(cfg['all-covs-types'])):
                         logging.warning("Unexpected number of covariance structures found.")
                         print(likelihoods_df.round(3))

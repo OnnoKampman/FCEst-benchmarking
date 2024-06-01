@@ -25,9 +25,12 @@ if __name__ == "__main__":
     )
     models_list = cfg['plot-models']
     num_trials = int(experiment_data[-4:])
-    test_likelihoods_savedir = os.path.join(cfg['git-results-basedir'], 'imputation_benchmark')
 
     for noise_type in cfg['noise-types']:
+
+        test_likelihoods_savedir = os.path.join(
+            cfg['git-results-basedir'], noise_type, data_split, 'imputation_benchmark'
+        )
 
         for covs_type in cfg['plot-covs-types']:
 

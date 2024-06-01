@@ -77,7 +77,7 @@ if __name__ == "__main__":
                 # Get likelihood of observed data at test locations under predicted covariance matrices.
                 test_log_likelihood = get_test_log_likelihood(
                     predicted_covariance_structure=test_locations_predicted_covariance_structure,
-                    y_test=y_test
+                    y_test=y_test,
                 )
                 test_likelihoods_df.loc[i_trial, covs_type] = test_log_likelihood
 
@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
         likelihoods_filename = f'{data_split:s}_{noise_type:s}_likelihoods_{model_name:s}.csv'
         test_likelihoods_savedir = os.path.join(
-            cfg['git-results-basedir'], 'imputation_benchmark'
+            cfg['git-results-basedir'], noise_type, data_split, 'imputation_benchmark'
         )
         if not os.path.exists(test_likelihoods_savedir):
             os.makedirs(test_likelihoods_savedir)

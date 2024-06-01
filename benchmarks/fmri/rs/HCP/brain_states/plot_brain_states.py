@@ -59,7 +59,7 @@ def plot_brain_state_cluster_centroids(
                 ),
                 index_col=0
             )  # (D, D)
-            n_time_series = cluster_centroid_df.shape[0]  # D
+            num_time_series = cluster_centroid_df.shape[0]  # D
 
             brain_state += 1  # make 1-indexed
             i_subplot = scan_id * n_basis_states + brain_state
@@ -69,7 +69,7 @@ def plot_brain_state_cluster_centroids(
             if data_dimensionality == 'd15':
                 cluster_centroid_array, new_rsn_names = reorder_ica_components(
                     original_matrix=cluster_centroid_df.values,
-                    n_time_series=n_time_series,
+                    num_time_series=num_time_series,
                     config_dict=config_dict,
                 )
             else:

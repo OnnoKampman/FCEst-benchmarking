@@ -67,7 +67,7 @@ if __name__ == '__main__':
                     subjects_subset_list=all_subjects_list,
                     nuisance_variables=cfg['subject-measures-nuisance-variables'].copy(),  # do not edit original list
                     morphometricity_subject_measure=subject_measure
-                )  # (n_subjects, n_covariates)
+                )  # (num_subjects, num_covariates)
                 K = get_tvfc_estimates_similarity_matrix(
                     config_dict=cfg,
                     tvfc_summary_measure=tvfc_summary_measure,

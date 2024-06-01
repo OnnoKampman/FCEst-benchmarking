@@ -32,7 +32,7 @@ if __name__ == "__main__":
             cfg['data-basedir'], pp_pipeline, 'node_timeseries', cfg['roi-list-name'], subject_filename
         )
         x, y = load_rockland_data(data_file)  # (N, 1), (N, D)
-        n_time_series = y.shape[1]
+        num_time_series = y.shape[1]
 
         x_train, x_test = leave_every_other_out_split(x)  # (N/2, 1), (N/2, 1)
         y_train, y_test = leave_every_other_out_split(y)  # (N/2, D), (N/2, D)
@@ -45,7 +45,7 @@ if __name__ == "__main__":
             y_train_locations=y_train,
             data_split=data_split,
             subject=subject_filename,
-            num_time_series=n_time_series
+            num_time_series=num_time_series
         )
 
         # Get likelihood of observed data at test locations under predicted covariance matrices.

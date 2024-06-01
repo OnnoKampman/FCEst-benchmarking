@@ -17,10 +17,10 @@ from helpers.inference import save_elbo_plot
 if __name__ == "__main__":
 
     model_name = 'SVWP_joint'
+    experiment_dimensionality = 'multivariate'  # or 'bivariate'
 
     data_dimensionality = sys.argv[1]  # 'd15' or 'd50'
     data_split = sys.argv[2]  # 'all' or 'LEOO'
-    experiment_dimensionality = sys.argv[3]  # 'multivariate' or 'bivariate'
 
     cfg = get_config_dict(
         data_set_name='HCP_PTN1200_recon2',
@@ -28,7 +28,7 @@ if __name__ == "__main__":
         hostname=socket.gethostname()
     )
     all_subjects_list = get_human_connectome_project_subjects(data_dir=cfg['data-dir'])
-    n_subjects = len(all_subjects_list)
+    num_subjects = len(all_subjects_list)
 
     # Allow for local and CPU cluster training.
     # When running on the Hivemind with SLURM, only one model is trained here.
@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     for i_subject, subject_filename in enumerate(subjects):
 
-        print(f'\n> SUBJECT {i_subject+1:d} / {n_subjects:d}: {subject_filename:s}\n')
+        print(f'\n> SUBJECT {i_subject+1:d} / {num_subjects:d}: {subject_filename:s}\n')
 
         data_file = os.path.join(cfg['data-dir'], subject_filename)
         for scan_id in cfg['scan-ids']:
@@ -66,16 +66,7 @@ if __name__ == "__main__":
             x, y = load_human_connectome_project_data(
                 data_file, scan_id=scan_id, verbose=False
             )  # (N, 1), (N, D)
-            n_time_series = y.shape[1]
-
-            # TODO: pick two time series at random if 'experiment_dimensionality' == 'bivariate'?
-            if experiment_dimensionality == 'bivariate':
-                chosen_indices = [0, 1]
-                # chosen_indices_df = cfg['chosen-indices']
-                # chosen_indices = chosen_indices_df.loc[subject, scan_id]
-                y = y[:, chosen_indices]
-                n_time_series = y.shape[1]
-                print('y', y.shape)
+            num_time_series = y.shape[1]
 
             match data_split:
                 case "LEOO":
@@ -89,9 +80,9 @@ if __name__ == "__main__":
 
             k = gpflow.kernels.Matern52()
             m = SparseVariationalWishartProcess(
-                D=n_time_series,
+                D=num_time_series,
                 Z=x_train[:cfg['n-inducing-points']],
-                nu=n_time_series,
+                nu=num_time_series,
                 kernel=k
             )
             maxiter = ci_niter(cfg['n-iterations'])

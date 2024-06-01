@@ -1,0 +1,52 @@
+# https://citation-file-format.github.io
+
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Kampman"
+  given-names: "Onno P."
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "Ziminski"
+  given-names: "Joe"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "Afyouni"
+  given-names: "Soroosh"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "van der Wilk"
+  given-names: "Mark"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "Kourtzi"
+  given-names: "Zoe"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+title: "FCEst-benchmarking"
+version: 0.0.1
+doi: 10.5281/zenodo.1234
+date-released: 2024-05-17
+url: "https://github.com/OnnoKampman/FCEst-benchmarking"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Kampman"
+    given-names: "Onno P."
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "Ziminski"
+    given-names: "Joe"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "Afyouni"
+    given-names: "Soroosh"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "van der Wilk"
+    given-names: "Mark"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "Kourtzi"
+    given-names: "Zoe"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+  doi: "10.1162/imag_a_00184"
+  journal: "Imaging Neuroscience"
+  month: 5
+  start: 1 # First page number
+  end: 28 # Last page number
+  title: "Time-varying functional connectivity as Wishart processes"
+  issue: 1
+  volume: 2
+  year: 2024

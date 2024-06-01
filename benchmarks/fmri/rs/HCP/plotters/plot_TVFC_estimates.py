@@ -52,7 +52,7 @@ def plot_hcp_tvfc_estimates(
     figsize: tuple[float]
     figures_savedir: str
     """
-    n_time_series = y_train_locations.shape[1]
+    num_time_series = y_train_locations.shape[1]
 
     sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
@@ -69,9 +69,9 @@ def plot_hcp_tvfc_estimates(
     )
 
     if random_edges:
-        interaction_pairs_indices = np.triu_indices(n_time_series, k=1)  # set k=0 to include variances
+        interaction_pairs_indices = np.triu_indices(num_time_series, k=1)  # set k=0 to include variances
         interaction_pairs_indices = np.array(interaction_pairs_indices).T
-        n_interactions = int(n_time_series * (n_time_series - 1) / 2)
+        n_interactions = int(num_time_series * (num_time_series - 1) / 2)
         assert n_interactions == len(interaction_pairs_indices)
         random_interactions = np.random.choice(len(interaction_pairs_indices), num_rows*num_columns)
         interaction_pairs_indices = interaction_pairs_indices[random_interactions]
@@ -208,7 +208,6 @@ if __name__ == "__main__":
             x, y = load_human_connectome_project_data(
                 data_file, scan_id=scan_id, verbose=False
             )  # (N, 1), (N, D)
-            n_time_steps = x.shape[0]
 
             if data_split == 'LEOO':
                 x_train, _ = leave_every_other_out_split(x)
@@ -217,11 +216,11 @@ if __name__ == "__main__":
                 x_train = x
                 y_train = y
 
-            n_time_steps = x_train.shape[0]
+            num_time_steps = x_train.shape[0]
             xx = convert_to_minutes(
                 x_train,
                 repetition_time=cfg['repetition-time'],
-                data_length=n_time_steps
+                data_length=num_time_steps
             )
             plot_hcp_tvfc_estimates(
                 config_dict=cfg,

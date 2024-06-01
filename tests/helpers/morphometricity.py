@@ -23,7 +23,7 @@ class TestMorphometricity(unittest.TestCase):
         y = np.array(data['petal_length']).reshape(-1, 1)  # (n_samples, 1)
 
         # covariates: sepal_width and sepal_length
-        X = np.array(data[['sepal_length', 'sepal_width']])  # (n_samples, n_covariates=2)
+        X = np.array(data[['sepal_length', 'sepal_width']])  # (num_samples, num_covariates=2)
 
         # Anatomical similarity: computed as inverted euclidean distance in petal_width
         euclidean_dist = pairwise_distances(

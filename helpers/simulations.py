@@ -25,24 +25,24 @@ def save_synthetic_dataset(
     :return:
     """
     y = simulate_time_series(covariance_structure=covariance_structure)  # (N, D)
-    n_time_steps = y.shape[0]
-    n_time_series = y.shape[1]
+    num_time_steps = y.shape[0]
+    num_time_series = y.shape[1]
 
     # Randomly select HCP noise.
     if hcp_noise_snr is not None:
         all_hcp_noise = _pick_random_hcp_noise(
             config_dict=config_dict,
-            n_samples=n_time_steps,
-            n_time_series=n_time_series
+            num_samples=num_time_steps,
+            num_time_series=num_time_series
         )  # (N, D)
 
     # Normalize data and add noise.
-    for i_timeseries in range(n_time_series):
+    for i_timeseries in range(num_time_series):
         y[:, i_timeseries] = normalize_array(y[:, i_timeseries])
 
         # Add white noise.
         if white_noise_snr is not None:
-            white_noise_ts = _generate_white_noise_ts(n_samples=n_time_steps)  # (N, )
+            white_noise_ts = _generate_white_noise_ts(num_samples=num_time_steps)  # (N, )
             y[:, i_timeseries] = _mix_signals_linearly(
                 y[:, i_timeseries], white_noise_ts, white_noise_snr
             )
@@ -59,7 +59,7 @@ def save_synthetic_dataset(
     # Save time series to disk.
     df = pd.DataFrame(
         y,
-        columns=[f"ts_{i:02d}" for i in range(n_time_series)]
+        columns=[f"ts_{i:02d}" for i in range(num_time_series)]
     )
     if not os.path.exists(synthetic_data_dir):
         os.makedirs(synthetic_data_dir)
@@ -76,14 +76,14 @@ def simulate_time_series(covariance_structure: np.array) -> np.array:
 
     :param covariance_structure: full covariance structure of shape (N, D, D).
     :return
-        y: array of shape (n_time_steps, n_time_series) or (N, D).
+        y: array of shape (num_time_steps, num_time_series) or (N, D).
     """
-    n_time_steps = covariance_structure.shape[0]
-    n_time_series = covariance_structure.shape[1]
+    num_time_steps = covariance_structure.shape[0]
+    num_time_series = covariance_structure.shape[1]
 
-    means = np.zeros(n_time_series)
+    means = np.zeros(num_time_series)
     y = []
-    for sample_step in range(n_time_steps):
+    for sample_step in range(num_time_steps):
         time_step_covariance_matrix = covariance_structure[sample_step, :, :]
         try:
             _ = np.linalg.cholesky(time_step_covariance_matrix)  # A = L*L^T

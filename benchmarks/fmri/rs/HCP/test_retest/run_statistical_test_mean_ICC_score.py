@@ -26,7 +26,7 @@ if __name__ == "__main__":
     )
     icc_edgewise_savedir = os.path.join(cfg['git-results-basedir'], 'test_retest', metric)
     models_list = cfg['plot-model-estimates-methods']
-    n_time_series = int(data_dimensionality[1:])
+    num_time_series = int(data_dimensionality[1:])
 
     all_method_significances_df = pd.DataFrame(
         np.nan,
@@ -55,7 +55,7 @@ if __name__ == "__main__":
                 icc_matrix_filepath = os.path.join(icc_edgewise_savedir, icc_matrix_filename)
                 if not os.path.exists(icc_matrix_filepath):
                     logging.warning(f"ICC scores TVFC {tvfc_summary_measure:s} {model_name:s} not found.")
-                    all_methods_edgewise_icc_scores.append(np.full([n_time_series, n_time_series], np.nan).flatten())
+                    all_methods_edgewise_icc_scores.append(np.full([num_time_series, num_time_series], np.nan).flatten())
                     continue
                 summary_measure_icc_df = pd.read_csv(
                     icc_matrix_filepath,

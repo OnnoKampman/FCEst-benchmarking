@@ -36,7 +36,7 @@ def _plot_static_functional_connectivity_estimate(
     re_ordered_correlation_matrix, new_rsn_names = reorder_ica_components(
         config_dict=config_dict,
         original_matrix=correlation_matrix,
-        n_time_series=num_time_series,
+        num_time_series=num_time_series,
     )
 
     plt.figure()
@@ -84,13 +84,13 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_time_series = int(data_dimensionality[1:])
+    num_time_series = int(data_dimensionality[1:])
     scan_ids = cfg['scan-ids']
     subjects = get_human_connectome_project_subjects(
         data_dir=cfg['data-dir'], as_ints=True
     )
 
-    mean_sfc_estimate = np.zeros((n_time_series, n_time_series))
+    mean_sfc_estimate = np.zeros((num_time_series, num_time_series))
     for i_subject, subject in enumerate(subjects):
 
         print(f"\n> SUBJECT {i_subject+1:d}: {subject:d}\n")

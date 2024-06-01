@@ -68,7 +68,6 @@ if __name__ == "__main__":
                     case _:
                         logging.error("Data split not recognized.")
 
-                n_time_steps = x_train.shape[0]
                 plot_node_timeseries(
                     config_dict=cfg,
                     x_plot=x_train,

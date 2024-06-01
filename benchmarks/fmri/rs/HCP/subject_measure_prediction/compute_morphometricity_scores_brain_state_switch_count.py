@@ -60,7 +60,7 @@ if __name__ == '__main__':
                 subjects_subset_list=all_subjects_list,
                 nuisance_variables=cfg['subject-measures-nuisance-variables'].copy(),  # do not edit original list
                 morphometricity_subject_measure=subject_measure
-            )  # (n_subjects, n_covariates)
+            )  # (num_subjects, num_covariates)
             K = get_brain_state_switch_count_similarity_matrix(
                 config_dict=cfg,
                 n_basis_states=3,

@@ -20,7 +20,6 @@ if __name__ == "__main__":
         subset_dimensionality=data_dimensionality,
         hostname=socket.gethostname()
     )
-    n_time_series = int(data_dimensionality[1:])
     kernel_params_savedir = os.path.join(cfg['git-results-basedir'], 'kernel_analysis')
     kernel_params_df = pd.read_csv(
         os.path.join(kernel_params_savedir, f'{kernel_param:s}_kernel_params.csv'),

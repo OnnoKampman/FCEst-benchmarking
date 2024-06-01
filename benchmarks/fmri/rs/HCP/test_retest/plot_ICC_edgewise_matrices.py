@@ -60,18 +60,18 @@ def plot_icc_scores_per_edge_joint(
                 index_col=0,
             )
 
-            n_time_series = icc_edgewise_df.shape[0]  # D
+            num_time_series = icc_edgewise_df.shape[0]  # D
 
             if data_dimensionality == 'd15':
                 icc_edgewise_array, new_rsn_names = reorder_ica_components(
                     config_dict=config_dict,
                     original_matrix=icc_edgewise_df.values,
-                    n_time_series=n_time_series,
+                    num_time_series=num_time_series,
                     lower_triangular=True
                 )
             else:
                 icc_edgewise_array = icc_edgewise_df.values
-                new_rsn_names = np.arange(n_time_series)
+                new_rsn_names = np.arange(num_time_series)
 
             # Define mask for upper triangular values.
             mask = np.zeros_like(icc_edgewise_array)
@@ -142,18 +142,18 @@ def plot_icc_scores_per_edge(
     sns.set(style="white")  # scales colorbar labels as well
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
 
-    n_time_series = icc_edgewise_df.shape[0]  # D
+    num_time_series = icc_edgewise_df.shape[0]  # D
 
     if data_dimensionality == 'd15':
         icc_edgewise_array, new_rsn_names = reorder_ica_components(
             config_dict=config_dict,
             original_matrix=icc_edgewise_df.values,
-            n_time_series=n_time_series,
+            num_time_series=num_time_series,
             lower_triangular=True
         )
     else:
         icc_edgewise_array = icc_edgewise_df.values
-        new_rsn_names = np.arange(n_time_series)
+        new_rsn_names = np.arange(num_time_series)
 
     # Define mask for upper triangular values.
     mask = np.zeros_like(icc_edgewise_array)
@@ -211,18 +211,18 @@ def _plot_icc_scores_per_edge_binned(
     sns.set(style="whitegrid", font_scale=1.1)  # scales colorbar labels as well
     plt.rcParams["font.family"] = 'serif'
 
-    n_time_series = icc_edgewise_df.shape[0]  # D
+    num_time_series = icc_edgewise_df.shape[0]  # D
 
     if data_dimensionality == 'd15':
         icc_edgewise_array, new_rsn_names = reorder_ica_components(
             config_dict=config_dict,
             original_matrix=icc_edgewise_df.values,
-            n_time_series=n_time_series,
+            num_time_series=num_time_series,
             lower_triangular=True
         )
     else:
         icc_edgewise_array = icc_edgewise_df.values
-        new_rsn_names = np.arange(n_time_series)
+        new_rsn_names = np.arange(num_time_series)
 
     plt.figure()
 

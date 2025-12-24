@@ -32,6 +32,12 @@ def plot_quantitative_results(
     Note that the figure will be slightly different for Fig. S1.
 
     TODO: replace with violin plot, after saving results for all individual trials
+
+    Parameters
+    ----------
+    config_dict : dict
+        Configuration dictionary.
+    performance_metric : str
     """
     sns.set(style="whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
@@ -61,15 +67,21 @@ def plot_quantitative_results(
         )
 
     average_quantitative_results_df = _process_df(
-        config_dict, average_quantitative_results_df, is_fig_s1
+        config_dict,
+        average_quantitative_results_df,
+        is_fig_s1,
     )
     if stddev_error_bars:
         errorbars_quantitative_results_df = _process_df(
-            config_dict, stddev_quantitative_results_df, is_fig_s1
+            config_dict,
+            stddev_quantitative_results_df,
+            is_fig_s1,
         )
     else:
         errorbars_quantitative_results_df = _process_df(
-            config_dict, stderr_quantitative_results_df, is_fig_s1
+            config_dict,
+            stderr_quantitative_results_df,
+            is_fig_s1,
         )
 
     models = average_quantitative_results_df.index
@@ -86,7 +98,7 @@ def plot_quantitative_results(
     else:
         cmap = matplotlib.colormaps['tab10']
         # cmap = sns.color_palette(palette="tab10", n_colors=10, as_cmap=True)
-
+        # cmap = matplotlib.colormaps.get_cmap('tab10')
     plt.figure(
         # figsize=config_dict['figure-quantitative-results-figsize'],
         figsize=figsize,
@@ -95,8 +107,7 @@ def plot_quantitative_results(
         transform = Affine2D().translate(offsets[i_model], 0.0) + plt.gca().transData
 
         if is_fig_s1:
-            model_color = cmap(i_model)  # for Fig. S1 only
-            model_color = cmap[i_model]  # for Fig. S1 only
+            model_color = cmap[i_model]
         else:
             model_color = cmap(i_model + 1) if config_dict['data-set-name'] == 'd2' and i_model > 1 else cmap(i_model)  # this line makes sure colors are assigned to the same model across plots
 
@@ -112,7 +123,10 @@ def plot_quantitative_results(
             markersize=markersize,
             transform=transform,
         )
-    plt.xticks(rotation=35, ha="right")
+    plt.xticks(
+        rotation=35,
+        ha="right",
+    )
     plt.ylabel(performance_metric.replace('_', ' ').replace(' RMSE', '\nRMSE'))
     plt.legend(
         bbox_to_anchor=bbox_to_anchor,
@@ -120,6 +134,7 @@ def plot_quantitative_results(
         title='TVFC\nestimator',
         alignment='left',
     )
+
     # plt.tight_layout()
 
     if figures_savedir is not None:
@@ -142,6 +157,8 @@ def _get_offsets(n_models: int):
     match n_models:
         case 4 | 5:
             offsets = np.linspace(-0.25, 0.25, n_models)
+        case 6:
+            offsets = np.linspace(-0.3, 0.3, n_models)
         case 7:
             offsets = np.linspace(-0.3, 0.3, n_models)
         case _:

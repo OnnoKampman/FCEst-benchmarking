@@ -17,17 +17,19 @@ def load_data(data_file: str, verbose: bool = True) -> (np.array, np.array):
         logging.info(f"Loaded data from '{data_file:s}'.")
         print(df.head())
         print(df.shape)
-    n_time_steps = len(df)
-    xx = np.linspace(0, 1, n_time_steps).reshape(-1, 1).astype(np.float64)
+    num_time_steps = len(df)
+    xx = np.linspace(0, 1, num_time_steps).reshape(-1, 1).astype(np.float64)
     return xx, df.values
 
 
 def reorder_ica_components(
-        config_dict: dict, original_matrix: np.array, n_time_series: int,
-        lower_triangular: bool = False
+    config_dict: dict,
+    original_matrix: np.array,
+    num_time_series: int,
+    lower_triangular: bool = False,
 ):
     # Get ICA RSN labels.
-    original_index = np.arange(n_time_series)
+    original_index = np.arange(num_time_series)
     original_rsn_id_assignment_array = map_array(
         original_index,
         array_map=config_dict['ica-id-to-rsn-id-algo-map']

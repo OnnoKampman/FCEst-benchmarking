@@ -6,6 +6,9 @@ Functional connectivity (FC) estimates are sensitive to choice of estimation met
 This project aims to design a range of benchmarks to determine what estimation method to use.
 
 These benchmarks have been particularly developed to test the estimation methods included in the [FCEst](https://github.com/OnnoKampman/FCEst) Python package.
+Results have been published in an article in Imaging Neuroscience (see `CITATION.cff`).
+
+Many extensions of this project are possible, both in terms of adding more estimation methods and more benchmarks.
 
 ## Contributing
 

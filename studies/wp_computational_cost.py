@@ -109,7 +109,7 @@ if __name__ == "__main__":
             cov_structure = get_ground_truth_covariance_structure(
                 covs_type=cov_structure_type,
                 data_set_name=f'd{D:d}s',  # train on sparse covariance structure
-                n_samples=N,
+                num_samples=N,
                 signal_to_noise_ratio=None
             )
             y = simulate_time_series(cov_structure)

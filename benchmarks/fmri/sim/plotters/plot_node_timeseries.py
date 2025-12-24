@@ -21,7 +21,7 @@ if __name__ == "__main__":
         experiment_data=experiment_data,
         hostname=socket.gethostname()
     )
-    n_trials = int(experiment_data[-4:])
+    num_trials = int(experiment_data[-4:])
     assert os.path.exists(os.path.join(cfg['data-dir']))
 
     noise_types = cfg['noise-types']
@@ -29,8 +29,8 @@ if __name__ == "__main__":
 
     for noise_type in noise_types:
         for covs_type in covs_types:
-            for i_trial in range(n_trials):
-                print(f"\n> TRIAL {i_trial+1:d} / {n_trials:d}\n")
+            for i_trial in range(num_trials):
+                print(f"\n> TRIAL {i_trial+1:d} / {num_trials:d}\n")
 
                 data_file = os.path.join(
                     cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
@@ -68,7 +68,6 @@ if __name__ == "__main__":
                     case _:
                         logging.error("Data split not recognized.")
 
-                n_time_steps = x_train.shape[0]
                 plot_node_timeseries(
                     config_dict=cfg,
                     x_plot=x_train,

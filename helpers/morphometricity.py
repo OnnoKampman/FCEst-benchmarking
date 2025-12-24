@@ -8,7 +8,9 @@ from helpers.data import assert_normalized
 
 
 def get_phenotype_array(
-        phenotype_df: pd.DataFrame, subjects_subset_list: list, morphometricity_subject_measure: str
+    phenotype_df: pd.DataFrame,
+    subjects_subset_list: list,
+    morphometricity_subject_measure: str,
 ) -> np.array:
     """
     Returns a normalized array with values for a single subject measure.
@@ -16,6 +18,9 @@ def get_phenotype_array(
     Sources:
         https://github.com/ThomasYeoLab/CBIG/blob/703454dba7b6e0b1cfb97beb449e1593c5170547/stable_projects/preprocessing/Li2019_GSR/replication/scripts/HCP_lists/58behaviors_age_sex.txt
         https://github.com/ThomasYeoLab/CBIG/blob/703454dba7b6e0b1cfb97beb449e1593c5170547/stable_projects/preprocessing/Li2019_GSR/VarianceComponentModel/README.md
+    
+    Parameters
+    ----------
     :param phenotype_df:
     :param subjects_subset_list:
     :param morphometricity_subject_measure:
@@ -43,13 +48,17 @@ def get_phenotype_array(
 
 
 def get_covariates_array(
-        phenotype_df: pd.DataFrame, subjects_subset_list: list,
-        nuisance_variables: list, morphometricity_subject_measure: str
+    phenotype_df: pd.DataFrame,
+    subjects_subset_list: list,
+    nuisance_variables: list,
+    morphometricity_subject_measure: str,
 ) -> np.array:
     """
     These covariates or nuisance variables will be regressed out.
     TODO: add motion (FD and DVARS)
 
+    Parameters
+    ----------
     :param phenotype_df:
     :param subjects_subset_list:
     :param nuisance_variables: list of strings.
@@ -69,7 +78,7 @@ def get_covariates_array(
 
     # Select nuisance variables from subject measures DataFrame.
     covariates_array = phenotype_df.loc[subjects_subset_list, nuisance_variables]  # floats array
-    covariates_array = np.atleast_2d(np.float64(covariates_array.values))  # (n_subjects, n_covariates)
+    covariates_array = np.atleast_2d(np.float64(covariates_array.values))  # (num_subjects, num_covariates)
 
     # Normalize covariates array.
     covariates_array -= np.mean(covariates_array, axis=0)
@@ -84,8 +93,11 @@ def get_covariates_array(
 
 
 def variance_component_model(
-        phenotype_array: np.array, X: np.array, K: np.array,
-        tol: float = 1e-4, max_n_iterations: int = 100
+    phenotype_array: np.array,
+    X: np.array,
+    K: np.array,
+    tol: float = 1e-4,
+    max_num_iterations: int = 100,
 ) -> dict:
     """
     Compute (using variance components model) the variation of y explained by the covariance matrix K, after regressing
@@ -100,14 +112,20 @@ def variance_component_model(
 
     TODO: add a jackknife procedure to get estimate of uncertainty in morphometricity scores
 
-    :param phenotype_array: (y): (n_subjects, 1) vector array of phenotypes (trait values)
-    :param X: (n_subjects, n_covariates) the (design) matrix of confounding variables (sometimes called covariates or
-        nuisance variables) such as age and sex.
-    :param K: (n_subjects, n_subjects) array of anatomical similarity matrix (ASM)
+    Parameters
+    ----------
+    :param phenotype_array: (y): 
+        (num_subjects, 1) vector array of phenotypes (trait values)
+    :param X: (num_subjects, num_covariates)
+        The (design) matrix of confounding variables (sometimes called covariates or nuisance variables) such as age and sex.
+    :param K: (n_subjects, n_subjects)
+        Array of anatomical similarity matrix (ASM)
         K has to be a symmetric, positive semi-definite matrix with its diagonal elements averaging to 1.
         If K is not non-negative definite, its negative eigenvalues will be set to zero, and a warning will be printed.
-    :param tol: the tolerance for the convergence of the ReML algorithm
-    :param max_n_iterations: the maximum number of iterations for the ReML algorithm
+    :param tol:
+        The tolerance for the convergence of the ReML algorithm
+    :param max_num_iterations:
+        The maximum number of iterations for the ReML algorithm
     :return:
         dict: {
             'flag': flag indicates the convergence of the ReML algorithm (1 if converged, and 0 if not),
@@ -179,7 +197,7 @@ def variance_component_model(
     Lnew = _compute_likelihood(logdetV, X, V, phenotype_array, projection_matrix)
 
     iteration = 0
-    while abs(Lnew - Lold) >= tol and iteration < max_n_iterations:  # criteria of termination
+    while abs(Lnew - Lold) >= tol and iteration < max_num_iterations:  # criteria of termination
         iteration += 1
         Lold = Lnew
         logging.info(f"ReML Iteration {iteration:02d}")
@@ -248,7 +266,7 @@ def variance_component_model(
     )
 
     # Diagnose the convergence.
-    if (iteration == max_n_iterations) and (abs(Lnew - Lold) >= tol):
+    if (iteration == max_num_iterations) and (abs(Lnew - Lold) >= tol):
         flag = 0
     else:
         flag = 1
@@ -270,7 +288,7 @@ def _compute_projection_matrix(n_subjects: int, V: np.array, X: np.array) -> np.
     V\X is the Matlab translation of la.solve(V, X).
     :param n_subjects:
     :param V: array of shape (n_subjects, n_subjects)
-    :param X: nuisance variables array of shape (n_subjects, n_covariates)
+    :param X: nuisance variables array of shape (num_subjects, num_covariates)
     :return:
     """
     return _mrdivide(
@@ -283,11 +301,14 @@ def _compute_projection_matrix(n_subjects: int, V: np.array, X: np.array) -> np.
 
 
 def _compute_likelihood(
-        logdetV: float, X: np.array, V: np.array, y: np.array, projection_matrix: np.array
+    logdetV: float,
+    X: np.array,
+    V: np.array,
+    y: np.array,
+    projection_matrix: np.array,
 ) -> float:
     """
     Lnew = -1/2 * logdetV - 1/2*log(det(X'/V*X)) - 1/2*y'*P*y
-    :return:
     """
     term_1 = -0.5 * logdetV
     term_2 = 0.5 * np.log(la.det(np.dot(_mrdivide(X.T, V), X)))
@@ -297,10 +318,15 @@ def _compute_likelihood(
 
 
 def _construct_score_vector(
-        projection_matrix: np.array, K: np.array, phenotype_array: np.array
+    projection_matrix: np.array,
+    K: np.array,
+    phenotype_array: np.array,
 ) -> np.array:
     """
     Compute score vector (S).
+
+    Parameters
+    ----------
     :param projection_matrix:
     :param K:
     :param phenotype_array:
@@ -326,8 +352,12 @@ def _compute_information_matrix(y: np.array, P: np.array, K: np.array):
     Igg = 1/2 * y'*P*K*P*K*P*y
     Ige = 1/2 * y'*P*K*P*P*y
     Iee = 1/2 * y'*P*P*P*y
+
+    Parameters
+    ----------
     :param y:
-    :param P: projection matrix
+    :param P:
+        Projection matrix.
     :param K:
     :return:
     """

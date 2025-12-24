@@ -27,6 +27,7 @@ if __name__ == "__main__":
 
     i_trials = range(num_trials)
     for noise_type in cfg['noise-types']:
+
         for i_trial in i_trials:
 
             for covs_type in cfg['all-covs-types']:
@@ -42,10 +43,11 @@ if __name__ == "__main__":
                             cfg['data-dir'], noise_type, f'trial_{i_trial:03d}',
                             'checkerboard_covariance.csv'
                         )
-                    if not os.path.exists(data_filepath):
-                        logging.warning(f"Node time series not found: '{data_filepath:s}'")
+                        if not os.path.exists(data_filepath):
+                            logging.warning(f"Node time series not found: '{data_filepath:s}'")
+                            continue
+                    else:
                         continue
-                    continue
 
                 tvfc_estimates_savedir = os.path.join(
                     cfg['experiments-basedir'], noise_type, f'trial_{i_trial:03d}', 'TVFC_estimates',
@@ -63,8 +65,6 @@ if __name__ == "__main__":
                     data_filepath,
                     verbose=False,
                 )  # (N, 1), (N, D)
-                n_time_steps = x.shape[0]
-                n_time_series = y.shape[1]
 
                 match data_split:
                     case "LEOO":
@@ -85,7 +85,7 @@ if __name__ == "__main__":
                     data_split=data_split,
                     noise_type=noise_type,
                     i_trial=i_trial,
-                    covs_type=covs_type
+                    covs_type=covs_type,
                 )
                 if estimated_tvfc is None:
                     continue

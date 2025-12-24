@@ -23,6 +23,9 @@ def plot_method_tvfc_estimates(
     y_train_locations: np.array,
     data_split: str,
     metric: str,
+    scan_id: int = None,
+    experiment_dimensionality: str = None,
+    subject: int = None,
     subject_name: str = None,
     noise_type: str = None,
     i_trial: int = None,
@@ -33,10 +36,9 @@ def plot_method_tvfc_estimates(
     ax=None,
 ) -> None:
     """
-    Plots a time series of TVFC estimates for a given estimation method.
+    Plots a time series of TVFC estimates for a (single) given estimation method.
     For the leave-every-other-out scheme, we only plot at the train locations.
 
-    TODO: add compatability with HCP benchmarks
     TODO: merge with helpers.evaluation.get_tvfc_estimates
 
     Parameters
@@ -55,12 +57,17 @@ def plot_method_tvfc_estimates(
     :param label_name:
     :param metric:
         'correlation' or 'covariance'.
+    :param scan_id:
     :param subject_name:
     :param i_time_series:
         By default we expect the bivariate case.
     :param j_time_series:
         By default we expect the bivariate case.
     """
+
+    # sns.set(style="whitegrid")
+    # plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
+
     n_time_series = y_train_locations.shape[1]
     data_set_name = config_dict['data-set-name']
     match data_set_name:
@@ -94,7 +101,17 @@ def plot_method_tvfc_estimates(
 
             rescale_x_axis = None
         case 'HCP_PTN1200_recon2':
-            raise NotImplementedError
+            wp_model_savedir = os.path.join(
+                config_dict['experiments-basedir'], 'saved_models', f'scan_{scan_id:d}',
+                data_split, experiment_dimensionality, model_name
+            )
+            wp_model_filename = f"{subject:d}.json"
+
+            tvfc_estimates_savedir = os.path.join(
+                config_dict['experiments-basedir'], 'TVFC_estimates', f'scan_{scan_id:d}',
+                data_split, experiment_dimensionality, metric, model_name
+            )
+            tvfc_estimates_filepath = os.path.join(tvfc_estimates_savedir, f"{subject:d}.csv")
         case 'rockland':
             wp_model_savedir = os.path.join(
                 config_dict['experiments-basedir'], pp_pipeline, 'saved_models',
@@ -164,10 +181,11 @@ def plot_method_tvfc_estimates(
                     0., 1., config_dict['wp-n-predict-samples']
                 ).reshape(-1, 1)
                 plot_wishart_process_covariances_pairwise(
-                    x_predict, m,
+                    x_predict,
+                    m,
                     i=i_time_series,
                     j=j_time_series,
-                    rescale_x_axis='seconds' if data_set_name == 'rockland' else rescale_x_axis,
+                    rescale_x_axis='seconds' if data_set_name == 'rockland' else 'minutes' if data_set_name == 'HCP_PTN1200_recon2' else rescale_x_axis,
                     connectivity_metric=metric,
                     repetition_time=config_dict['repetition-time'] if data_set_name[0] != 'd' else None,
                     data_length=x_train_locations.shape[0],
@@ -179,7 +197,10 @@ def plot_method_tvfc_estimates(
                 logging.warning(f"SVWP model not found in '{wp_model_savedir:s}'.")
         case 'DCC' | 'DCC_joint' | 'DCC_bivariate_loop':
             if os.path.exists(tvfc_estimates_filepath):
-                df = pd.read_csv(tvfc_estimates_filepath, index_col=0)  # (D*D, N)
+                df = pd.read_csv(
+                    tvfc_estimates_filepath, 
+                    index_col=0,
+                )  # (D*D, N)
 
                 # Remove zero padding required to run these models (only for TR=1.4).
                 if data_set_name == 'rockland' and config_dict['repetition-time'] == 1.4:
@@ -204,7 +225,7 @@ def plot_method_tvfc_estimates(
             if os.path.exists(tvfc_estimates_filepath):
                 covariance_structure_df = pd.read_csv(
                     tvfc_estimates_filepath,
-                    index_col=0
+                    index_col=0,
                 )  # (D*D, N)
                 covariance_structure = to_3d_format(covariance_structure_df.values)  # (N, D, D)
                 if data_set_name == 'rockland':
@@ -225,8 +246,8 @@ def plot_method_tvfc_estimates(
                         j=j_time_series,
                         connectivity_metric=metric,
                         markersize=3.6 if data_set_name not in ['d2'] else 0,
-                        plot_color=plot_color,
-                        ax=ax
+                        plot_color=plot_color,  # TODO: this was not there in HCP function
+                        ax=ax,
                     )
             else:
                 logging.warning(f"SW-CV TVFC estimates '{tvfc_estimates_filepath:s}' not found.")
@@ -244,7 +265,7 @@ def plot_method_tvfc_estimates(
                 j=j_time_series,
                 label=model_name.replace('_', '-'),
                 connectivity_metric=metric,
-                markersize=3.6,
+                markersize=3.6,  # TODO: is 0 in HCP function
                 ax=ax,
             )
         case 'SW':  # TODO: should we divide by 2 for leave-one-out?
@@ -267,7 +288,7 @@ def plot_method_tvfc_estimates(
                 j=j_time_series,
                 connectivity_metric=metric,
                 repetition_time=config_dict['repetition-time'],
-                plot_color=plot_color,
+                plot_color=plot_color,  # TODO: not there in HCP script
                 ax=ax,
             )
         case _:

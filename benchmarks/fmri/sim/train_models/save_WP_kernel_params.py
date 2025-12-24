@@ -16,8 +16,8 @@ if __name__ == "__main__":
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', 'd3s'
     data_split = sys.argv[2]       # 'all', 'LEOO'
-    experiment_data = sys.argv[3]  # e.g. 'N0200_T0100'
-    model_name = sys.argv[4]       # e.g. SVWP
+    experiment_data = sys.argv[3]  # 'Nxxxx_Txxxx'
+    model_name = sys.argv[4]       # 'SVWP', 'VWP', 'SVWP_joint', 'VWP_joint'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,
@@ -54,7 +54,9 @@ if __name__ == "__main__":
                         logging.warning(f"Model '{model_savepath:s}' not found.")
                     kernel_params_df.loc[i_trial, covs_type] = m_dict[kernel_param]
             kernel_params_df_filename = f'{model_name:s}_{kernel_param:s}_kernel_params.csv'
-            kernel_params_savedir = os.path.join(cfg['git-results-basedir'], noise_type, data_split)
+            kernel_params_savedir = os.path.join(
+                cfg['git-results-basedir'], noise_type, data_split, 'kernel_params'
+            )
             if not os.path.exists(kernel_params_savedir):
                 os.makedirs(kernel_params_savedir)
             kernel_params_df.to_csv(

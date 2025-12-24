@@ -93,7 +93,6 @@ if __name__ == "__main__":
                     data_file,
                     verbose=False,
                 )  # (N, 1), (N, D)
-                n_time_series = y.shape[1]
 
                 match data_split:
                     case "LEOO":
@@ -126,7 +125,7 @@ if __name__ == "__main__":
                 optimal_window_length_array.append(optimal_window_length)
 
             if len(optimal_window_length_array) > 0:
-                optimal_window_length_df[covs_type] = optimal_window_length_array  # (n_trials, )
+                optimal_window_length_df[covs_type] = optimal_window_length_array  # (num_trials, )
 
         optimal_window_length_filename = 'optimal_window_lengths.csv'
         optimal_window_length_savedir = os.path.join(

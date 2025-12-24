@@ -60,31 +60,36 @@ def reconstruct_symmetric_matrix_from_tril(
 
 
 def reconstruct_symmetric_summary_measure_matrix_from_tril(
-        cluster_array: np.array, n_time_series: int, tvfc_summary_measure: str
+    cluster_array: np.array,
+    num_time_series: int,
+    tvfc_summary_measure: str,
 ) -> np.array:
     """
     This propagates NaN values if present.
     TODO: perhaps we could merge this with nilearn.connectome.vec_to_sym_matrix
 
+    Parameters
+    ----------
     :param cluster_array:
-    :param n_time_series: denoted as D.
+    :param num_time_series:
+        Denoted as D.
     :param tvfc_summary_measure:
     :return:
-        array of shape (D, D).
+        Array of shape (D, D).
     """
     if np.isnan(cluster_array).any():
-        return np.full(shape=[n_time_series, n_time_series], fill_value=np.nan)
+        return np.full(shape=[num_time_series, num_time_series], fill_value=np.nan)
     match tvfc_summary_measure:
         case 'ar1':
-            return reconstruct_symmetric_matrix_from_tril(cluster_array, n_time_series, diagonal='zeros')
+            return reconstruct_symmetric_matrix_from_tril(cluster_array, num_time_series, diagonal='zeros')
         case 'mean':
-            return reconstruct_symmetric_matrix_from_tril(cluster_array, n_time_series, diagonal='ones')
+            return reconstruct_symmetric_matrix_from_tril(cluster_array, num_time_series, diagonal='ones')
         case 'rate_of_change':
-            return reconstruct_symmetric_matrix_from_tril(cluster_array, n_time_series, diagonal='zeros')
+            return reconstruct_symmetric_matrix_from_tril(cluster_array, num_time_series, diagonal='zeros')
         case 'std':
-            return reconstruct_symmetric_matrix_from_tril(cluster_array, n_time_series, diagonal='zeros')
+            return reconstruct_symmetric_matrix_from_tril(cluster_array, num_time_series, diagonal='zeros')
         case 'variance':
-            return reconstruct_symmetric_matrix_from_tril(cluster_array, n_time_series, diagonal='zeros')
+            return reconstruct_symmetric_matrix_from_tril(cluster_array, num_time_series, diagonal='zeros')
         case _:
             logging.error(f"Summary measure '{tvfc_summary_measure:s}' not recognized.")
 

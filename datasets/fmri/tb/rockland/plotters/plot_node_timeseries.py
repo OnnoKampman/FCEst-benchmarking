@@ -13,10 +13,13 @@ from helpers.figures import set_size
 from helpers.rockland import get_rockland_subjects, get_convolved_stim_array
 
 
-def _plot_node_timeseries(
-        config_dict: dict, ts_df: pd.DataFrame, convolved_stim_array: np.array,
-        mean_estimate: bool = False, subject_name: str = None,
-        figures_savedir: str = None
+def plot_node_timeseries(
+    config_dict: dict,
+    ts_df: pd.DataFrame,
+    convolved_stim_array: np.array,
+    mean_estimate: bool = False,
+    subject_name: str = None,
+    figures_savedir: str = None,
 ) -> None:
     """
     Plots the BOLD signal time series per brain region of interest.
@@ -26,47 +29,59 @@ def _plot_node_timeseries(
     Parameters
     ----------
     :param config_dict:
-    :param subject_ts_df:
+    :param ts_df:
+    :param convolved_stim_array:
+    :param mean_estimate:
     :param subject_name:
+    :param figures_savedir:
     """
     # sns.set(
     #     # style="whitegrid", 
     #     font_scale=0.05
     # )
-    sns.set_style(
-        "whitegrid",
-        {
-            'grid.linestyle': '--'
-        },
-        # font_scale=1.0
-    )
-    sns.set_context(rc={"grid.linewidth": 0.4})
+    # sns.set_style(
+    #     "whitegrid",
+    #     {
+    #         'grid.linestyle': '--'
+    #     },
+    #     # font_scale=1.0
+    # )
+    sns.set_style("whitegrid")
     plt.style.use(os.path.join(config_dict['git-basedir'], 'configs', 'fig.mplstyle'))
+    sns.set_context(rc={"grid.linewidth": 0.4})
 
     linewidth = 1.6
 
     fig, axes = plt.subplots(
         # figsize=(5, 3),
         figsize=set_size(),
-        nrows=ts_df.shape[1], ncols=1,
-        sharex='all', sharey=True
+        nrows=ts_df.shape[1],
+        ncols=1,
+        sharex='all',
+        sharey=True,
     )
 
     for i_roi, region_of_interest in enumerate(ts_df.columns):
         axes[i_roi].plot(
             ts_df[region_of_interest], 
             label='BOLD time series', 
-            linewidth=linewidth
+            linewidth=linewidth,
+            color='darkorange',
+            zorder=99,
         )
         axes[i_roi].plot(
             convolved_stim_array,
             label='Stimulus ' + r'$ \ast $' + ' HRF',
-            linewidth=linewidth
+            linewidth=linewidth,
+            color='darkblue',
         )
         axes[i_roi].set_ylim(config_dict['plot-time-series-ylim'])
         axes[i_roi].set_yticklabels([])
         axes[i_roi].set_ylabel(
-            f'{region_of_interest:s}', rotation='horizontal', va='center', labelpad=15
+            f'{region_of_interest:s}',
+            rotation='horizontal',
+            va='center',
+            labelpad=15,
         )
 
         for axis in ['top', 'bottom', 'left', 'right']:
@@ -79,7 +94,11 @@ def _plot_node_timeseries(
     axes[0].legend(bbox_to_anchor=(1.0, 1.0))
 
     # plt.tight_layout()
-    plt.subplots_adjust(hspace=0.1, wspace=0.2)
+
+    plt.subplots_adjust(
+        hspace=0.1,
+        wspace=0.2,
+    )
 
     if figures_savedir is not None:
         if mean_estimate:
@@ -137,7 +156,7 @@ if __name__ == '__main__':
     mean_over_subjects_timeseries_df /= len(all_subjects_list)
     print(mean_over_subjects_timeseries_df)
 
-    _plot_node_timeseries(
+    plot_node_timeseries(
         config_dict=cfg,
         ts_df=mean_over_subjects_timeseries_df,
         convolved_stim_array=convolved_stim_array,

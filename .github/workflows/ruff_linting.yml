@@ -1,0 +1,31 @@
+name: Ruff linting
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install git+https://github.com/OnnoKampman/FCEst.git@v0.1.0
+          pip install matplotlib nilearn pandas==1.5.3 ptitprince ruff seaborn
+      - name: Analyze code with Ruff
+        run: |
+          echo $PYTHONPATH
+          pwd
+          ls -al
+          export PYTHONPATH=$PWD
+          echo $PYTHONPATH
+          ruff check . --exit-zero
+        continue-on-error: true

@@ -81,7 +81,7 @@ def plot_d2_all_covariance_structures(
         )  # (N, 1), (N, D)
         ground_truth_covariance_structure = get_ground_truth_covariance_structure(
             covs_type=covs_type,
-            n_samples=len(x),
+            num_samples=len(x),
             signal_to_noise_ratio=signal_to_noise_ratio,
             data_set_name=config_dict['data-set-name'],
         )
@@ -197,8 +197,8 @@ def _plot_d2_tvfc_estimates_single_covariance_structure(
 
     plt.figure(figsize=config_dict['figure-model-estimates-figsize'])
 
-    n_time_series = y_train_locations.shape[1]
-    for i_time_series in range(n_time_series):
+    num_time_series = y_train_locations.shape[1]
+    for i_time_series in range(num_time_series):
         plt.subplot(4, 1, i_time_series + 1)
         plt.plot(
             x_train_locations, y_train_locations[:, i_time_series],

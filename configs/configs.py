@@ -25,7 +25,7 @@ def get_config_dict(
     Parameters
     ----------
     :param data_set_name:
-        simulations: 'sim', 'd2', 'd3d', 'd3s', 'd4s', 'd6s', 'd9s', 'd15s'
+        simulations: 'sim', 'd2', 'd3d', 'd3s', 'd4s', 'd6s', 'd9s', 'd15s', 'd50s'
         resting state data: 'HCP_PTN1200_recon2'
         task data: 'rockland'
     :param subset:
@@ -106,7 +106,7 @@ def get_config_dict(
                 shared_config_dict=shared_config_dict,
                 benchmark_dimensions=experiment_data
             )
-        case 'd3s' | 'd4s' | 'd5s' | 'd6s' | 'd9s' | 'd15s':
+        case 'd3s' | 'd4s' | 'd5s' | 'd6s' | 'd9s' | 'd15s' | 'd50s':
             config_dict = _get_sparse_config_dict(
                 shared_config_dict=shared_config_dict,
                 benchmark_dimensions=experiment_data
@@ -132,7 +132,8 @@ def get_config_dict(
 
 
 def _get_human_connectome_project_config_dict(
-        shared_config_dict: dict, data_dimensionality: str
+    shared_config_dict: dict,
+    data_dimensionality: str,
 ) -> dict:
     """
     Get configs dictionary for Human Connectome Project (HCP) data.
@@ -177,7 +178,7 @@ def _get_human_connectome_project_config_dict(
         ],
         'mgarch-training-types': [
             'bivariate_loop',
-            'joint'
+            'joint',
         ],
         'models-brain-state-analysis': [
             'SVWP_joint',
@@ -364,9 +365,9 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
             [None, 2],
             [None, 6],
             # [0.5, None],
-            [1, None],
-            [2, None],
-            [6, None],
+            # [1, None],
+            # [2, None],
+            # [6, None],
         ],
         'plot-covs-types': [  # these will be plotted in this order
             'null',
@@ -381,6 +382,12 @@ def _get_simulations_shared_config_dict(shared_config_dict: dict, benchmark_dime
         'plot-lengthscales-window-lengths': (12, 10),
         'plot-data-xlim': [-0.00, 1.00],
         'repetition-time': 1,  # synthetic TR is one second for simplicity
+        'TVFC-summary-measures': [
+            'ar1',
+            'mean',
+            'variance',
+            'rate_of_change',
+        ],
         'window-lengths': [
             15,
             30,
@@ -394,6 +401,8 @@ def _get_d2_config_dict(
     shared_config_dict: dict, benchmark_dimensions: str
 ) -> dict:
     """
+    Get configuration dictionary for D=2 (bivariate) simulations.
+
     Parameters
     ----------
     :param shared_config_dict:
@@ -666,7 +675,7 @@ def _get_rockland_config_dict(
             [0, 2],
             [0, 3],
             [0, 4],
-            [0, 5]
+            [0, 5],
         ]),
         'stimulus-prediction-models': [
             'VWP_joint',

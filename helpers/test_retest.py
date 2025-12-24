@@ -11,29 +11,37 @@ from helpers.i2c2 import compute_i2c2, to_i2c2_format
 
 
 def compute_tvfc_summary_measure_test_retest_scores(
-        config_dict: dict, test_retest_metric: str, model_name: str, tvfc_summary_measure: str,
-        n_time_series: int, experiment_dimensionality: str, data_split: str, connectivity_metric: str
+    config_dict: dict,
+    test_retest_metric: str,
+    model_name: str,
+    tvfc_summary_measure: str,
+    num_time_series: int,
+    experiment_dimensionality: str,
+    data_split: str,
+    connectivity_metric: str,
 ) -> pd.DataFrame:
     """
     Compute test-retest metrics.
 
     :param config_dict:
-    :param test_retest_metric: 'ICC' or 'I2C2'
-    :param model_name: 'SVWP_joint', 'DCC_joint', 'GO_joint', 'SW_cross_validated', 'SW_30', 'SW_60', 'sFC'
+    :param test_retest_metric:
+        'ICC' or 'I2C2'
+    :param model_name:
+        'SVWP_joint', 'DCC_joint', 'GO_joint', 'SW_cross_validated', 'SW_30', 'SW_60', 'sFC'
     :param summary_measure:
-    :param n_time_series:
+    :param num_time_series:
     :param experiment_dimensionality:
     :param data_split:
     :param connectivity_metric:
     :return:
     """
-    n_scans = len(config_dict['scan-ids'])
+    num_scans = len(config_dict['scan-ids'])
 
     tvfc_summary_measure_array = np.zeros(
-        (config_dict['n-subjects'], n_scans, n_time_series, n_time_series)
+        (config_dict['n-subjects'], num_scans, num_time_series, num_time_series)
     )  # (n_subjects, n_scans, D, D)
     for i_scan_id, scan_id in enumerate(config_dict['scan-ids']):
-        print(f"> TVFC '{tvfc_summary_measure:s}' - SCAN {i_scan_id+1:d} / {n_scans:d}")
+        print(f"> TVFC '{tvfc_summary_measure:s}' - SCAN {i_scan_id+1:d} / {num_scans:d}")
 
         # We load the estimates directly, they are saved with another script.
         tvfc_estimates_summaries_savedir = os.path.join(
@@ -53,7 +61,7 @@ def compute_tvfc_summary_measure_test_retest_scores(
             reconstruct_symmetric_summary_measure_matrix_from_tril(
                 tvfc_summaries_vector,
                 tvfc_summary_measure=tvfc_summary_measure,
-                n_time_series=n_time_series
+                num_time_series=num_time_series
             ) for tvfc_summaries_vector in tvfc_estimates_summaries_df.values
         ]  # (n_subjects, D, D)
 
@@ -67,7 +75,7 @@ def compute_tvfc_summary_measure_test_retest_scores(
         i2c2_score = compute_i2c2(
             y=tvfc_summary_measure_array,
             n_subjects=config_dict['n-subjects'],
-            n_scans=n_scans
+            n_scans=num_scans
         )
         return i2c2_score
     else:

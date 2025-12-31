@@ -34,6 +34,6 @@ dependencies:
     - seaborn==0.11.0
     - tensorflow==2.11.0
     # - templateflow
-    - tensorflow_probability==0.19.0
-    - git+https://github.com/OnnoKampman/FCEst@v0.1.0
+    # - tensorflow_probability==0.19.0  # probably already installed by FCEst
+    - git+https://github.com/OnnoKampman/FCEst@v0.1.1
     # - git+https://github.com/RittmanResearch/maybrain@master

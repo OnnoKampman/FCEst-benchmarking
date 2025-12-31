@@ -3,7 +3,7 @@ import os
 import socket
 import time
 
-from fcest.helpers.inference import run_adam_vwp, run_adam_svwp
+from fcest.helpers.inference import run_adam
 from fcest.models.wishart_process import VariationalWishartProcess, SparseVariationalWishartProcess
 import gpflow
 from gpflow.ci_utils import ci_niter
@@ -138,13 +138,15 @@ if __name__ == "__main__":
             train_start_time = time.time()
             match model_name:
                 case 'VWP':
-                    _ = run_adam_vwp(
+                    _ = run_adam(
+                        model_name,
                         model=m,
                         iterations=maxiter,
                         log_interval=log_interval
                     )
                 case 'SVWP':
-                    _ = run_adam_svwp(
+                    _ = run_adam(
+                        model_name,
                         model=m,
                         data=(x, y),
                         iterations=maxiter,

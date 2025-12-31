@@ -3,7 +3,7 @@ import os
 import socket
 import sys
 
-from fcest.helpers.inference import run_adam_svwp, run_adam_vwp
+from fcest.helpers.inference import run_adam
 from fcest.models.wishart_process import SparseVariationalWishartProcess, VariationalWishartProcess
 import gpflow
 from gpflow.ci_utils import ci_niter
@@ -20,9 +20,9 @@ if __name__ == "__main__":
     print('\nHostname:', hostname)
 
     data_set_name = sys.argv[1]    # 'd2', 'd3d', or 'd{%d}s'
-    experiment_data = sys.argv[2]  # e.g. 'N0200_T0100'
+    experiment_data = sys.argv[2]  # 'Nxxxx_Txxxx'
     model_name = sys.argv[3]       # 'VWP_joint', 'SVWP_joint', 'VWP', or 'SVWP'
-    data_split = sys.argv[4]       # 'all', or 'LEOO'
+    data_split = sys.argv[4]       # 'all', 'LEOO'
 
     cfg = get_config_dict(
         data_set_name=data_set_name,
@@ -105,7 +105,7 @@ if __name__ == "__main__":
                     data_file,
                     verbose=False,
                 )  # (N, 1), (N, D)
-                n_time_series = y.shape[1]
+                num_time_series = y.shape[1]
 
                 match data_split:
                     case "LEOO":
@@ -122,31 +122,34 @@ if __name__ == "__main__":
                     case 'VWP' | 'VWP_joint':
                         m = VariationalWishartProcess(
                             x_train, y_train,
-                            nu=n_time_series,
+                            nu=num_time_series,
                             kernel=k
                         )
                         maxiter = ci_niter(cfg['n-iterations-vwp'])
-                        logf = run_adam_vwp(
-                            m, maxiter,
+                        logf = run_adam(
+                            model_name,
+                            m,
+                            maxiter,
                             log_interval=cfg['log-interval'],
                             log_dir=tensorboard_logdir
                         )
                     case 'SVWP' | 'SVWP_joint':
                         m = SparseVariationalWishartProcess(
-                            D=n_time_series,
-                            Z=x[:cfg['n-inducing-points']],  # TODO: select equally spaced X for Z init?
+                            D=num_time_series,
+                            Z=x[:cfg['n-inducing-points']],  # TODO: select equally spaced X for Z init? also this may not work with N<200!!
                             # Z=x[::int(len(x) / n_inducing_points)],
-                            nu=n_time_series,
+                            nu=num_time_series,
                             kernel=k,
-                            train_additive_noise=True
+                            train_additive_noise=True,
                         )
                         maxiter = ci_niter(cfg['n-iterations-svwp'])
-                        logf = run_adam_svwp(
+                        logf = run_adam(
+                            model_name,
                             m,
                             data=(x_train, y_train),
                             iterations=maxiter,
                             log_interval=cfg['log-interval'],
-                            log_dir=tensorboard_logdir
+                            log_dir=tensorboard_logdir,
                         )
                     case _:
                         raise NotImplementedError(f"Model name '{model_name:s}' not recognized.")

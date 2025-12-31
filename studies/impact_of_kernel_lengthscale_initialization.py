@@ -2,7 +2,7 @@ import logging
 import os
 import socket
 
-from fcest.helpers.inference import run_adam_vwp, run_adam_svwp
+from fcest.helpers.inference import run_adam
 from fcest.models.wishart_process import VariationalWishartProcess, SparseVariationalWishartProcess
 import gpflow
 from gpflow.ci_utils import ci_niter
@@ -99,9 +99,9 @@ if __name__ == "__main__":
                 maxiter = ci_niter(n_iterations)
                 match model_name:
                     case 'VWP':
-                        logf = run_adam_vwp(m, maxiter, log_interval)
+                        logf = run_adam(model_name, m, maxiter, log_interval)
                     case 'SVWP':
-                        logf = run_adam_svwp(m, (x, y), maxiter, log_interval)
+                        logf = run_adam(model_name, m, (x, y), maxiter, log_interval)
                 save_elbo_plot(
                     maxiter, log_interval, logf,
                     savedir=os.path.join(figures_savedir, 'elbo'),

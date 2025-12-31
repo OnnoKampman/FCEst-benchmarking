@@ -2,7 +2,7 @@ import os
 import socket
 import sys
 
-from helpers.inference import run_adam_svwp, run_adam_vwp
+from helpers.inference import run_adam
 from fcest.models.wishart_process import VariationalWishartProcess, SparseVariationalWishartProcess
 import gpflow
 from gpflow.ci_utils import ci_niter
@@ -73,7 +73,8 @@ if __name__ == "__main__":
                     kernel=k
                 )
                 maxiter = ci_niter(cfg['n-iterations'])
-                logf = run_adam_vwp(
+                logf = run_adam(
+                    model_name,
                     m,
                     maxiter,
                     log_interval=cfg['log-interval'],
@@ -89,7 +90,8 @@ if __name__ == "__main__":
                     kernel=k
                 )
                 maxiter = ci_niter(cfg['n-iterations-svwp'])
-                logf = run_adam_svwp(
+                logf = run_adam(
+                    model_name,
                     m,
                     data=(x_train, y_train),
                     iterations=maxiter,
